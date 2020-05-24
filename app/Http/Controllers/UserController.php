@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -23,7 +24,7 @@ class UserController extends Controller
         if ($validate->fails()) {
             return response()->json([
                 "status" => 400,
-                "data" => $validate->errors()
+                "errors" => $validate->errors()
             ], 400);
         }
 
@@ -46,7 +47,7 @@ class UserController extends Controller
         $user->lastname = ucfirst(strtolower($request['lastname']));
         $user->email = strtolower($request['email']);
         $user->phone = $request['phone'];
-        $user->password = Hash::make(strtolower($request['gender']));
+        $user->password = Hash::make(strtolower($request['password']));
 
         // Try user save or catch error if any
         try {
@@ -55,7 +56,33 @@ class UserController extends Controller
             return ['status' => 200, 'data' => $data];
         } catch (\Throwable $th) {
             Log::error($th);
-            return ['status' => 500, 'data' => 'Internal Server Error'];
+            return ['status' => 500, 'errors' => 'Internal Server Error'];
+        }
+    }
+
+    /**
+     * Login user
+     * @return json $response
+     */
+    public function login(Request $request)
+    {
+        $credentials = $credentials = $request->only('email', 'password');
+
+        // Attempt user login
+        $attempt = Auth::attempt($credentials);
+
+        $res = [
+            'status' => 400,
+            'errors' => [
+                'email' => 'Invalid credentials.'
+            ]
+        ];
+
+        if ($attempt) {
+            $data = User::where('email', $credentials['email'])->first();
+            return ['status' => 200, 'data' => $data];
+        } else {
+            return response()->json($res, 400);
         }
     }
 

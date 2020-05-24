@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'user'], function () {
 
-    // Create User
-    Route::post('create', 'UserController@create');
+    // User Signup
+    Route::post('signup', 'UserController@create');
+
+    // User Login
+    Route::post('login', 'UserController@login');
 });
