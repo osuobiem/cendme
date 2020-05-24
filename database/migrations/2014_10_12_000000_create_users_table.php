@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->float('balance')->default(0);
             $table->string('photo')->nullable();
             $table->string('password');
+            $table->json('other_details')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

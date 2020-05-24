@@ -24,11 +24,12 @@ class UserController extends Controller
             return response()->json([
                 "status" => 400,
                 "data" => $validate->errors()
-            ]);
+            ], 400);
         }
 
         // Store user data
-        return response()->json($this->store($request));
+        $store = $this->store($request);
+        return response()->json($store, $store['status']);
     }
 
     /**
@@ -50,7 +51,8 @@ class UserController extends Controller
         // Try user save or catch error if any
         try {
             $user->save();
-            return ['status' => 200, 'data' => 'Successful'];
+            $data = $user::where('email', $user->email)->first();
+            return ['status' => 200, 'data' => $data];
         } catch (\Throwable $th) {
             Log::error($th);
             return ['status' => 500, 'data' => 'Internal Server Error'];
@@ -69,7 +71,7 @@ class UserController extends Controller
             'lastname' => 'required|alpha',
             'email' => 'required|email|unique:users',
             'phone' => 'required|numeric',
-            'password' => 'required|alpha_dash|min:8|max:20'
+            'password' => 'required|alpha_dash|min:6|max:30'
         ]);
     }
 }
