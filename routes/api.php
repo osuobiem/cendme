@@ -26,4 +26,7 @@ Route::group(['prefix' => 'user'], function () {
 
     // User Login
     Route::post('login', 'UserController@login');
+
+    // User Update
+    Route::post('update/{id}', 'UserController@update');
 });
