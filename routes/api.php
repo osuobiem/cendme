@@ -43,8 +43,8 @@ Route::group(['prefix' => 'vendor'], function () {
     // Vendor Signup
     Route::post('signup', 'VendorController@create');
 
-    // // User Login
-    // Route::post('login', 'UserController@login');
+    // Vendor Login
+    Route::post('login', 'VendorController@login');
 
     // Vendor Update
     Route::post('update/{id}', 'VendorController@update');

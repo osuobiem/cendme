@@ -4,12 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class VendorController extends Controller
 {
+
+    /**
+     * Login vendor
+     * @return json $response
+     */
+    public function login(Request $request)
+    {
+        $credentials = $credentials = $request->only('email', 'password');
+
+        // Attempt vendor login
+        $attempt = Auth::guard('vendors')->attempt($credentials);
+
+        $res = [
+            'status' => 400,
+            'message' => [
+                'email' => 'Invalid credentials.'
+            ]
+        ];
+
+        if ($attempt) {
+            return ['status' => 200, 'message' => "Successful"];
+        } else {
+            return response()->json($res, 400);
+        }
+    }
+
     /**
      * Create new vendor
      * @return json $response
@@ -23,7 +50,7 @@ class VendorController extends Controller
         if ($validate->fails()) {
             return response()->json([
                 "status" => 400,
-                "errors" => $validate->errors()
+                "message" => $validate->errors()
             ], 400);
         }
 
@@ -46,7 +73,7 @@ class VendorController extends Controller
         if ($validate->fails()) {
             return response()->json([
                 "status" => 400,
-                "errors" => $validate->errors()
+                "message" => $validate->errors()
             ], 400);
         }
 
@@ -80,13 +107,13 @@ class VendorController extends Controller
             // Try vendor save or catch error if any
             try {
                 $vendor->save();
-                return ['status' => 200, 'errors' => 'Update Successful'];
+                return ['status' => 200, 'message' => 'Update Successful'];
             } catch (\Throwable $th) {
                 Log::error($th);
-                return ['status' => 500, 'errors' => 'Internal Server Error'];
+                return ['status' => 500, 'message' => 'Internal Server Error'];
             }
         } else {
-            return ['status' => 404, 'errors' => 'No vendor exists with this ID'];
+            return ['status' => 404, 'message' => 'No vendor exists with this ID'];
         }
     }
 
@@ -110,10 +137,10 @@ class VendorController extends Controller
         try {
             $vendor->save();
             $data = $vendor::where('email', $vendor->email)->first();
-            return ['status' => 200, 'data' => $data];
+            return ['status' => 200, 'message' => 'Successful', 'data' => $data];
         } catch (\Throwable $th) {
             Log::error($th);
-            return ['status' => 500, 'errors' => 'Internal Server Error'];
+            return ['status' => 500, 'message' => 'Internal Server Error'];
         }
     }
 
