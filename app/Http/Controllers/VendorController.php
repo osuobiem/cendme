@@ -33,6 +33,64 @@ class VendorController extends Controller
     }
 
     /**
+     * Update vendor data
+     * @param int $id Vendor id to update with
+     * @return json $response
+     */
+    public function update(Request $request, $id)
+    {
+        // Get validation rules
+        $validate = $this->update_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "status" => 400,
+                "errors" => $validate->errors()
+            ], 400);
+        }
+
+        // Store vendor data
+        $store = $this->ustore($request, $id);
+        return response()->json($store, $store['status']);
+    }
+
+    /**
+     * Process vendor data update
+     * @param int $id Vendor id to update with
+     * @return array Update status
+     */
+    public function ustore(Request $request, $id)
+    {
+        // Decode vendor id
+        $id = base64_decode($id);
+
+        // Find vendor with supplied id
+        $vendor = Vendor::find($id);
+
+        if ($vendor) {
+            // Assign vendor object properties
+            $vendor->business_name = $request['business_name'];
+            $vendor->phone = $request['phone'];
+            $vendor->address = $request['address'];
+            if ($request['password']) {
+                $vendor->password = Hash::make(strtolower($request['password']));
+            }
+
+            // Try vendor save or catch error if any
+            try {
+                $vendor->save();
+                return ['status' => 200, 'errors' => 'Update Successful'];
+            } catch (\Throwable $th) {
+                Log::error($th);
+                return ['status' => 500, 'errors' => 'Internal Server Error'];
+            }
+        } else {
+            return ['status' => 404, 'errors' => 'No vendor exists with this ID'];
+        }
+    }
+
+    /**
      * Process vendor creation
      * @return array Result of saved vendor data
      */
@@ -42,7 +100,7 @@ class VendorController extends Controller
         $vendor = new Vendor();
 
         // Assign vendor object properties
-        $vendor->business_name = ucfirst(strtolower($request['business_name']));
+        $vendor->business_name = $request['business_name'];
         $vendor->email = strtolower($request['email']);
         $vendor->phone = $request['phone'];
         $vendor->address = $request['address'];
@@ -68,10 +126,25 @@ class VendorController extends Controller
         // Make and return validation rules
         return Validator::make($request->all(), [
             'business_name' => 'required|min:1',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:vendors',
             'phone' => 'required|numeric',
             'address' => 'required|min:4',
             'password' => 'required|alpha_dash|min:6|max:30'
+        ]);
+    }
+
+    /**
+     * Vendor Update Validation Rules
+     * @return object The validator object
+     */
+    private function update_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'business_name' => 'required|min:1',
+            'phone' => 'required|numeric',
+            'address' => 'required|min:4',
+            'password' => 'alpha_dash|min:6|max:30'
         ]);
     }
 }

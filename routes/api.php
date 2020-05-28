@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+/**
+ * USER ROUTES
+ */
 Route::group(['prefix' => 'user'], function () {
 
     // User Signup
@@ -30,3 +33,20 @@ Route::group(['prefix' => 'user'], function () {
     // User Update
     Route::post('update/{id}', 'UserController@update');
 });
+// END USER ROUTES
+
+/**
+ * VENDOR ROUTES
+ */
+Route::group(['prefix' => 'vendor'], function () {
+
+    // Vendor Signup
+    Route::post('signup', 'VendorController@create');
+
+    // // User Login
+    // Route::post('login', 'UserController@login');
+
+    // Vendor Update
+    Route::post('update/{id}', 'VendorController@update');
+});
+// END VENDOR ROUTES
