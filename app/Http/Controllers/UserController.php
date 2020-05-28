@@ -24,7 +24,7 @@ class UserController extends Controller
         if ($validate->fails()) {
             return response()->json([
                 "status" => 400,
-                "errors" => $validate->errors()
+                "message" => $validate->errors()
             ], 400);
         }
 
@@ -53,10 +53,10 @@ class UserController extends Controller
         try {
             $user->save();
             $data = $user::where('email', $user->email)->first();
-            return ['status' => 200, 'data' => $data];
+            return ['status' => 200, 'message' => 'Signup Successful', 'data' => $data];
         } catch (\Throwable $th) {
             Log::error($th);
-            return ['status' => 500, 'errors' => 'Internal Server Error'];
+            return ['status' => 500, 'message' => 'Internal Server Error'];
         }
     }
 
@@ -73,14 +73,14 @@ class UserController extends Controller
 
         $res = [
             'status' => 400,
-            'errors' => [
+            'message' => [
                 'email' => 'Invalid credentials.'
             ]
         ];
 
         if ($attempt) {
             $data = User::where('email', $credentials['email'])->first();
-            return ['status' => 200, 'data' => $data];
+            return ['status' => 200, 'message' => 'Login Successful', 'data' => $data];
         } else {
             return response()->json($res, 400);
         }
@@ -100,7 +100,7 @@ class UserController extends Controller
         if ($validate->fails()) {
             return response()->json([
                 "status" => 400,
-                "errors" => $validate->errors()
+                "message" => $validate->errors()
             ], 400);
         }
 
@@ -136,13 +136,13 @@ class UserController extends Controller
             // Try user save or catch error if any
             try {
                 $user->save();
-                return ['status' => 200, 'errors' => 'Update Successful'];
+                return ['status' => 200, 'message' => 'Update Successful'];
             } catch (\Throwable $th) {
                 Log::error($th);
-                return ['status' => 500, 'errors' => 'Internal Server Error'];
+                return ['status' => 500, 'message' => 'Internal Server Error'];
             }
         } else {
-            return ['status' => 404, 'errors' => 'No user exists with this ID'];
+            return ['status' => 404, 'message' => 'No user exists with this ID'];
         }
     }
 
