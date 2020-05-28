@@ -13,6 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+/**
+ * VENDOR ROUTES
+ */
+Route::group(['prefix' => 'vendor'], function () {
+
+    // Vendor Signup
+    Route::post('signup', 'VendorController@create');
+
+    // Vendor Login
+    Route::post('login', 'VendorController@login');
+
+    // Vendor Update
+    Route::post('update/{id}', 'VendorController@update');
 });
+// END VENDOR ROUTES

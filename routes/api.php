@@ -19,34 +19,22 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-/**
- * USER ROUTES
- */
-Route::group(['prefix' => 'user'], function () {
+Route::namespace('API')->group(function () {
 
-    // User Signup
-    Route::post('signup', 'UserController@create');
+    /**
+     * USER ROUTES
+     */
+    Route::group(['prefix' => 'user'], function () {
 
-    // User Login
-    Route::post('login', 'UserController@login');
+        // User Signup
+        Route::post('signup', 'UserController@create');
 
-    // User Update
-    Route::post('update/{id}', 'UserController@update');
+        // User Login
+        Route::post('login', 'UserController@login');
+
+        // User Update
+        Route::post('update/{id}', 'UserController@update');
+    });
+    // END USER ROUTES
+
 });
-// END USER ROUTES
-
-/**
- * VENDOR ROUTES
- */
-Route::group(['prefix' => 'vendor'], function () {
-
-    // Vendor Signup
-    Route::post('signup', 'VendorController@create');
-
-    // Vendor Login
-    Route::post('login', 'VendorController@login');
-
-    // Vendor Update
-    Route::post('update/{id}', 'VendorController@update');
-});
-// END VENDOR ROUTES

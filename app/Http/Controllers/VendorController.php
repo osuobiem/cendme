@@ -31,7 +31,7 @@ class VendorController extends Controller
         ];
 
         if ($attempt) {
-            return ['status' => 200, 'message' => "Successful"];
+            return ['status' => 200, 'message' => "Login Successful"];
         } else {
             return response()->json($res, 400);
         }
@@ -137,7 +137,7 @@ class VendorController extends Controller
         try {
             $vendor->save();
             $data = $vendor::where('email', $vendor->email)->first();
-            return ['status' => 200, 'message' => 'Successful', 'data' => $data];
+            return ['status' => 200, 'message' => 'Signup Successful', 'data' => $data];
         } catch (\Throwable $th) {
             Log::error($th);
             return ['status' => 500, 'message' => 'Internal Server Error'];
