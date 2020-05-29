@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::namespace('API')->group(function () {
+Route::group(['namespace' => 'API'], function () {
 
     /**
      * USER ROUTES
@@ -32,8 +32,10 @@ Route::namespace('API')->group(function () {
         // User Login
         Route::post('login', 'UserController@login');
 
-        // User Update
-        Route::post('update/{id}', 'UserController@update');
+        Route::group(['middleware' => 'auth:api'], function () {
+            // User Update
+            Route::post('update/{id}', 'UserController@update');
+        });
     });
     // END USER ROUTES
 
