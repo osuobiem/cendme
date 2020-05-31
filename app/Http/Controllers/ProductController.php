@@ -81,7 +81,7 @@ class ProductController extends Controller
             Log::error($th);
 
             // Delete uploaded file if there's an error
-            $stored && $product->photo != 'placeholder' ? Storage::delete('/products/' . $product->photo) : '';
+            $stored && $product->photo != 'placeholder.png' ? Storage::delete('/products/' . $product->photo) : '';
 
             return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
         }
@@ -166,14 +166,14 @@ class ProductController extends Controller
                 $product->save();
 
                 // Delete previous photo
-                $stored && $old_photo != 'placeholder' ? Storage::delete('/products/' . $product->photo) : '';
+                $stored && $old_photo != 'placeholder.png' ? Storage::delete('/products/' . $old_photo) : '';
 
                 return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
             } catch (\Throwable $th) {
                 Log::error($th);
 
                 // Delete uploaded file if there's an error
-                $stored && $product->photo != 'placeholder' ? Storage::delete('/products/' . $product->photo) : '';
+                $stored && $product->photo != 'placeholder.png' ? Storage::delete('/products/' . $product->photo) : '';
 
                 return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }

@@ -39,5 +39,8 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth:vendors'], function (
 
     // Create Product
     Route::post('create/{vendor_id}', 'ProductController@create');
+
+    // Update Product
+    Route::post('update/{id}', 'ProductController@update');
 });
 // ---------------
