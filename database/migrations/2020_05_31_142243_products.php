@@ -17,9 +17,9 @@ class Products extends Migration
             $table->id();
             $table->string('title');
             $table->string('details');
-            $table->string('quantity');
+            $table->integer('quantity');
             $table->json('other_details')->nullable();
-            $table->json('photos')->nullable();
+            $table->string('photo')->default('placeholder.png');
             $table->foreignId('vendor_id')->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->timestamps();
         });

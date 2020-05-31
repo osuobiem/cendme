@@ -14,7 +14,7 @@ class VendorController extends Controller
 
     /**
      * Login vendor
-     * @return json $response
+     * @return json
      */
     public function login(Request $request)
     {
@@ -25,9 +25,7 @@ class VendorController extends Controller
 
         $res = [
             'success' => false,
-            'message' => [
-                'email' => 'Invalid credentials.'
-            ]
+            'message' => 'Invalid credentials'
         ];
 
         if ($attempt) {
@@ -38,10 +36,10 @@ class VendorController extends Controller
     }
 
     /**
-     * Create new vendor
-     * @return json $response
+     * Vendor signup
+     * @return json
      */
-    public function create(Request $request)
+    public function signup(Request $request)
     {
         // Get validation rules
         $validate = $this->create_rules($request);
@@ -64,7 +62,7 @@ class VendorController extends Controller
     /**
      * Update vendor data
      * @param int $id Vendor id to update with
-     * @return json $response
+     * @return json
      */
     public function update(Request $request, $id)
     {
@@ -156,7 +154,7 @@ class VendorController extends Controller
     {
         // Make and return validation rules
         return Validator::make($request->all(), [
-            'business_name' => 'required|min:1',
+            'business_name' => 'required',
             'email' => 'required|email|unique:vendors',
             'phone' => 'required|numeric',
             'address' => 'required|min:4',
@@ -172,7 +170,7 @@ class VendorController extends Controller
     {
         // Make and return validation rules
         return Validator::make($request->all(), [
-            'business_name' => 'required|min:1',
+            'business_name' => 'required',
             'phone' => 'required|numeric',
             'address' => 'required|min:4',
             'password' => 'alpha_dash|min:6|max:30'

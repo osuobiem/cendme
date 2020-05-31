@@ -19,12 +19,25 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'vendor'], function () {
 
     // Vendor Signup
-    Route::post('signup', 'VendorController@create');
+    Route::post('signup', 'VendorController@signup');
 
     // Vendor Login
     Route::post('login', 'VendorController@login');
 
-    // Vendor Update
-    Route::post('update/{id}', 'VendorController@update');
+    Route::group(['middleware' => 'auth:vendors'], function () {
+
+        // Vendor Update
+        Route::post('update/{id}', 'VendorController@update');
+    });
 });
 // END VENDOR ROUTES
+
+/**
+ * PRODUCT ROUTES
+ */
+Route::group(['prefix' => 'product', 'middleware' => 'auth:vendors'], function () {
+
+    // Create Product
+    Route::post('create/{vendor_id}', 'ProductController@create');
+});
+// END PRODUCT ROUTES

@@ -18,10 +18,9 @@ class Authenticate extends Middleware
         if (!$request->expectsJson()) {
             if ($request->is('api/*')) {
                 throw new HttpResponseException(response()->json(['success' => false, 'message' => 'Auth token required!'],  401));
+            } else {
+                throw new HttpResponseException(response()->json(['success' => false, 'message' => "You're not logged in"],  401));
             }
-            // return response()->json([
-            //     'success' => false, 'message' => 'Unauthorized!'
-            // ], 401);
         }
     }
 }

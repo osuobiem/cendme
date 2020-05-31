@@ -15,7 +15,7 @@ class UserController extends Controller
 {
     /**
      * Create new user
-     * @return json $response
+     * @return json
      */
     public function create(Request $request)
     {
@@ -64,7 +64,7 @@ class UserController extends Controller
 
     /**
      * Login user
-     * @return json $response
+     * @return json
      */
     public function login(Request $request)
     {
@@ -114,7 +114,7 @@ class UserController extends Controller
     /**
      * Update user data
      * @param int $id User id to update with
-     * @return json $response
+     * @return json
      */
     public function update(Request $request, $id)
     {
