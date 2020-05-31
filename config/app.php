@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Africa/Lagos',
 
     /*
     |--------------------------------------------------------------------------
@@ -119,7 +119,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY','2bhgqbsx9cqlib3s3ns1z727fg6nzk4i'),
+    'key' => env('APP_KEY', '2bhgqbsx9cqlib3s3ns1z727fg6nzk4i'),
 
     'cipher' => 'AES-256-CBC',
 
