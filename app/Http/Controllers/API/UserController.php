@@ -85,7 +85,9 @@ class UserController extends Controller
 
         // Store user data
         $store = $this->cstore($request);
-        return response()->json($store, $store['status']);
+        $status = $store['status'];
+        unset($store['status']);
+        return response()->json($store, $status);
     }
 
     /**
@@ -126,7 +128,7 @@ class UserController extends Controller
             'firstname' => 'required|alpha',
             'lastname' => 'required|alpha',
             'email' => 'required|email|unique:users',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|digits:11',
             'password' => 'required|alpha_dash|min:6|max:30'
         ]);
     }
@@ -153,8 +155,10 @@ class UserController extends Controller
         }
 
         // Store user data
-        $store = $this->ustore($request, $id);
-        return response()->json($store, $store['status']);
+        $store = $this->cstore($request, $id);
+        $status = $store['status'];
+        unset($store['status']);
+        return response()->json($store, $status);
     }
 
     /**
@@ -204,7 +208,7 @@ class UserController extends Controller
         return Validator::make($request->all(), [
             'firstname' => 'required|alpha',
             'lastname' => 'required|alpha',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|digits:11',
             'gender' => 'required|alpha|min:4|max:6',
             'address' => 'required|min:4',
             'password' => 'alpha_dash|min:6|max:30'

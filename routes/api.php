@@ -40,4 +40,23 @@ Route::group(['namespace' => 'API'], function () {
     });
     // ----------------
 
+    /**
+     * AGENT ROUTES
+     */
+    Route::group(['prefix' => 'agent'], function () {
+
+        // Agent Signup
+        Route::post('signup', 'AgentController@create');
+
+        // // User Login
+        // Route::post('login', 'UserController@login');
+
+        // Route::group(['middleware' => 'auth:api'], function () {
+
+        //     // User Update
+        //     Route::post('update/{id}', 'UserController@update');
+        // });
+    });
+    // ----------------
+
 });

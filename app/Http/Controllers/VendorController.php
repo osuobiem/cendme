@@ -98,7 +98,7 @@ class VendorController extends Controller
         return Validator::make($request->all(), [
             'business_name' => 'required',
             'email' => 'required|email|unique:vendors',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|digits:11',
             'address' => 'required|min:4',
             'password' => 'required|alpha_dash|min:6|max:30'
         ]);
@@ -176,7 +176,7 @@ class VendorController extends Controller
         // Make and return validation rules
         return Validator::make($request->all(), [
             'business_name' => 'required',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|digits:11',
             'address' => 'required|min:4',
             'password' => 'alpha_dash|min:6|max:30'
         ]);

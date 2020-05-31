@@ -17,13 +17,13 @@ class Agents extends Migration
             $table->id();
             $table->string('surname');
             $table->string('firstname');
-            $table->string('othername');
+            $table->string('othername')->nullable();
             $table->string('email')->unique();
             $table->string('phone')->unique();
-            $table->string('gender');
-            $table->string('dob');
-            $table->text('about');
-            $table->text('address');
+            $table->string('gender')->nullable();
+            $table->timestamp('dob');
+            $table->text('about')->nullable();
+            $table->text('address')->nullable();
             $table->float('balance')->default(0);
             $table->string('password');
             $table->json('other_details')->nullable();
