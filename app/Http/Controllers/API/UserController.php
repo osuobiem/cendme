@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,7 @@ class UserController extends Controller
         // Run validation
         if ($validate->fails()) {
             return response()->json([
-                "status" => 400,
+                "success" => false,
                 "message" => $validate->errors()
             ], 400);
         }
@@ -54,10 +55,10 @@ class UserController extends Controller
         try {
             $user->save();
             $data = $user::where('email', $user->email)->first();
-            return ['status' => 200, 'message' => 'Signup Successful', 'data' => $data];
+            return ['success' => true, 'status' => 200, 'message' => 'Signup Successful', 'data' => $data];
         } catch (\Throwable $th) {
             Log::error($th);
-            return ['status' => 500, 'message' => 'Internal Server Error'];
+            return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
         }
     }
 
@@ -67,21 +68,44 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
+        // Initial failure response
+        $res = [
+            'success' => true,
+            'status' => 400,
+            'message' => 'Invalid credentials.'
+        ];
+
         $credentials = $credentials = $request->only('email', 'password');
 
         // Attempt user login
         $attempt = Auth::attempt($credentials);
-
-        $res = [
-            'status' => 400,
-            'message' => [
-                'email' => 'Invalid credentials.'
-            ]
-        ];
-
         if ($attempt) {
-            $data = User::where('email', $credentials['email'])->first();
-            return ['status' => 200, 'message' => 'Login Successful', 'data' => $data];
+            // Get user object
+            $user = $request->user();
+
+            // Create access token
+            $token = $user->createToken('User Access Token');
+
+            // Compose response data
+            $data = [
+                'user' => $user,
+                'token' => $token->accessToken,
+                'token_type' => 'Bearer',
+                'token_expires' => Carbon::parse(
+                    $token->token->expires_at
+                )->toDateTimeString(),
+            ];
+
+            // Send success response
+            return response()->json(
+                [
+                    'success' => true,
+                    'status' => 200,
+                    'message' => 'Login Successful',
+                    'data' => $data
+                ],
+                200
+            );
         } else {
             return response()->json($res, 400);
         }
@@ -100,7 +124,7 @@ class UserController extends Controller
         // Run validation
         if ($validate->fails()) {
             return response()->json([
-                "status" => 400,
+                "success" => false,
                 "message" => $validate->errors()
             ], 400);
         }
@@ -137,13 +161,13 @@ class UserController extends Controller
             // Try user save or catch error if any
             try {
                 $user->save();
-                return ['status' => 200, 'message' => 'Update Successful'];
+                return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
             } catch (\Throwable $th) {
                 Log::error($th);
-                return ['status' => 500, 'message' => 'Internal Server Error'];
+                return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }
         } else {
-            return ['status' => 404, 'message' => 'No user exists with this ID'];
+            return ['success' => false, 'status' => 404, 'message' => 'No user exists with this ID'];
         }
     }
 
