@@ -13,6 +13,59 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
+    // USER LOGIN
+    /**
+     * Login user
+     * @return json
+     */
+    public function login(Request $request)
+    {
+        // Initial failure response
+        $res = [
+            'success' => true,
+            'status' => 400,
+            'message' => 'Invalid credentials.'
+        ];
+
+        $credentials = $credentials = $request->only('email', 'password');
+
+        // Attempt user login
+        $attempt = Auth::attempt($credentials);
+        if ($attempt) {
+            // Get user object
+            $user = $request->user();
+
+            // Create access token
+            $token = $user->createToken('User Access Token');
+
+            // Compose response data
+            $data = [
+                'user' => $user,
+                'token' => $token->accessToken,
+                'token_type' => 'Bearer',
+                'token_expires' => Carbon::parse(
+                    $token->token->expires_at
+                )->toDateTimeString(),
+            ];
+
+            // Send success response
+            return response()->json(
+                [
+                    'success' => true,
+                    'status' => 200,
+                    'message' => 'Login Successful',
+                    'data' => $data
+                ],
+                200
+            );
+        } else {
+            return response()->json($res, 400);
+        }
+    }
+    // -----------
+
+
+    // USER SIGNUP
     /**
      * Create new user
      * @return json
@@ -63,54 +116,24 @@ class UserController extends Controller
     }
 
     /**
-     * Login user
-     * @return json
+     * User Creation Validation Rules
+     * @return object The validator object
      */
-    public function login(Request $request)
+    private function create_rules(Request $request)
     {
-        // Initial failure response
-        $res = [
-            'success' => true,
-            'status' => 400,
-            'message' => 'Invalid credentials.'
-        ];
-
-        $credentials = $credentials = $request->only('email', 'password');
-
-        // Attempt user login
-        $attempt = Auth::attempt($credentials);
-        if ($attempt) {
-            // Get user object
-            $user = $request->user();
-
-            // Create access token
-            $token = $user->createToken('User Access Token');
-
-            // Compose response data
-            $data = [
-                'user' => $user,
-                'token' => $token->accessToken,
-                'token_type' => 'Bearer',
-                'token_expires' => Carbon::parse(
-                    $token->token->expires_at
-                )->toDateTimeString(),
-            ];
-
-            // Send success response
-            return response()->json(
-                [
-                    'success' => true,
-                    'status' => 200,
-                    'message' => 'Login Successful',
-                    'data' => $data
-                ],
-                200
-            );
-        } else {
-            return response()->json($res, 400);
-        }
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'firstname' => 'required|alpha',
+            'lastname' => 'required|alpha',
+            'email' => 'required|email|unique:users',
+            'phone' => 'required|numeric',
+            'password' => 'required|alpha_dash|min:6|max:30'
+        ]);
     }
+    // -----------
 
+
+    // UPDATE USER
     /**
      * Update user data
      * @param int $id User id to update with
@@ -172,22 +195,6 @@ class UserController extends Controller
     }
 
     /**
-     * User Creation Validation Rules
-     * @return object The validator object
-     */
-    private function create_rules(Request $request)
-    {
-        // Make and return validation rules
-        return Validator::make($request->all(), [
-            'firstname' => 'required|alpha',
-            'lastname' => 'required|alpha',
-            'email' => 'required|email|unique:users',
-            'phone' => 'required|numeric',
-            'password' => 'required|alpha_dash|min:6|max:30'
-        ]);
-    }
-
-    /**
      * User Update Validation Rules
      * @return object The validator object
      */
@@ -203,4 +210,5 @@ class UserController extends Controller
             'password' => 'alpha_dash|min:6|max:30'
         ]);
     }
+    // ------------
 }

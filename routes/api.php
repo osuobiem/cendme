@@ -38,6 +38,6 @@ Route::group(['namespace' => 'API'], function () {
             Route::post('update/{id}', 'UserController@update');
         });
     });
-    // END USER ROUTES
+    // ----------------
 
 });

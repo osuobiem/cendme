@@ -30,7 +30,7 @@ Route::group(['prefix' => 'vendor'], function () {
         Route::post('update/{id}', 'VendorController@update');
     });
 });
-// END VENDOR ROUTES
+// ---------------
 
 /**
  * PRODUCT ROUTES
@@ -40,4 +40,4 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth:vendors'], function (
     // Create Product
     Route::post('create/{vendor_id}', 'ProductController@create');
 });
-// END PRODUCT ROUTES
+// ---------------

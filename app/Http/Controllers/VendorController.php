@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class VendorController extends Controller
 {
-
+    // VENDOR LOGIN
     /**
      * Login vendor
      * @return json
@@ -34,7 +34,9 @@ class VendorController extends Controller
             return response()->json($res, 400);
         }
     }
+    // -------------
 
+    // VENDOR SIGNUP
     /**
      * Vendor signup
      * @return json
@@ -59,6 +61,52 @@ class VendorController extends Controller
         return response()->json($store, $status);
     }
 
+    /**
+     * Process vendor creation
+     * @return array Result of saved vendor data
+     */
+    public function cstore(Request $request)
+    {
+        // New vendor object
+        $vendor = new Vendor();
+
+        // Assign vendor object properties
+        $vendor->business_name = $request['business_name'];
+        $vendor->email = strtolower($request['email']);
+        $vendor->phone = $request['phone'];
+        $vendor->address = $request['address'];
+        $vendor->password = Hash::make(strtolower($request['password']));
+
+        // Try vendor save or catch error if any
+        try {
+            $vendor->save();
+            $data = $vendor::where('email', $vendor->email)->first();
+            return ['success' => true, 'status' => 200, 'message' => 'Signup Successful', 'data' => $data];
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
+        }
+    }
+
+    /**
+     * Vendor Creation Validation Rules
+     * @return object The validator object
+     */
+    private function create_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'business_name' => 'required',
+            'email' => 'required|email|unique:vendors',
+            'phone' => 'required|numeric',
+            'address' => 'required|min:4',
+            'password' => 'required|alpha_dash|min:6|max:30'
+        ]);
+    }
+    // -------------
+
+
+    // UPDATE VENDOR
     /**
      * Update vendor data
      * @param int $id Vendor id to update with
@@ -120,49 +168,6 @@ class VendorController extends Controller
     }
 
     /**
-     * Process vendor creation
-     * @return array Result of saved vendor data
-     */
-    public function cstore(Request $request)
-    {
-        // New vendor object
-        $vendor = new Vendor();
-
-        // Assign vendor object properties
-        $vendor->business_name = $request['business_name'];
-        $vendor->email = strtolower($request['email']);
-        $vendor->phone = $request['phone'];
-        $vendor->address = $request['address'];
-        $vendor->password = Hash::make(strtolower($request['password']));
-
-        // Try vendor save or catch error if any
-        try {
-            $vendor->save();
-            $data = $vendor::where('email', $vendor->email)->first();
-            return ['success' => true, 'status' => 200, 'message' => 'Signup Successful', 'data' => $data];
-        } catch (\Throwable $th) {
-            Log::error($th);
-            return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
-        }
-    }
-
-    /**
-     * Vendor Creation Validation Rules
-     * @return object The validator object
-     */
-    private function create_rules(Request $request)
-    {
-        // Make and return validation rules
-        return Validator::make($request->all(), [
-            'business_name' => 'required',
-            'email' => 'required|email|unique:vendors',
-            'phone' => 'required|numeric',
-            'address' => 'required|min:4',
-            'password' => 'required|alpha_dash|min:6|max:30'
-        ]);
-    }
-
-    /**
      * Vendor Update Validation Rules
      * @return object The validator object
      */
@@ -176,4 +181,5 @@ class VendorController extends Controller
             'password' => 'alpha_dash|min:6|max:30'
         ]);
     }
+    // -------------
 }
