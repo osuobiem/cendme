@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\Vendor;
-use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -43,7 +42,7 @@ class ProductController extends Controller
         } else {
             return response()->json([
                 "success" => false,
-                "message" => "No vendor exists with this ID"
+                "message" => "No product exists with this ID"
             ], 404);
         }
     }
@@ -54,10 +53,10 @@ class ProductController extends Controller
      */
     public function cstore(Request $request)
     {
-        // New vendor object
+        // New product object
         $product = new Product();
 
-        // Assign vendor object properties
+        // Assign product object properties
         $product->title = $request['title'];
         $product->details = $request['details'];
         $product->quantity = $request['quantity'];
@@ -72,7 +71,7 @@ class ProductController extends Controller
             $product->photo = $stored ? basename($stored) : 'placeholder.png';
         }
 
-        // Try vendor save or catch error if any
+        // Try product save or catch error if any
         try {
             $product->save();
 
@@ -161,7 +160,7 @@ class ProductController extends Controller
                 $product->photo = $stored ? basename($stored) : '';
             }
 
-            // Try vendor save or catch error if any
+            // Try product save or catch error if any
             try {
                 $product->save();
 
@@ -182,4 +181,53 @@ class ProductController extends Controller
         }
     }
     // -------------
+
+
+    // DELETE PRODUCT
+    /**
+     * Delete Product
+     * @param int $id ID of product to be deleted
+     * @return object Delete status
+     */
+    public function delete($id)
+    {
+        // Decode product id
+        $id = base64_decode($id);
+
+        // Find product with supplied id
+        $product = Product::find($id);
+
+        if ($product) {
+
+            // Try product delete or catch error if any
+            try {
+                $product->delete();
+
+                // Delete product photo
+                $product->photo != 'placeholder.png' ? Storage::delete('/products/' . $product->photo) : '';
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Product deleted'
+                ]);
+            } catch (\Throwable $th) {
+                Log::error($th);
+
+                // Return failure response
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Internal Server Error'
+                ]);
+            }
+        } else {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'No product exists with this ID'
+                ],
+                404
+            );
+        }
+    }
+    // --------------
 }

@@ -42,5 +42,8 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth:vendors'], function (
 
     // Update Product
     Route::post('update/{id}', 'ProductController@update');
+
+    // Delete Product
+    Route::delete('delete/{id}', 'ProductController@delete');
 });
 // ---------------
