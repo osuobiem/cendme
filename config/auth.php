@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'vendors',
+        'passwords' => 'vendors',
     ],
 
     /*
@@ -36,17 +36,28 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-
         'vendors' => [
             'driver' => 'session',
             'provider' => 'vendors',
         ],
 
-        'api' => [
+        'agents-web' => [
+            'driver' => 'session',
+            'provider' => 'agents',
+        ],
+
+        'agents-api' => [
+            'driver' => 'passport',
+            'provider' => 'agents',
+            'hash' => false,
+        ],
+
+        'users-web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'users-api' => [
             'driver' => 'passport',
             'provider' => 'users',
             'hash' => false,
@@ -81,10 +92,10 @@ return [
             'model' => App\Vendor::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'agents' => [
+            'driver' => 'eloquent',
+            'model' => App\Agent::class,
+        ],
     ],
 
     /*
@@ -105,6 +116,13 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'vendors' => [
+            'provider' => 'vendors',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

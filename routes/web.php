@@ -24,7 +24,7 @@ Route::group(['prefix' => 'vendor'], function () {
     // Vendor Login
     Route::post('login', 'VendorController@login');
 
-    Route::group(['middleware' => 'auth:vendors'], function () {
+    Route::group(['middleware' => 'auth'], function () {
 
         // Vendor Update
         Route::post('update/{id}', 'VendorController@update');
@@ -35,7 +35,7 @@ Route::group(['prefix' => 'vendor'], function () {
 /**
  * PRODUCT ROUTES
  */
-Route::group(['prefix' => 'product', 'middleware' => 'auth:vendors'], function () {
+Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
 
     // Create Product
     Route::post('create/{vendor_id}', 'ProductController@create');

@@ -21,7 +21,7 @@ class VendorController extends Controller
         $credentials = $credentials = $request->only('email', 'password');
 
         // Attempt vendor login
-        $attempt = Auth::guard('vendors')->attempt($credentials);
+        $attempt = Auth::attempt($credentials);
 
         $res = [
             'success' => false,

@@ -22,18 +22,17 @@ class UserController extends Controller
     {
         // Initial failure response
         $res = [
-            'success' => true,
-            'status' => 400,
+            'success' => false,
             'message' => 'Invalid credentials.'
         ];
 
-        $credentials = $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password');
 
         // Attempt user login
-        $attempt = Auth::attempt($credentials);
+        $attempt = Auth::guard('users-web')->attempt($credentials);
         if ($attempt) {
             // Get user object
-            $user = $request->user();
+            $user = auth()->guard('users-web')->user();
 
             // Create access token
             $token = $user->createToken('User Access Token');
@@ -52,7 +51,6 @@ class UserController extends Controller
             return response()->json(
                 [
                     'success' => true,
-                    'status' => 200,
                     'message' => 'Login Successful',
                     'data' => $data
                 ],

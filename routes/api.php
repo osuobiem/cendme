@@ -32,7 +32,7 @@ Route::group(['namespace' => 'API'], function () {
         // User Login
         Route::post('login', 'UserController@login');
 
-        Route::group(['middleware' => 'auth:api'], function () {
+        Route::group(['middleware' => 'auth:users'], function () {
 
             // User Update
             Route::post('update/{id}', 'UserController@update');
