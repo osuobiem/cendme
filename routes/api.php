@@ -32,7 +32,7 @@ Route::group(['namespace' => 'API'], function () {
         // User Login
         Route::post('login', 'UserController@login');
 
-        Route::group(['middleware' => 'auth:users'], function () {
+        Route::group(['middleware' => 'auth:users-api'], function () {
 
             // User Update
             Route::post('update/{id}', 'UserController@update');
@@ -48,8 +48,8 @@ Route::group(['namespace' => 'API'], function () {
         // Agent Signup
         Route::post('signup', 'AgentController@create');
 
-        // // User Login
-        // Route::post('login', 'UserController@login');
+        // Agent Login
+        Route::post('login', 'AgentController@login');
 
         // Route::group(['middleware' => 'auth:api'], function () {
 

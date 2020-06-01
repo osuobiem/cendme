@@ -46,6 +46,53 @@ class AgentController extends Controller
             return false;
         }
     }
+
+    /**
+     * Login agent
+     * @return json
+     */
+    public function login(Request $request)
+    {
+        // Initial failure response
+        $res = [
+            'success' => false,
+            'message' => 'Invalid credentials.'
+        ];
+
+        $credentials = $request->only('email', 'password');
+
+        // Attempt agent login
+        $attempt = Auth::guard('agents-web')->attempt($credentials);
+        if ($attempt) {
+            // Get agent object
+            $user = auth()->guard('agents-web')->user();
+
+            // Create access token
+            $token = $user->createToken('Agent Access Token');
+
+            // Compose response data
+            $data = [
+                'agent' => $user,
+                'token' => $token->accessToken,
+                'token_type' => 'Bearer',
+                'token_expires' => Carbon::parse(
+                    $token->token->expires_at
+                )->toDateTimeString(),
+            ];
+
+            // Send success response
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Login Successful',
+                    'data' => $data
+                ],
+                200
+            );
+        } else {
+            return response()->json($res, 400);
+        }
+    }
     // -----------
 
 
