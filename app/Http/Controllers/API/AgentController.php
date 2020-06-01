@@ -23,10 +23,10 @@ class AgentController extends Controller
         $credentials = $request->only('email', 'password');
 
         // Attempt agent login
-        $attempt = Auth::guard('agents_web')->attempt($credentials);
+        $attempt = Auth::guard('agents-web')->attempt($credentials);
 
         if ($attempt) {
-            $agent = auth()->guard('agents_web')->user();
+            $agent = auth()->guard('agents-web')->user();
 
             // Create access token
             $token = $agent->createToken('Agent Access Token');

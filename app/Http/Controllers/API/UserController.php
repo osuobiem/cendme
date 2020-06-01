@@ -15,6 +15,39 @@ class UserController extends Controller
 {
     // USER LOGIN
     /**
+     * Login user without validation checks
+     * @return array Response array
+     */
+    private function fast_login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        // Attempt user login
+        $attempt = Auth::guard('users-web')->attempt($credentials);
+
+        if ($attempt) {
+            $user = auth()->guard('users-web')->user();
+
+            // Create access token
+            $token = $user->createToken('User Access Token');
+
+            // Compose response data
+            $data = [
+                'user' => $user,
+                'token' => $token->accessToken,
+                'token_type' => 'Bearer',
+                'token_expires' => Carbon::parse(
+                    $token->token->expires_at
+                )->toDateTimeString(),
+            ];
+
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Login user
      * @return json
      */
@@ -107,8 +140,21 @@ class UserController extends Controller
         // Try user save or catch error if any
         try {
             $user->save();
-            $data = $user::where('email', $user->email)->first();
-            return ['success' => true, 'status' => 200, 'message' => 'Signup Successful', 'data' => $data];
+
+            // Attempt auto login
+            $login = $this->fast_login($request);
+            if ($login) {
+
+                // Send success response
+                return [
+                    'success' => true,
+                    'status' => 200,
+                    'message' => 'Signup Successful',
+                    'data' => $login
+                ];
+            } else {
+                return ['success' => false, 'status' => 500, 'message' => 'Server Error'];
+            }
         } catch (\Throwable $th) {
             Log::error($th);
             return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
