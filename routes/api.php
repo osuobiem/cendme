@@ -51,11 +51,14 @@ Route::group(['namespace' => 'API'], function () {
         // Agent Login
         Route::post('login', 'AgentController@login');
 
-        // Route::group(['middleware' => 'auth:agents-api'], function () {
+        Route::group(['middleware' => 'auth:agents-api'], function () {
 
-        //     // User Update
-        //     Route::post('test', 'AgentController@test');
-        // });
+            // Agent Update (after verification)
+            Route::post('update/{id}', 'AgentController@update');
+
+            // Agent Update (before verification)
+            Route::post('update/{id}/before', 'AgentController@update_b');
+        });
     });
     // ----------------
 

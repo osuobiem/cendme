@@ -131,10 +131,7 @@ class AgentController extends Controller
         $agent = new Agent();
 
         // Assign agent object properties
-        $agent->surname = ucfirst(strtolower($request['surname']));
-        $agent->firstname = ucfirst(strtolower($request['firstname']));
         $agent->email = strtolower($request['email']);
-        $agent->phone = $request['phone'];
         $agent->password = Hash::make(strtolower($request['password']));
 
         // Try agent save or catch error if any
@@ -169,18 +166,17 @@ class AgentController extends Controller
     {
         // Make and return validation rules
         return Validator::make($request->all(), [
-            'surname' => 'required|alpha',
-            'firstname' => 'required|alpha',
             'email' => 'required|email|unique:agents',
-            'phone' => 'required|numeric|unique:agents|digits:11',
             'password' => 'required|alpha_dash|min:6|max:30'
         ]);
     }
     // -----------
 
     // UPDATE AGENT
+
+    // After verification
     /**
-     * Update agent data
+     * Update agent data (after verification)
      * @param int $id Agent id to update with
      * @return json
      */
@@ -215,29 +211,30 @@ class AgentController extends Controller
         $id = base64_decode($id);
 
         // Find agent with supplied id
-        $user = Agent::find($id);
+        $agent = Agent::find($id);
 
-        if ($user) {
-            // Assign user object properties
-            $user->firstname = ucfirst(strtolower($request['firstname']));
-            $user->lastname = ucfirst(strtolower($request['lastname']));
-            $user->phone = $request['phone'];
-            $user->gender = ucfirst(strtolower($request['gender']));
-            $user->address = $request['address'];
+        if ($agent) {
+            // Assign agent object properties
+            if ($request['about']) {
+                $agent->about = $request['about'];
+            }
+            if ($request['address']) {
+                $agent->address = $request['address'];
+            }
             if ($request['password']) {
-                $user->password = Hash::make(strtolower($request['password']));
+                $agent->password = Hash::make(strtolower($request['password']));
             }
 
-            // Try user save or catch error if any
+            // Try agent save or catch error if any
             try {
-                $user->save();
+                $agent->save();
                 return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
             } catch (\Throwable $th) {
                 Log::error($th);
                 return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }
         } else {
-            return ['success' => false, 'status' => 404, 'message' => 'No user exists with this ID'];
+            return ['success' => false, 'status' => 404, 'message' => 'No agent exists with this ID'];
         }
     }
 
@@ -249,8 +246,97 @@ class AgentController extends Controller
     {
         // Make and return validation rules
         return Validator::make($request->all(), [
+            'address' => 'min:4',
+            'password' => 'alpha_dash|min:6|max:30'
+        ]);
+    }
+
+
+    // Before Verification
+    /**
+     * Update agent data (before verification)
+     * @param int $id Agent id to update with
+     * @return json
+     */
+    public function update_b(Request $request, $id)
+    {
+        // Get validation rules
+        $validate = $this->update_rules_b($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ], 400);
+        }
+
+        // Store agent data
+        $store = $this->ustore_b($request, $id);
+        $status = $store['status'];
+        unset($store['status']);
+        return response()->json($store, $status);
+    }
+
+    /**
+     * Process agent data update (before verifiction)
+     * @param int $id Agent id to update with
+     * @return array Update status
+     */
+    public function ustore_b(Request $request, $id)
+    {
+        // Decode agent id
+        $id = base64_decode($id);
+
+        // Find agent with supplied id
+        $agent = Agent::find($id);
+
+        if ($agent) {
+            // Assign agent object properties
+            $agent->firstname = ucfirst(strtolower($request['firstname']));
+            $agent->lastname = ucfirst(strtolower($request['lastname']));
+            $agent->gender = $request['gender'];
+            $agent->phone = $request['phone'];
+            $agent->dob = date('Y-m-d', strtotime($request['dob']));
+            $agent->bvn = $request['bvn'];
+            if ($request['about']) {
+                $agent->about = $request['about'];
+            }
+            if ($request['address']) {
+                $agent->address = $request['address'];
+            }
+            if ($request['password']) {
+                $agent->password = Hash::make(strtolower($request['password']));
+            }
+
+            // Try agent save or catch error if any
+            try {
+                $agent->save();
+                return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
+            } catch (\Throwable $th) {
+                Log::error($th);
+                return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
+            }
+        } else {
+            return ['success' => false, 'status' => 404, 'message' => 'No agent exists with this ID'];
+        }
+    }
+
+    /**
+     * Agent Update Validation Rules (before verification)
+     * @return object The validator object
+     */
+    private function update_rules_b(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'firstname' => 'required|alpha',
+            'lastname' => 'required|alpha',
+            'phone' => 'required|numeric|unique:agents|digits:11',
             'gender' => 'required|alpha|min:4|max:6',
-            'address' => 'required|min:4',
+            'bvn' => 'required|numeric|unique:agents|digits:11',
+            'dob' => 'required|date',
+            'address' => 'min:4',
             'password' => 'alpha_dash|min:6|max:30'
         ]);
     }

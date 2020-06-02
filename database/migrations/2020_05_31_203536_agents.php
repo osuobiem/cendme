@@ -15,13 +15,13 @@ class Agents extends Migration
     {
         Schema::create('agents', function (Blueprint $table) {
             $table->id();
-            $table->string('firstname');
-            $table->string('lastname');
+            $table->string('firstname')->nullable();
+            $table->string('lastname')->nullable();
             $table->string('email')->unique();
-            $table->string('phone')->unique();
+            $table->string('phone')->unique()->nullable();
             $table->string('gender')->nullable();
-            $table->timestamp('dob');
-            $table->timestamp('bvn')->nullable();
+            $table->timestamp('dob')->nullable();
+            $table->string('bvn')->nullable();
             $table->text('about')->nullable();
             $table->text('address')->nullable();
             $table->float('balance')->default(0);
