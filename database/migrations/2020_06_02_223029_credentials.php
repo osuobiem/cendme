@@ -28,6 +28,6 @@ class Credentials extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('credentials');
     }
 }
