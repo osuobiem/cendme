@@ -16,4 +16,12 @@ class Agent extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Relationship with BVN Data
+     */
+    public function bvn_data()
+    {
+        return $this->hasMany('App\BVN_Data');
+    }
 }
