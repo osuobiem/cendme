@@ -22,6 +22,6 @@ class Agent extends Authenticatable
      */
     public function bvn_data()
     {
-        return $this->hasMany('App\BVN_Data');
+        return $this->hasOne('App\BVN_Data');
     }
 }

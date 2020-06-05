@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\API;
 
 use App\Agent;
+use App\BVN_Data;
+use App\Credential;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AgentController extends Controller
 {
@@ -172,6 +176,7 @@ class AgentController extends Controller
     }
     // -----------
 
+
     // UPDATE AGENT
 
     // After verification
@@ -251,7 +256,6 @@ class AgentController extends Controller
         ]);
     }
 
-
     // Before Verification
     /**
      * Update agent data (before verification)
@@ -260,31 +264,6 @@ class AgentController extends Controller
      */
     public function update_b(Request $request, $id)
     {
-        // Get validation rules
-        $validate = $this->update_rules_b($request);
-
-        // Run validation
-        if ($validate->fails()) {
-            return response()->json([
-                "success" => false,
-                "message" => $validate->errors()
-            ], 400);
-        }
-
-        // Store agent data
-        $store = $this->ustore_b($request, $id);
-        $status = $store['status'];
-        unset($store['status']);
-        return response()->json($store, $status);
-    }
-
-    /**
-     * Process agent data update (before verifiction)
-     * @param int $id Agent id to update with
-     * @return array Update status
-     */
-    public function ustore_b(Request $request, $id)
-    {
         // Decode agent id
         $id = base64_decode($id);
 
@@ -292,30 +271,194 @@ class AgentController extends Controller
         $agent = Agent::find($id);
 
         if ($agent) {
-            // Assign agent object properties
-            $agent->firstname = ucfirst(strtolower($request['firstname']));
-            $agent->lastname = ucfirst(strtolower($request['lastname']));
-            $agent->gender = $request['gender'];
-            $agent->phone = $request['phone'];
-            $agent->dob = date('Y-m-d', strtotime($request['dob']));
-            $agent->bvn = $request['bvn'];
-            if ($request['about']) {
-                $agent->about = $request['about'];
-            }
-            if ($request['address']) {
-                $agent->address = $request['address'];
-            }
-            if ($request['password']) {
-                $agent->password = Hash::make(strtolower($request['password']));
+
+            // Get validation rules
+            $validate = $this->update_rules_b($request, $agent);
+
+            // Run validation
+            if ($validate->fails()) {
+                return response()->json([
+                    "success" => false,
+                    "message" => $validate->errors()
+                ], 400);
             }
 
-            // Try agent save or catch error if any
-            try {
+            // Store agent data
+            $store = $this->ustore_b($request, $agent);
+            $status = $store['status'];
+            unset($store['status']);
+            return response()->json($store, $status);
+        } else {
+            return response()->json([
+                "success" => false,
+                "message" => 'No agent exists with this ID'
+            ], 404);
+        }
+    }
+
+    /**
+     * Process agent data update (before verifiction)
+     * @param object $agent Agent object
+     * @return array Update status
+     */
+    public function ustore_b(Request $request, $agent)
+    {
+        // Assign agent object properties
+        $agent->firstname = ucfirst(strtolower($request['firstname']));
+        $agent->lastname = ucfirst(strtolower($request['lastname']));
+        $agent->gender = $request['gender'];
+        $agent->phone = $request['phone'];
+        $agent->dob = date('Y-m-d', strtotime($request['dob']));
+        $agent->bvn = $request['bvn'];
+        if ($request['about']) {
+            $agent->about = $request['about'];
+        }
+        if ($request['address']) {
+            $agent->address = $request['address'];
+        }
+        if ($request['password']) {
+            $agent->password = Hash::make(strtolower($request['password']));
+        }
+
+        // Try agent save or catch error if any
+        try {
+            $agent->save();
+            return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
+        }
+    }
+
+    /**
+     * Agent Update Validation Rules (before verification)
+     * @param object $agent Agent Object
+     * @return object The validator object
+     */
+    private function update_rules_b(Request $request, $agent)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'firstname' => 'required|alpha',
+            'lastname' => 'required|alpha',
+            'phone' => [
+                'required', 'numeric', 'digits:11',
+                // Ignore current agent from phone uniqueness validation
+                Rule::unique('agents')->ignore($agent->id),
+            ],
+            'gender' => 'required|alpha|min:4|max:6',
+            'bvn' => [
+                'required', 'numeric', 'digits:11',
+                // Ignore current agent from bvn uniqueness validation
+                Rule::unique('agents')->ignore($agent->id),
+            ],
+            'dob' => 'required|date',
+            'address' => 'min:4',
+            'password' => 'alpha_dash|min:6|max:30',
+        ]);
+    }
+    // ------------
+
+    // AGENT VERIFICATION
+    /**
+     * Verify agent's identity using bvn + paystack API endpoint
+     * @param $id ID of the agent to be verified
+     * @return json
+     */
+    public function verify($id)
+    {
+        // decode base64 id
+        $id = base64_decode($id);
+
+        // Find agent with supplied id
+        $agent = Agent::find($id);
+
+        if ($agent) {
+
+            // Try to retrieve already saved bvn data
+            $bvn_data = $agent->bvn_data;
+
+            if ($bvn_data) {
+                // Try agent verification
+                $errors = $this->check_agent($bvn_data, $agent);
+
+                // Do extra BVN check
+                if ($bvn_data->bvn != $agent->bvn) {
+                    array_push($errors, [
+                        "bvn" => [
+                            "Invalid BVN - Please update or confirm from your bank."
+                        ]
+                    ]);
+                }
+
+                // Return error if verification fails
+                if ($errors) {
+                    return response()->json([
+                        "success" => false,
+                        "message" => $errors
+                    ], 400);
+                }
+
+                // Update agent verification status
+                $agent->verified = true;
                 $agent->save();
-                return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
-            } catch (\Throwable $th) {
-                Log::error($th);
-                return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
+
+                // Return success response
+                return response()->json(["success" => true, "message" => "Agent verified"], 200);
+            } else {
+                // Retrieve necessary credentials
+                $credentials = Credential::where('key', 'paystack_secret_key')->first();
+
+                // Ping Paystack's BVN API
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $credentials->value
+                ])->get('https://api.paystack.co/bank/resolve_bvn/' . $agent->bvn);
+
+                if ($response->successful()) {
+                    $data = $response->json()['data'];
+
+                    // Save retrieved bvn data
+                    $bvn_data = new BVN_Data();
+
+                    $bvn_data->first_name = $data['first_name'];
+                    $bvn_data->last_name = $data['last_name'];
+                    $bvn_data->dob = $data['dob'];
+                    $bvn_data->formatted_dob = $data['formatted_dob'];
+                    $bvn_data->mobile = $data['mobile'];
+                    $bvn_data->bvn = $data['bvn'];
+                    $bvn_data->agent_id = $agent->id;
+
+                    $bvn_data->save();
+
+                    // Try agent verification
+
+                    $data = (object) $data;
+                    $errors = $this->check_agent($data, $agent);
+
+                    // Return error if verification fails
+                    if ($errors) {
+                        return response()->json([
+                            "success" => false,
+                            "message" => $errors
+                        ], 400);
+                    }
+
+                    // Update agent verification status
+                    $agent->verified = true;
+                    $agent->save();
+
+                    // Return success response
+                    return response()->json(["success" => true, "message" => "Agent verified"], 200);
+                } else {
+                    return response()->json([
+                        "success" => false,
+                        "message" => [
+                            "bvn" => [
+                                "Invalid BVN - Please update or confirm from your bank."
+                            ]
+                        ]
+                    ], 400);
+                }
             }
         } else {
             return ['success' => false, 'status' => 404, 'message' => 'No agent exists with this ID'];
@@ -323,22 +466,49 @@ class AgentController extends Controller
     }
 
     /**
-     * Agent Update Validation Rules (before verification)
-     * @return object The validator object
+     * Match BVN data against strored agent data
+     * @param object $data BVN Data
+     * @param object $agent Stored agent object
+     * 
+     * @return array Array of errors if any
      */
-    private function update_rules_b(Request $request)
+    private function check_agent($data, $agent)
     {
-        // Make and return validation rules
-        return Validator::make($request->all(), [
-            'firstname' => 'required|alpha',
-            'lastname' => 'required|alpha',
-            'phone' => 'required|numeric|unique:agents|digits:11',
-            'gender' => 'required|alpha|min:4|max:6',
-            'bvn' => 'required|numeric|unique:agents|digits:11',
-            'dob' => 'required|date',
-            'address' => 'min:4',
-            'password' => 'alpha_dash|min:6|max:30'
-        ]);
+        $errors = [];
+
+        if (strtolower($data->first_name) != strtolower($agent->firstname)) {
+            array_push($errors, [
+                'firstname' => [
+                    'Firstname does not match BVN records'
+                ]
+            ]);
+        }
+
+        if (strtolower($data->last_name) != strtolower($agent->lastname)) {
+            array_push($errors, [
+                'lastname' => [
+                    'Lastname does not match BVN records'
+                ]
+            ]);
+        }
+
+        if ($data->formatted_dob != date('Y-m-d', strtotime($agent->dob))) {
+            array_push($errors, [
+                'dob' => [
+                    'Date of birth does not match BVN records'
+                ]
+            ]);
+        }
+
+        if ($data->mobile != $agent->phone) {
+            array_push($errors, [
+                'phone' => [
+                    'Phone number does not match BVN records'
+                ]
+            ]);
+        }
+
+        return $errors;
     }
     // ------------
 }

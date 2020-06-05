@@ -15,13 +15,14 @@ class BvnData extends Migration
     {
         Schema::create('bvn_data', function (Blueprint $table) {
             $table->id();
-            $table->string('firstname');
-            $table->string('lastname');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('dob');
             $table->string('formatted_dob');
             $table->string('mobile');
             $table->string('bvn');
-            $table->foreignId('agent_id')->contrained()->onDelete('no action')->onUpdate('no action');
+            $table->unsignedBigInteger('agent_id');
+            $table->foreign('agent_id')->references('id')->on('agents')->onDelete('no action')->onUpdate('no action');
             $table->timestamps();
         });
     }

@@ -58,6 +58,9 @@ Route::group(['namespace' => 'API'], function () {
 
             // Agent Update (before verification)
             Route::post('update/{id}/before', 'AgentController@update_b');
+
+            // Verify agent using BVN
+            Route::get('verify/{id}', 'AgentController@verify');
         });
     });
     // ----------------
