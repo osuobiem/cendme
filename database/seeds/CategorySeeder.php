@@ -22,13 +22,10 @@ class CategorySeeder extends Seeder
             'name' => 'Health & Beauty'
         ]);
         Category::create([
-            'name' => 'Food'
+            'name' => 'Household Cleaning'
         ]);
         Category::create([
-            'name' => 'Household/Cleaning'
-        ]);
-        Category::create([
-            'name' => 'Baby Products'
+            'name' => 'Baby Care'
         ]);
         Category::create([
             'name' => 'Plastic & Paper Products'
