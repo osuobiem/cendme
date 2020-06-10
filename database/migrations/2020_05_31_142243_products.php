@@ -20,7 +20,9 @@ class Products extends Migration
             $table->integer('quantity');
             $table->json('other_details')->nullable();
             $table->string('photo')->default('placeholder.png');
+            $table->bigInteger('sub_category_id')->unsigned();
             $table->foreignId('vendor_id')->constrained()->onDelete('cascade')->onUpdate('no action');
+            $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade')->onUpdate('no action');
             $table->timestamps();
         });
     }
