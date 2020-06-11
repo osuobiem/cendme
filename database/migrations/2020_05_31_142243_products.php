@@ -18,6 +18,7 @@ class Products extends Migration
             $table->string('title');
             $table->text('details');
             $table->integer('quantity');
+            $table->float('price');
             $table->json('other_details')->nullable();
             $table->string('photo')->default('placeholder.png');
             $table->bigInteger('sub_category_id')->unsigned();

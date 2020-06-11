@@ -42,7 +42,7 @@ class ProductController extends Controller
         } else {
             return response()->json([
                 "success" => false,
-                "message" => "No product exists with this ID"
+                "message" => "No vendor exists with this ID"
             ], 404);
         }
     }
@@ -60,7 +60,9 @@ class ProductController extends Controller
         $product->title = $request['title'];
         $product->details = $request['details'];
         $product->quantity = $request['quantity'];
+        $product->price = $request['price'];
         $product->vendor_id = $request['vendor_id'];
+        $product->sub_category_id = $request['sub_category'];
 
         $stored = false;
 
@@ -97,7 +99,8 @@ class ProductController extends Controller
             'title' => 'required',
             'details' => 'required',
             'quantity' => 'required|numeric',
-            'photo' => 'image|max:3072'
+            'photo' => 'image|max:3072',
+            'sub_category' => 'required|numeric|exists:App\SubCategory,id'
         ]);
     }
     // -------------
@@ -148,6 +151,8 @@ class ProductController extends Controller
             $product->title = $request['title'];
             $product->details = $request['details'];
             $product->quantity = $request['quantity'];
+            $product->price = $request['price'];
+            $product->sub_category_id = $request['sub_category'];
 
             $old_photo = $product->photo;
             $stored = false;
