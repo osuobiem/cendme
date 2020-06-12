@@ -153,7 +153,7 @@ class UserController extends Controller
                     'data' => $login
                 ];
             } else {
-                return ['success' => false, 'status' => 500, 'message' => 'Server Error'];
+                return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }
         } catch (\Throwable $th) {
             Log::error($th);
@@ -199,7 +199,7 @@ class UserController extends Controller
         }
 
         // Store user data
-        $store = $this->cstore($request, $id);
+        $store = $this->ustore($request, $id);
         $status = $store['status'];
         unset($store['status']);
         return response()->json($store, $status);
@@ -225,6 +225,7 @@ class UserController extends Controller
             $user->phone = $request['phone'];
             $user->gender = ucfirst(strtolower($request['gender']));
             $user->address = $request['address'];
+            $user->lga_id = $request['lga'];
             if ($request['password']) {
                 $user->password = Hash::make(strtolower($request['password']));
             }
@@ -255,7 +256,8 @@ class UserController extends Controller
             'phone' => 'required|numeric|digits:11',
             'gender' => 'required|alpha|min:4|max:6',
             'address' => 'required|min:4',
-            'password' => 'alpha_dash|min:6|max:30'
+            'lga' => 'required|numeric|exists:lgas,id',
+            'password' => 'alpha_dash|min:6|max:30',
         ]);
     }
     // ------------

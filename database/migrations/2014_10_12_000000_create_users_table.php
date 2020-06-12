@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('photo')->nullable();
             $table->string('password');
             $table->json('other_details')->nullable();
+            $table->foreignId('lga_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->rememberToken();
             $table->timestamps();
         });
