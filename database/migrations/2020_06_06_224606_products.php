@@ -25,6 +25,7 @@ class Products extends Migration
             $table->foreignId('vendor_id')->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade')->onUpdate('no action');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

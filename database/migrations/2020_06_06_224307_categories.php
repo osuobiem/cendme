@@ -18,6 +18,7 @@ class Categories extends Migration
             $table->string('name');
             $table->json('other_details')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

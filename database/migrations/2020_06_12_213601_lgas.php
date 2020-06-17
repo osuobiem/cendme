@@ -18,6 +18,7 @@ class Lgas extends Migration
             $table->string('name');
             $table->foreignId('state_id')->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

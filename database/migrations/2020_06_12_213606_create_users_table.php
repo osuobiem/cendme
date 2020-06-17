@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('lga_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

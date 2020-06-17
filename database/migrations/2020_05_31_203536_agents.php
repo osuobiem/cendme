@@ -30,6 +30,7 @@ class Agents extends Migration
             $table->string('photo')->default('placeholder.png');
             $table->boolean('verified')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -18,6 +18,7 @@ class Credentials extends Migration
             $table->text('key');
             $table->text('value');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

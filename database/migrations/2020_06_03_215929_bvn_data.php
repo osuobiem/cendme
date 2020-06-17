@@ -24,6 +24,7 @@ class BvnData extends Migration
             $table->unsignedBigInteger('agent_id');
             $table->foreign('agent_id')->references('id')->on('agents')->onDelete('no action')->onUpdate('no action');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
