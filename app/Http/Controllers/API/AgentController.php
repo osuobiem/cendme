@@ -223,9 +223,9 @@ class AgentController extends Controller
             if ($request['about']) {
                 $agent->about = $request['about'];
             }
-            if ($request['address']) {
-                $agent->address = $request['address'];
-            }
+            $agent->address = $request['address'];
+            $agent->lga_id = $request['lga'];
+
             if ($request['password']) {
                 $agent->password = Hash::make(strtolower($request['password']));
             }
@@ -251,7 +251,8 @@ class AgentController extends Controller
     {
         // Make and return validation rules
         return Validator::make($request->all(), [
-            'address' => 'min:4',
+            'address' => 'required|min:4',
+            'lga' => 'required|numeric|exists:lgas,id',
             'password' => 'alpha_dash|min:6|max:30'
         ]);
     }
@@ -313,9 +314,9 @@ class AgentController extends Controller
         if ($request['about']) {
             $agent->about = $request['about'];
         }
-        if ($request['address']) {
-            $agent->address = $request['address'];
-        }
+        $agent->address = $request['address'];
+        $agent->lga_id = $request['lga'];
+
         if ($request['password']) {
             $agent->password = Hash::make(strtolower($request['password']));
         }
@@ -353,11 +354,13 @@ class AgentController extends Controller
                 Rule::unique('agents')->ignore($agent->id),
             ],
             'dob' => 'required|date',
-            'address' => 'min:4',
+            'address' => 'required|min:4',
+            'lga' => 'required|numeric|exists:lgas,id',
             'password' => 'alpha_dash|min:6|max:30',
         ]);
     }
     // ------------
+
 
     // AGENT VERIFICATION
     /**
