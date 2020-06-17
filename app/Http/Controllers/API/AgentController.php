@@ -137,6 +137,7 @@ class AgentController extends Controller
         // Assign agent object properties
         $agent->email = strtolower($request['email']);
         $agent->password = Hash::make(strtolower($request['password']));
+        $agent->level_id = 1;
 
         // Try agent save or catch error if any
         try {

@@ -25,6 +25,7 @@ class Vendor extends Migration
             $table->json('other_details')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

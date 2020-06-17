@@ -28,9 +28,12 @@ class Agents extends Migration
             $table->string('password');
             $table->json('other_details')->nullable();
             $table->string('photo')->default('placeholder.png');
+            $table->bigInteger('level_id')->unsigned();
             $table->boolean('verified')->default(false);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('level_id')->references('id')->on('agent_levels')->onDelete('cascade')->onUpdate('no action');
         });
     }
 
