@@ -44,7 +44,7 @@ class VendorController extends Controller
         $credentials = $credentials = $request->only('email', 'password');
 
         // Attempt vendor login
-        $attempt = Auth::attempt($credentials);
+        $attempt = Auth::attempt($credentials, $request['remember_me']);
 
         $res = [
             'success' => false,
@@ -204,6 +204,7 @@ class VendorController extends Controller
             $vendor->business_name = $request['business_name'];
             $vendor->phone = $request['phone'];
             $vendor->address = $request['address'];
+            $vendor->lga_id = $request['lga'];
             if ($request['password']) {
                 $vendor->password = Hash::make(strtolower($request['password']));
             }
@@ -232,7 +233,8 @@ class VendorController extends Controller
             'business_name' => 'required',
             'phone' => 'required|numeric|digits:11',
             'address' => 'required|min:4',
-            'password' => 'alpha_dash|min:6|max:30'
+            'password' => 'alpha_dash|min:6|max:30',
+            'lga' => 'required|numeric|exists:lgas,id'
         ]);
     }
     // -------------
