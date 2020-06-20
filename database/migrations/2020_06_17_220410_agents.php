@@ -28,9 +28,10 @@ class Agents extends Migration
             $table->string('password');
             $table->json('other_details')->nullable();
             $table->string('photo')->default('placeholder.png');
-            $table->foreignId('lga_id')->constrained()->onDelete('cascade')->onUpdate('no action')->nullable();
+            $table->foreignId('lga_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->bigInteger('level_id')->unsigned();
             $table->boolean('verified')->default(false);
+            $table->boolean('status')->default(true);
             $table->timestamps();
             $table->softDeletes();
 

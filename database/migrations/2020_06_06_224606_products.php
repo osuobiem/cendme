@@ -21,7 +21,7 @@ class Products extends Migration
             $table->float('price');
             $table->json('other_details')->nullable();
             $table->string('photo')->default('placeholder.png');
-            $table->integer('status')->default(1);
+            $table->boolean('status')->default(true);
             $table->bigInteger('sub_category_id')->unsigned();
             $table->foreignId('vendor_id')->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade')->onUpdate('no action');
