@@ -30,6 +30,17 @@ class VendorController extends Controller
      */
     public function login(Request $request)
     {
+        // Get validation rules
+        $validate = $this->login_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ], 400);
+        }
+
         $credentials = $credentials = $request->only('email', 'password');
 
         // Attempt vendor login
@@ -45,6 +56,32 @@ class VendorController extends Controller
         } else {
             return response()->json($res, 400);
         }
+    }
+
+    /**
+     * Vendor Login Validation Rules
+     * @return object The validator object
+     */
+    public function login_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|alpha_dash'
+        ]);
+    }
+
+    /**
+     * Logout vendor
+     * @return object
+     */
+    public function logout()
+    {
+        Auth::logout();
+
+        return response()->json([
+            'success' => true
+        ]);
     }
     // -------------
 
