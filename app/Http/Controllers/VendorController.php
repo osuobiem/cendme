@@ -13,6 +13,18 @@ class VendorController extends Controller
 {
     // VENDOR LOGIN
     /**
+     * Login vendor without validation checks
+     * @return bool
+     */
+    private function fast_login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        // Attempt vendor login
+        return Auth::attempt($credentials);
+    }
+
+    /**
      * Login vendor
      * @return json
      */
@@ -76,12 +88,16 @@ class VendorController extends Controller
         $vendor->phone = $request['phone'];
         $vendor->address = $request['address'];
         $vendor->password = Hash::make(strtolower($request['password']));
+        $vendor->lga_id = $request['lga'];
 
         // Try vendor save or catch error if any
         try {
             $vendor->save();
-            $data = $vendor::where('email', $vendor->email)->first();
-            return ['success' => true, 'status' => 200, 'message' => 'Signup Successful', 'data' => $data];
+
+            // Attempt login
+            $login = $this->fast_login($request);
+
+            return ['success' => true, 'status' => 200, 'message' => 'Signup Successful', 'data' => ['login' => $login]];
         } catch (\Throwable $th) {
             Log::error($th);
             return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
