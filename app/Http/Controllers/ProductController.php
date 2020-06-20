@@ -59,7 +59,7 @@ class ProductController extends Controller
         // Check for images
         if ($request['photo']) {
             $photo = $request['photo'];
-            $stored = Storage::put('/products', $photo);
+            $stored = Storage::put('/public/products', $photo);
             $product->photo = $stored ? basename($stored) : 'placeholder.png';
         }
 
@@ -72,7 +72,7 @@ class ProductController extends Controller
             Log::error($th);
 
             // Delete uploaded file if there's an error
-            $stored && $product->photo != 'placeholder.png' ? Storage::delete('/products/' . $product->photo) : '';
+            $stored && $product->photo != 'placeholder.png' ? Storage::delete('/public/products/' . $product->photo) : '';
 
             return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
         }
@@ -150,7 +150,7 @@ class ProductController extends Controller
             // Check for images
             if ($request['photo']) {
                 $photo = $request['photo'];
-                $stored = Storage::put('/products', $photo);
+                $stored = Storage::put('/public/products', $photo);
 
                 $product->photo = $stored ? basename($stored) : '';
             }
@@ -160,14 +160,14 @@ class ProductController extends Controller
                 $product->save();
 
                 // Delete previous photo
-                $stored && $old_photo != 'placeholder.png' ? Storage::delete('/products/' . $old_photo) : '';
+                $stored && $old_photo != 'placeholder.png' ? Storage::delete('/public/products/' . $old_photo) : '';
 
                 return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
             } catch (\Throwable $th) {
                 Log::error($th);
 
                 // Delete uploaded file if there's an error
-                $stored && $product->photo != 'placeholder.png' ? Storage::delete('/products/' . $product->photo) : '';
+                $stored && $product->photo != 'placeholder.png' ? Storage::delete('/public/products/' . $product->photo) : '';
 
                 return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }
@@ -246,7 +246,7 @@ class ProductController extends Controller
                 $product->forceDelete();
 
                 // Delete product photo
-                $product->photo != 'placeholder.png' ? Storage::delete('/products/' . $product->photo) : '';
+                $product->photo != 'placeholder.png' ? Storage::delete('/public/products/' . $product->photo) : '';
 
                 return response()->json([
                     'success' => true,
