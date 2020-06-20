@@ -243,7 +243,7 @@ class ProductController extends Controller
 
             // Try product delete or catch error if any
             try {
-                $product->delete();
+                $product->forceDelete();
 
                 // Delete product photo
                 $product->photo != 'placeholder.png' ? Storage::delete('/products/' . $product->photo) : '';
