@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -34,6 +35,9 @@ class AgentController extends Controller
 
             // Create access token
             $token = $agent->createToken('Agent Access Token');
+
+            // Get agent photo url
+            $agent->photo = url('/') . Storage::url('agents/' . $agent->photo);
 
             // Compose response data
             $data = [
@@ -69,14 +73,17 @@ class AgentController extends Controller
         $attempt = Auth::guard('agents-web')->attempt($credentials);
         if ($attempt) {
             // Get agent object
-            $user = auth()->guard('agents-web')->user();
+            $agent = auth()->guard('agents-web')->user();
 
             // Create access token
-            $token = $user->createToken('Agent Access Token');
+            $token = $agent->createToken('Agent Access Token');
+
+            // Get agent photo url
+            $agent->photo = url('/') . Storage::url('agents/' . $agent->photo);
 
             // Compose response data
             $data = [
-                'agent' => $user,
+                'agent' => $agent,
                 'token' => $token->accessToken,
                 'token_type' => 'Bearer',
                 'token_expires' => Carbon::parse(
@@ -240,7 +247,7 @@ class AgentController extends Controller
                 return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }
         } else {
-            return ['success' => false, 'status' => 404, 'message' => 'No agent exists with this ID'];
+            return ['success' => false, 'status' => 404, 'message' => 'Agent not found'];
         }
     }
 
@@ -293,7 +300,7 @@ class AgentController extends Controller
         } else {
             return response()->json([
                 "success" => false,
-                "message" => 'No agent exists with this ID'
+                "message" => 'Agent not found'
             ], 404);
         }
     }
@@ -465,7 +472,7 @@ class AgentController extends Controller
                 }
             }
         } else {
-            return ['success' => false, 'status' => 404, 'message' => 'No agent exists with this ID'];
+            return ['success' => false, 'status' => 404, 'message' => 'Agent not found'];
         }
     }
 
