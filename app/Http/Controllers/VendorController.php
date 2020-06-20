@@ -100,6 +100,7 @@ class VendorController extends Controller
             'email' => 'required|email|unique:vendors',
             'phone' => 'required|numeric|digits:11',
             'address' => 'required|min:4',
+            'lga' => 'required|numeric|exists:lgas,id',
             'password' => 'required|alpha_dash|min:6|max:30'
         ]);
     }
