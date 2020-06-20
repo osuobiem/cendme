@@ -41,10 +41,13 @@ Route::group(['prefix' => 'vendor'], function () {
 Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
 
     // Create Product
-    Route::post('create/{vendor_id}', 'ProductController@create');
+    Route::post('create', 'ProductController@create');
 
     // Update Product
     Route::post('update/{id}', 'ProductController@update');
+
+    // Change Product Status
+    Route::get('status/{id}', 'ProductController@status');
 
     // Delete Product
     Route::delete('delete/{id}', 'ProductController@delete');

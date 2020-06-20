@@ -17,4 +17,10 @@ class Vendor extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // Relationship with Product
+    public function product()
+    {
+        return $this->hasMany('App\Product');
+    }
 }

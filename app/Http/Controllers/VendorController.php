@@ -218,7 +218,7 @@ class VendorController extends Controller
                 return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }
         } else {
-            return ['success' => false, 'status' => 404, 'message' => 'No vendor exists with this ID'];
+            return ['success' => false, 'status' => 404, 'message' => 'Vendor not found'];
         }
     }
 

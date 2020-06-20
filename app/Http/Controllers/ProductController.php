@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,7 @@ class ProductController extends Controller
      * Create product
      * @return json
      */
-    public function create(Request $request, $vendor_id)
+    public function create(Request $request)
     {
         // Get validation rules
         $validate = $this->rules($request);
@@ -29,22 +30,11 @@ class ProductController extends Controller
             ], 400);
         }
 
-        $vendor_id = base64_decode($vendor_id);
-
-        if (Vendor::find($vendor_id)) {
-            $request['vendor_id'] = $vendor_id;
-
-            // Store product data
-            $store = $this->cstore($request);
-            $status = $store['status'];
-            unset($store['status']);
-            return response()->json($store, $status);
-        } else {
-            return response()->json([
-                "success" => false,
-                "message" => "No vendor exists with this ID"
-            ], 404);
-        }
+        // Store product data
+        $store = $this->cstore($request);
+        $status = $store['status'];
+        unset($store['status']);
+        return response()->json($store, $status);
     }
 
     /**
@@ -58,11 +48,11 @@ class ProductController extends Controller
 
         // Assign product object properties
         $product->title = $request['title'];
-        $product->details = $request['details'];
+        $product->details = $request['details'] ? $request['details'] : '';
         $product->quantity = $request['quantity'];
         $product->price = $request['price'];
-        $product->vendor_id = $request['vendor_id'];
         $product->sub_category_id = $request['sub_category'];
+        $product->vendor_id = Auth::user()->id;
 
         $stored = false;
 
@@ -97,10 +87,10 @@ class ProductController extends Controller
         // Make and return validation rules
         return Validator::make($request->all(), [
             'title' => 'required',
-            'details' => 'required',
             'quantity' => 'required|numeric',
-            'photo' => 'image|max:3072',
-            'sub_category' => 'required|numeric|exists:App\SubCategory,id'
+            'price' => 'required|numeric',
+            'photo' => 'image|max:5120',
+            'sub_category' => 'required|numeric|exists:sub_categories,id'
         ]);
     }
     // -------------
@@ -149,7 +139,7 @@ class ProductController extends Controller
 
             // Assign product object properties
             $product->title = $request['title'];
-            $product->details = $request['details'];
+            $product->details = $request['details'] ? $request['details'] : '';
             $product->quantity = $request['quantity'];
             $product->price = $request['price'];
             $product->sub_category_id = $request['sub_category'];
@@ -182,7 +172,54 @@ class ProductController extends Controller
                 return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }
         } else {
-            return ['success' => false, 'status' => 404, 'message' => 'No product exists with this ID'];
+            return ['success' => false, 'status' => 404, 'message' => 'Product not found'];
+        }
+    }
+
+    /**
+     * Change product status
+     * @param int $id Product ID
+     * @return object
+     */
+    public function status($id)
+    {
+        // Decode product id
+        $id = base64_decode($id);
+
+        // Find product with supplied id
+        $product = Product::find($id);
+
+        if ($product) {
+            // Change status
+            $product->status = $product->status ? 0 : 1;
+
+            // Try product delete or catch error if any
+            try {
+                $product->save();
+
+                $status = $product->status ? 'Enabled' : 'Disabled';
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Product ' . $status
+                ]);
+            } catch (\Throwable $th) {
+                Log::error($th);
+
+                // Return failure response
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Internal Server Error'
+                ]);
+            }
+        } else {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Product not found'
+                ],
+                404
+            );
         }
     }
     // -------------
@@ -228,7 +265,7 @@ class ProductController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'No product exists with this ID'
+                    'message' => 'Product not found'
                 ],
                 404
             );

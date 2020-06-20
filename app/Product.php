@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
     use SoftDeletes;
+
+    // Relationship with Vendor
+    public function vendor()
+    {
+        return $this->belongsTo('App\Vendor');
+    }
 }
