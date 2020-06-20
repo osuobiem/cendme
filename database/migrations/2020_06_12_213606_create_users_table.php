@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('gender')->nullable();
             $table->string('address')->nullable();
             $table->float('balance')->default(0);
-            $table->string('photo')->nullable();
+            $table->string('photo')->default('placeholder.png');
             $table->string('password');
             $table->json('other_details')->nullable();
             $table->foreignId('lga_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -30,6 +31,9 @@ class UserController extends Controller
 
             // Create access token
             $token = $user->createToken('User Access Token');
+
+            // Get user photo url
+            $user->photo = url('/') . Storage::url('users/' . $user->photo);
 
             // Compose response data
             $data = [
@@ -69,6 +73,9 @@ class UserController extends Controller
 
             // Create access token
             $token = $user->createToken('User Access Token');
+
+            // Get user photo url
+            $user->photo = url('/') . Storage::url('users/' . $user->photo);
 
             // Compose response data
             $data = [
