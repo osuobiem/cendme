@@ -19,4 +19,10 @@ class User extends Authenticatable
   protected $hidden = [
     'password', 'remember_token',
   ];
+
+  // Relationship with LGA
+  public function lga()
+  {
+    return $this->belongsTo('App\Lga');
+  }
 }
