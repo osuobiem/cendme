@@ -17,8 +17,9 @@ class Orders extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->foreignId('agent_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
-            $table->json('amount');
+            $table->json('amount')->nullable();
             $table->string('status')->default('pending');
+            $table->boolean('activated')->default(false);
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
