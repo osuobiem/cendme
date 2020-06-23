@@ -19,13 +19,16 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'vendor'], function () {
 
     // Vendor Signup
-    Route::post('signup', 'VendorController@signup');
+    Route::post('p-signup', 'VendorController@signup');
 
     // Vendor Login
-    Route::post('login', 'VendorController@login');
+    Route::post('p-login', 'VendorController@login');
 
     // Vendor Dashboard Page
     Route::get('', 'VendorViewController@dashboard');
+
+    // Vendor Login Page
+    Route::get('login', 'VendorViewController@login');
 
     Route::group(['middleware' => 'auth'], function () {
 

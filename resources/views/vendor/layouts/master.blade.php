@@ -19,19 +19,17 @@
 
 </head>
 
-<body class="sb-nav-fixed">
+@yield('topbar')
 
-  @yield('topbar')
+@yield('content')
 
-  @yield('content')
-
-  <script src="{{ url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ url('assets/vendor/chart/highcharts.js') }}"></script>
-  <script src="{{ url('assets/vendor/chart/exporting.js') }}"></script>
-  <script src="{{ url('assets/vendor/chart/export-data.js') }}"></script>
-  <script src="{{ url('assets/vendor/chart/accessibility.js') }}"></script>
-  <script src="{{ url('assets/js/scripts.js') }}"></script>
-  <script src="{{ url('assets/js/chart.js') }}"></script>
+<script src="{{ url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url('assets/vendor/chart/highcharts.js') }}"></script>
+<script src="{{ url('assets/vendor/chart/exporting.js') }}"></script>
+<script src="{{ url('assets/vendor/chart/export-data.js') }}"></script>
+<script src="{{ url('assets/vendor/chart/accessibility.js') }}"></script>
+<script src="{{ url('assets/js/scripts.js') }}"></script>
+<script src="{{ url('assets/js/chart.js') }}"></script>
 </body>
 
 </html>

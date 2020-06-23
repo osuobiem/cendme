@@ -1,3 +1,5 @@
+<body class="sb-nav-fixed">
+  
 <nav class="sb-topnav navbar navbar-expand navbar-light bg-clr">
     <a class="navbar-brand logo-brand" href="index.html">Gambo Supermarket</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i

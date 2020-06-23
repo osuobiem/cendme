@@ -13,4 +13,12 @@ class VendorViewController extends Controller
     {
         return view('vendor.dashboard');
     }
+
+    /**
+     * Vendor Login Page
+     */
+    public function login()
+    {
+        return view('vendor.login');
+    }
 }
