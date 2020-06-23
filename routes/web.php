@@ -24,6 +24,9 @@ Route::group(['prefix' => 'vendor'], function () {
     // Vendor Login
     Route::post('login', 'VendorController@login');
 
+    // Vendor Dashboard Page
+    Route::get('', 'VendorViewController@dashboard');
+
     Route::group(['middleware' => 'auth'], function () {
 
         // Vendor Update
