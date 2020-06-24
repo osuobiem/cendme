@@ -1,0 +1,15 @@
+.error-message {
+    font-size: 12px;
+}
+
+#form-error {
+    font-size: 14px;
+}
+
+.top-alert {
+    width: fit-content;
+    position: fixed !important;
+    top: 30px;
+    right: 50px;
+    z-index: 1000;
+}
