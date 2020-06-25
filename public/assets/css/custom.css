@@ -13,3 +13,9 @@
     right: 50px;
     z-index: 1000;
 }
+
+#auth-logo {
+    height: 130px;
+    border: solid 1px #b3b3b3;
+    border-radius: 100px;
+}

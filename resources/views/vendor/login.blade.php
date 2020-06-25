@@ -12,6 +12,9 @@
       <main>
         <div class="container">
           <div class="row justify-content-center">
+            <div class="col-md-12 text-center mt-4">
+              <img src="{{ url('assets/images/cendme-logo.png') }}" id="auth-logo" class="shadow-lg">
+            </div>
             <div class="col-xl-5 col-lg-6">
               <div class="card shadow-lg border-0 rounded-lg mt-5">
                 <div class="card-header card-sign-header">
