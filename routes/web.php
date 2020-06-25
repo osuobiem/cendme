@@ -18,25 +18,37 @@ use Illuminate\Support\Facades\Route;
  */
 Route::group(['prefix' => 'vendor'], function () {
 
-    // Vendor Signup
-    Route::post('p-signup', 'VendorController@signup');
+    Route::group(['middleware' => 'guest:vendors'], function () {
 
-    // Vendor Login
-    Route::post('p-login', 'VendorController@login');
+        // LOGIC -------
+        // Vendor Signup
+        Route::post('p-signup', 'VendorController@signup');
 
-    // Vendor Dashboard Page
-    Route::get('', 'VendorViewController@dashboard');
+        // Vendor Login
+        Route::post('p-login', 'VendorController@login');
+        // ------------
 
-    // Vendor Login Page
-    Route::get('login', 'VendorViewController@login');
+
+        // UI -------
+        // Vendor Login Page
+        Route::get('login', 'VendorViewController@login');
+        // -----------
+    });
 
     Route::group(['middleware' => 'auth'], function () {
 
+        // LOGIC ----
         // Vendor Update
         Route::post('update/{id}', 'VendorController@update');
 
         // Vendor Logout
         Route::get('logout', 'VendorController@logout');
+        // ----------
+
+        // UI ------
+        // Vendor Dashboard Page
+        Route::get('', 'VendorViewController@dashboard');
+        // --------
     });
 });
 // ---------------
