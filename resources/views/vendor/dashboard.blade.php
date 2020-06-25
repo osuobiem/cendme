@@ -7,3 +7,8 @@
 @section('topbar')
 @include('vendor.components.topbar')
 @endsection
+
+{{-- Side Bar --}}
+@section('sidebar')
+@include('vendor.components.sidebar')
+@endsection

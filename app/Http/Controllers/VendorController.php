@@ -79,9 +79,7 @@ class VendorController extends Controller
     {
         Auth::logout();
 
-        return response()->json([
-            'success' => true
-        ]);
+        return url('vendor/login');
     }
     // -------------
 

@@ -23,6 +23,12 @@
 
 @yield('topbar')
 
+<div id="layoutSidenav">
+
+@yield('sidebar')
+
+</div>
+
 @yield('content')
 
 <div class="alert alert-success top-alert d-none" role="alert" id="success-alert">
