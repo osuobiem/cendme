@@ -30,6 +30,8 @@
 
   <div id="layoutSidenav_content">
     @yield('content')
+
+    @yield('footer')
   </div>
 </div>
 

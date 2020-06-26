@@ -81,3 +81,8 @@
   </script>
 </main>
 @endsection
+
+{{-- Footer --}}
+@section('footer')
+@include('vendor.components.footer')
+@endsection
