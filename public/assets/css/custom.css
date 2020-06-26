@@ -23,3 +23,13 @@
 #top-logo {
     height: 55px;
 }
+
+#pay-qr-code {
+    display: flex;
+    justify-content: center;
+}
+
+#qr-txt {
+    font-size: 14px;
+    text-align: center;
+}

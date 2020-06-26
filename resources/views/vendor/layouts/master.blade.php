@@ -25,11 +25,12 @@
 
 <div id="layoutSidenav">
 
-@yield('sidebar')
+  @yield('sidebar')
 
+  <div id="layoutSidenav_content">
+    @yield('content')
+  </div>
 </div>
-
-@yield('content')
 
 <div class="alert alert-success top-alert d-none" role="alert" id="success-alert">
 </div>
