@@ -21,4 +21,12 @@ class VendorViewController extends Controller
     {
         return view('vendor.login');
     }
+
+    /**
+     * Products Page
+     */
+    public function products()
+    {
+        return view('vendor.products');
+    }
 }

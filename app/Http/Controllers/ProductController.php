@@ -272,4 +272,22 @@ class ProductController extends Controller
         }
     }
     // --------------
+
+    // FETCH PRODUCT
+    /**
+     * Get all products
+     * @return html
+     */
+    public function get()
+    {
+        // Extract vendor ID
+        $vendor_id = Auth::user()->id;
+
+        // Fetch products
+        $products = Product::where('vendor_id', $vendor_id)->orderBy('title', 'asc')->get();
+
+        // Return view
+        return view('vendor.product.list', ['products' => $products]);
+    }
+    // -------------
 }

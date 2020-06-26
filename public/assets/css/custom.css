@@ -9,9 +9,9 @@
 .top-alert {
     width: fit-content;
     position: fixed !important;
-    top: 30px;
-    right: 50px;
-    z-index: 1000;
+    top: 60px;
+    right: 30px;
+    z-index: 2000;
 }
 
 #auth-logo {

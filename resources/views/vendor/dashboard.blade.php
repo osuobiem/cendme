@@ -66,7 +66,7 @@
   <script>
     $(document).ready(function () {
       $('#order-table').DataTable({
-        "order": [[2, "desc"]]
+        "order": []
       });
 
       let qrcode = new QRCode("pay-qr-code", {

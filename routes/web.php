@@ -48,6 +48,9 @@ Route::group(['prefix' => 'vendor'], function () {
         // UI ------
         // Vendor Dashboard Page
         Route::get('', 'VendorViewController@dashboard');
+
+        // Products Page
+        Route::get('products', 'VendorViewController@products');
         // --------
     });
 });
@@ -69,5 +72,8 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
 
     // Delete Product
     Route::delete('delete/{id}', 'ProductController@delete');
+
+    // Get all Products
+    Route::get('get', 'ProductController@get');
 });
 // ---------------

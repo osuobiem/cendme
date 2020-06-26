@@ -19,6 +19,7 @@
   <link href="{{url('assets/css/animate.min.css')}}" rel="stylesheet">
 
   <script src="{{ url('assets/js/jquery-3.4.1.min.js') }}"></script>
+  <script src="{{ url('assets/js/custom.js') }}"></script>
 
 </head>
 
@@ -48,7 +49,6 @@
 <!-- <script src="{{ url('assets/vendor/chart/export-data.js') }}"></script> -->
 <!-- <script src="{{ url('assets/vendor/chart/accessibility.js') }}"></script> -->
 <script src="{{ url('assets/js/scripts.js') }}"></script>
-<script src="{{ url('assets/js/custom.js') }}"></script>
 <!-- <script src="{{ url('assets/js/chart.js') }}"></script> -->
 </body>
 
