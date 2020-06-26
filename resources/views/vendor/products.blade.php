@@ -39,7 +39,7 @@
                     <th>Photo</th>
                     <th>Title</th>
                     <th>Price</th>
-                    <th>Quantity Left</th>
+                    <th>Quantity</th>
                     <th>Added</th>
                     <th>Actions</th>
                   </tr>
