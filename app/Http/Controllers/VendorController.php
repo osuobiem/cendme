@@ -79,7 +79,7 @@ class VendorController extends Controller
     {
         Auth::logout();
 
-        return url('vendor/login');
+        return redirect('vendor/login');
     }
     // -------------
 

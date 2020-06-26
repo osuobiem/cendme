@@ -24,19 +24,23 @@
             <h4>Recent Orders</h4>
             <a href="orders.html" class="view-btn hover-btn">View All</a>
           </div>
+
           <hr style="margin: 0 !important;">
-          <div class="table-responsive">
-            <table class="table ucp-table table-hover" id="order-table">
-              <thead>
-                <tr>
-                  <th>Amount</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>View</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table ucp-table table-hover" id="order-table">
+                <thead>
+                  <tr>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>View</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -60,13 +64,19 @@
   <script src="{{ url('assets/vendor/qrcode/qrcode.min.js') }}"></script>
 
   <script>
-    var qrcode = new QRCode("pay-qr-code", {
-      text: "This code cannot work without Cendme mobile app",
-      width: 300,
-      height: 300,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
+    $(document).ready(function () {
+      $('#order-table').DataTable({
+        "order": [[2, "desc"]]
+      });
+
+      let qrcode = new QRCode("pay-qr-code", {
+        text: "This code cannot work without Cendme mobile app",
+        width: 300,
+        height: 300,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
     });
   </script>
 </main>
