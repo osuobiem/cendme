@@ -40,8 +40,10 @@
     border-radius: 5px;
 }
 
-.prod-img-lg {
-    width: inherit;
-    border: solid 1px;
-    border-radius: 10px;
+.img-style {
+    border-radius: 5px;
+    height: 170px;
+    background-position: center !important;
+    background-size: cover !important;
+    border: solid 1px !important;
 }

@@ -11,15 +11,15 @@
         </div>
         <div class="modal-body">
 
-          <form class="row justify-content-center">
+          <form class="row justify-content-center" method="POST">
             <div class="col-md-3 text-center">
               <span class="text-danger error-message" id="a-photo"></span>
-              <img class="prod-img-lg" src="{{ Storage::url('products/placeholder.png') }}" alt="">
-              <button class="btn btn-outline-secondary mt-2" id="a-select-img">
+              <div class="img-style" id="a-photo-fill" style="background: url('{{ Storage::url('products/placeholder.png') }}')"></div>
+              <button class="btn btn-outline-secondary mt-2" type="button" id="a-select-img" onclick="pickImage('aphoto')">
                 <i class="fas fa-camera"></i>
                 Select Image
               </button>
-              <input type="file" accept="image/*" class="d-none" name="photo">
+              <input type="file" accept="image/*" id="aphoto" class="d-none" onchange="fillImage(this, 'a-photo-fill')" name="photo">
             </div>
 
             <div class="col-md-9 row">
@@ -40,7 +40,7 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label class="form-label">Category <span class="text-danger">*</span></label>
-                <select name="category" class="form-control category" id="acategory" onchange="loadSubCategories(this.value)">
+                <select class="form-control category" id="acategory" onchange="loadSubCategories(this.value)">
                   <option disabled selected>Select Category</option>
                 </select>
                 <span class="text-danger error-message" id="a-category"></span>
@@ -59,7 +59,7 @@
             </div>
 
             <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-3 ml-auto mr-auto">
-              <button class="btn btn-sign hover-btn" type="submit" id="add-product-btn">
+              <button class="btn btn-sign hover-btn" type="submit" id="add-product-btn" type="submit">
                 <span id="btn-txt">Add Product</span>
                 <div id="a-spinner" style="display: none;" class="spinner-border spinner-border-sm text-light"
                   role="status">

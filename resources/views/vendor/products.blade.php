@@ -123,6 +123,32 @@
           showAlert(false, 'An Error Occured!. Please relaod page')
         })
     }
+
+    // 
+    function fillImage(input, fillId) {
+      let img = document.getElementById(fillId)
+
+      if (input.files && input.files[0]) {
+        if (input.files[0].size > 5120000) {
+          showAlert(false, 'Image size must not be more than 5MB')
+        } else if (input.files[0].type.split('/')[0] != 'image') {
+          showAlert(false, 'The file is not an image')
+        } else {
+          var reader = new FileReader();
+
+          reader.onload = e => {
+            img.setAttribute('style', "background: url(\"" + e.target.result + "\")")
+          }
+
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+    }
+
+    // Pick Image
+    function pickImage(inputId) {
+      $('#' + inputId).click();
+    }
   </script>
 
 </main>
