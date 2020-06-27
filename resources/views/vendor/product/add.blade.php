@@ -40,7 +40,7 @@
               </div>
               <div class="form-group col-lg-6 col-md-6">
                 <label class="form-label">Category <span class="text-danger">*</span></label>
-                <select name="category" class="form-control category" id="asub_category">
+                <select name="category" class="form-control category" id="acategory" onchange="loadSubCategories(this.value)">
                   <option disabled selected>Select Category</option>
                 </select>
                 <span class="text-danger error-message" id="a-category"></span>

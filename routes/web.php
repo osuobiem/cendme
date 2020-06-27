@@ -77,3 +77,23 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
     Route::get('get', 'ProductController@get');
 });
 // ---------------
+
+/**
+ * CATEGORY ROUTES
+ */
+Route::group(['prefix' => 'category', 'middleware' => 'auth'], function () {
+
+    // Get all Categories
+    Route::get('get', 'CategoryController@get');
+});
+// ---------------
+
+/**
+ * SUBCATEGORY ROUTES
+ */
+Route::group(['prefix' => 'subcategory', 'middleware' => 'auth'], function () {
+
+    // Get all SubCategories
+    Route::get('get/{category_id}', 'SubCategoryController@get');
+});
+// ---------------

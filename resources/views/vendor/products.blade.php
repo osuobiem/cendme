@@ -101,7 +101,23 @@
         url
       })
         .then(res => {
-          $('.categories').html(res)
+          $('#acategory').append(res)
+        })
+        .catch(err => {
+          showAlert(false, 'An Error Occured!. Please relaod page')
+        })
+    }
+
+    // Load Product SubCategories
+    function loadSubCategories(id) {
+      let url = "{{ url('subcategory/get') }}/" + id;
+
+      $.ajax({
+        type: "GET",
+        url
+      })
+        .then(res => {
+          $('#asub_category').html(res)
         })
         .catch(err => {
           showAlert(false, 'An Error Occured!. Please relaod page')
