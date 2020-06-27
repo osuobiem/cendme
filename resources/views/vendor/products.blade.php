@@ -127,7 +127,7 @@
         url
       })
         .then(res => {
-          $('#asub_category').html(res)
+          $('#asubcategory').html(res)
         })
         .catch(err => {
           showAlert(false, 'An Error Occured!. Please relaod page')

@@ -13,7 +13,7 @@ class SubCategories extends Migration
      */
     public function up()
     {
-        Schema::create('sub_categories', function (Blueprint $table) {
+        Schema::create('subcategories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->json('other_details')->nullable();

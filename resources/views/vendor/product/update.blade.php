@@ -1,5 +1,4 @@
 @foreach ($products as $product)
-
 <!-- Update product modal -->
 <div class="modal fade" id="update{{ $product->id }}-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
@@ -64,13 +63,13 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label class="form-label">Subcategory <span class="text-danger">*</span></label>
-              <select name="sub_category" required class="form-control" id="e{{ $product->id }}sub_category">
+              <select name="subcategory" required class="form-control" id="e{{ $product->id }}subcategory">
                 @foreach ($subcategories as $subcategory)
                     <option value="{{ base64_encode($subcategory->id) }}" 
-                      {{ $subcategory->id == $product->sub_category_id ? 'selected' : '' }}>{{ $subcategory->name }}</option>
+                      {{ $subcategory->id == $product->subcategory_id ? 'selected' : '' }}>{{ $subcategory->name }}</option>
                 @endforeach
               </select>
-              <span class="text-danger error-message" id="e{{ $product->id }}-sub_category"></span>
+              <span class="text-danger error-message" id="e{{ $product->id }}-subcategory"></span>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label class="form-label">Product Details</label>

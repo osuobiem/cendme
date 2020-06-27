@@ -53,7 +53,7 @@ class ProductController extends Controller
         $product->details = $request['details'] ? $request['details'] : '';
         $product->quantity = $request['quantity'];
         $product->price = $request['price'];
-        $product->sub_category_id = $request['sub_category'];
+        $product->subcategory_id = $request['subcategory'];
         $product->vendor_id = Auth::user()->id;
 
         $stored = false;
@@ -92,7 +92,7 @@ class ProductController extends Controller
             'quantity' => 'required|numeric',
             'price' => 'required|numeric',
             'photo' => 'image|max:5120',
-            'sub_category' => 'required|numeric|exists:sub_categories,id'
+            'subcategory' => 'required|numeric|exists:sub_categories,id'
         ]);
     }
     // -------------
@@ -144,7 +144,7 @@ class ProductController extends Controller
             $product->details = $request['details'] ? $request['details'] : '';
             $product->quantity = $request['quantity'];
             $product->price = $request['price'];
-            $product->sub_category_id = $request['sub_category'];
+            $product->subcategory_id = $request['subcategory'];
 
             $old_photo = $product->photo;
             $stored = false;

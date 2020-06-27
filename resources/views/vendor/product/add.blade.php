@@ -59,9 +59,9 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label class="form-label">Subcategory <span class="text-danger">*</span></label>
-              <select name="sub_category" required class="form-control" id="asub_category">
+              <select name="subcategory" required class="form-control" id="asubcategory">
               </select>
-              <span class="text-danger error-message" id="a-sub_category"></span>
+              <span class="text-danger error-message" id="a-subcategory"></span>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label class="form-label">Product Details</label>

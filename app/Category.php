@@ -10,7 +10,7 @@ class Category extends Model
     use SoftDeletes;
 
     // Relationship with SubCategory
-    public function sub_category()
+    public function subcategory()
     {
         return $this->hasMany('App\SubCategory');
     }

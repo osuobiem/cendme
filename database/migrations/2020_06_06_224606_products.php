@@ -22,9 +22,9 @@ class Products extends Migration
             $table->json('other_details')->nullable();
             $table->string('photo')->default('placeholder.png');
             $table->boolean('status')->default(true);
-            $table->bigInteger('sub_category_id')->unsigned();
+            $table->bigInteger('subcategory_id')->unsigned();
             $table->foreignId('vendor_id')->constrained()->onDelete('cascade')->onUpdate('no action');
-            $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade')->onUpdate('no action');
+            $table->foreign('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade')->onUpdate('no action');
             $table->timestamps();
             $table->softDeletes();
         });

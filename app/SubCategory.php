@@ -9,8 +9,6 @@ class SubCategory extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'sub_categories';
-
     // Relationship with Category
     public function category()
     {
