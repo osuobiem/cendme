@@ -52,7 +52,8 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label class="form-label">Category <span class="text-danger">*</span></label>
-              <select class="form-control category" id="acategory" required onchange="loadSubCategories(this.value)">
+              <select class="form-control category" id="acategory" required
+                onchange="loadSubCategories(this.value, 'asubcategory')">
                 <option disabled selected>Select Category</option>
               </select>
               <span class="text-danger error-message" id="a-category"></span>
@@ -130,13 +131,11 @@
               }
             }
             else {
-              error()
               showAlert(false, errors)
             }
           }
 
           else {
-            error()
             showAlert(false, "Oops! Something's not right. Try Again")
           }
         })

@@ -119,7 +119,7 @@
     }
 
     // Load Product SubCategories
-    function loadSubCategories(id) {
+    function loadSubCategories(id, container) {
       let url = "{{ url('subcategory/get') }}/" + id;
 
       $.ajax({
@@ -127,7 +127,7 @@
         url
       })
         .then(res => {
-          $('#asubcategory').html(res)
+          $('#' + container).html(res)
         })
         .catch(err => {
           showAlert(false, 'An Error Occured!. Please relaod page')

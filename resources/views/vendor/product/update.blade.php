@@ -53,7 +53,7 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label class="form-label">Category <span class="text-danger">*</span></label>
-              <select class="form-control category" id="e{{ $product->id }}category" required onchange="loadSubCategories(this.value)">
+              <select class="form-control category" id="e{{ $product->id }}category" required onchange="loadSubCategories(this.value, 'e{{ $product->id }}subcategory')">
                 @foreach ($categories as $category)
                     <option value="{{ base64_encode($category->id) }}" 
                       {{ $category->id == $product->subcategory->category_id ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -65,7 +65,7 @@
               <label class="form-label">Subcategory <span class="text-danger">*</span></label>
               <select name="subcategory" required class="form-control" id="e{{ $product->id }}subcategory">
                 @foreach ($subcategories as $subcategory)
-                    <option value="{{ base64_encode($subcategory->id) }}" 
+                    <option value="{{ $subcategory->id }}" 
                       {{ $subcategory->id == $product->subcategory_id ? 'selected' : '' }}>{{ $subcategory->name }}</option>
                 @endforeach
               </select>
@@ -79,7 +79,7 @@
           </div>
 
           <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-3 ml-auto mr-auto">
-            <button class="btn btn-sign hover-btn" type="submit" id="update-product-btn" type="submit">
+            <button class="btn btn-sign hover-btn" type="submit" id="update{{ $product->id }}-product-btn" type="submit" onclick="updateProduct({{ $product->id }})">
               <span class="btn-txt">Update Product</span>
               <div style="display: none;" class="spinner-border spinner-border-sm text-light spin"
                 role="status">
@@ -140,13 +140,11 @@
               }
             }
             else {
-              error()
               showAlert(false, errors)
             }
           }
 
           else {
-            error()
             showAlert(false, "Oops! Something's not right. Try Again")
           }
         })

@@ -92,7 +92,7 @@ class ProductController extends Controller
             'quantity' => 'required|numeric',
             'price' => 'required|numeric',
             'photo' => 'image|max:5120',
-            'subcategory' => 'required|numeric|exists:sub_categories,id'
+            'subcategory' => 'required|numeric|exists:subcategories,id'
         ]);
     }
     // -------------
@@ -131,9 +131,6 @@ class ProductController extends Controller
      */
     public function ustore(Request $request, $id)
     {
-        // Decode product id
-        $id = base64_decode($id);
-
         // Find product with supplied id
         $product = Product::find($id);
 
