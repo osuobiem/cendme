@@ -8,7 +8,7 @@
   <td>
     <button class="btn btn-sm btn-outline-success" title="View Product"><i class="fas fa-eye"></i></button>
     <button class="btn btn-sm btn-outline-primary" title="Update Product" data-toggle="modal" data-target="#update{{ $product->id }}-modal"><i class="fas fa-edit"></i></button>
-    <button class="btn btn-sm btn-outline-danger" title="Delete Product"><i class="fas fa-trash"></i></button>
+    <button class="btn btn-sm btn-outline-danger" title="Delete Product" onclick="deleteWarn({{ $product->id }})"><i class="fas fa-trash"></i></button>
   </td>
 </tr>
 @endforeach

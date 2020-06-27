@@ -13,3 +13,9 @@ function showAlert(type, message) {
         $(".top-alert").addClass("d-none");
     }, 4000);
 }
+
+$.ajaxSetup({
+    headers: {
+        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+    },
+});

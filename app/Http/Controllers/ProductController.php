@@ -232,9 +232,6 @@ class ProductController extends Controller
      */
     public function delete($id)
     {
-        // Decode product id
-        $id = base64_decode($id);
-
         // Find product with supplied id
         $product = Product::find($id);
 

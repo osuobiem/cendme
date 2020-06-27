@@ -42,7 +42,7 @@
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Added</th>
-                    <th>Actions</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody id="products">
@@ -181,6 +181,38 @@
       $('#' + inputId).click();
     }
 
+    // Delete Product Warning
+    function deleteWarn(id) {
+      swal({
+        title: "Are you sure?",
+        icon: "warning",
+        buttons: [true, "Delete"],
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            deleteProduct(id)
+          }
+        });
+    }
+
+    // Delete Product
+    function deleteProduct(id) {
+      let url = "{{ url('product/delete') }}/" + id;
+
+      $.ajax({
+        type: "DELETE",
+        url
+      })
+        .then(res => {
+          showAlert(true, res.message)
+          loadProducts()
+        })
+        .catch(err => {
+          showAlert(false, "Oops! Something's not right. Try Again")
+        })
+    }
+
     // Toggle button spinner
     function spin() {
       $('.btn-txt').toggle()
@@ -191,6 +223,7 @@
     function offError() {
       $('.error-message').html('')
     }
+
 
   </script>
 

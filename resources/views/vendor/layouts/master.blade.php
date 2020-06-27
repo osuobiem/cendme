@@ -5,8 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description-gambolthemes" content="">
-  <meta name="author-gambolthemes" content="">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title') | Cendme</title>
   <link href="{{url('assets/css/styles.css')}}" rel="stylesheet">
   <link href="{{url('assets/css/admin-style.css')}}" rel="stylesheet">
@@ -44,12 +43,8 @@
 
 <script src="{{ url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ url('assets/vendor/DataTables/datatables.min.js') }}"></script>
-<!-- <script src="{{ url('assets/vendor/chart/highcharts.js') }}"></script> -->
-<!-- <script src="{{ url('assets/vendor/chart/exporting.js') }}"></script> -->
-<!-- <script src="{{ url('assets/vendor/chart/export-data.js') }}"></script> -->
-<!-- <script src="{{ url('assets/vendor/chart/accessibility.js') }}"></script> -->
+<script src="{{ url('assets/vendor/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ url('assets/js/scripts.js') }}"></script>
-<!-- <script src="{{ url('assets/js/chart.js') }}"></script> -->
 </body>
 
 </html>
