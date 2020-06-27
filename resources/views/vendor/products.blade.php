@@ -26,7 +26,8 @@
         <div class="card card-static-2 mb-30">
           <div class="card-title-2">
             <h4>Products</h4>
-            <a href="orders.html" class="view-btn hover-btn"> <i class="fas fa-plus"></i> Add Product</a>
+            <a href="#add-product-modal" data-toggle="modal" class="view-btn hover-btn"> <i class="fas fa-plus"></i> Add
+              Product</a>
           </div>
 
           <hr style="margin: 0 !important;">
@@ -61,11 +62,18 @@
     </div>
   </div>
 
+  {{-- Add Product Modal --}}
+  @section('add-product')
+  @include('vendor.product.add')
+  @show
+
   <script>
     $(document).ready(function () {
       loadProducts();
+      loadCategories();
     });
 
+    // Load Products
     function loadProducts() {
       let url = "{{ url('product/get') }}";
 
@@ -80,7 +88,23 @@
           });
         })
         .catch(err => {
-          showAlert(false, 'Could not load products. Relaod Page')
+          showAlert(false, 'Could not load products. Please relaod page')
+        })
+    }
+
+    // Load Product Categories
+    function loadCategories() {
+      let url = "{{ url('category/get') }}";
+
+      $.ajax({
+        type: "GET",
+        url
+      })
+        .then(res => {
+          $('.categories').html(res)
+        })
+        .catch(err => {
+          showAlert(false, 'An Error Occured!. Please relaod page')
         })
     }
   </script>

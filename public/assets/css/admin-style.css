@@ -559,12 +559,13 @@ input[type=radio] {
     font-weight: 400 !important;
     color: #2b2f4c !important;
     border-radius: 3px !important;
-    border: 1px solid #efefef !important;
+    border: 1px solid #d2d1d1 !important;
     box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0.2) !important;
 }
 
 .form-control:focus {
-    border: 1px solid #e5e5e5 !important;
+    border: 1px solid #a7a7a7 !important;
+    box-shadow: 0 0 7px 0 #e2dada !important;
 }
 
 .status-btn {

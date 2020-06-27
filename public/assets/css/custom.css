@@ -39,3 +39,9 @@
     border: solid .6px rgba(0, 0, 0, 0.425);
     border-radius: 5px;
 }
+
+.prod-img-lg {
+    width: inherit;
+    border: solid 1px;
+    border-radius: 10px;
+}
