@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Product;
+use App\SubCategory;
 use App\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -288,6 +290,34 @@ class ProductController extends Controller
 
         // Return view
         return view('vendor.product.list', ['products' => $products]);
+    }
+
+    /**
+     * Get update modals
+     * @return html
+     */
+    public function get_update_modals()
+    {
+        // Extract vendor ID
+        $vendor_id = Auth::user()->id;
+
+        // Fetch products
+        $products = Product::where('vendor_id', $vendor_id)->get();
+
+        // Fetch categories
+        $categories = Category::get();
+
+        // Fetch subcategories
+        $subcategories = SubCategory::orderBy('name')->get();
+
+        $data = [
+            'products' => $products,
+            'categories' => $categories,
+            'subcategories' => $subcategories
+        ];
+
+        // Return view
+        return view('vendor.product.update', $data);
     }
     // -------------
 }

@@ -62,6 +62,9 @@
     </div>
   </div>
 
+  <!-- Update Modals Container -->
+  <div id="update-modals-h"></div>
+
   {{-- Add Product Modal --}}
   @section('add-product')
   @include('vendor.product.add')
@@ -73,6 +76,7 @@
     $(document).ready(function () {
       loadProducts();
       loadCategories();
+      loadUpdateModals();
       tagFormListeners()
     });
 
@@ -151,6 +155,22 @@
       }
     }
 
+    // Load Update Modals
+    function loadUpdateModals() {
+      let url = "{{ url('product/get-update-modals') }}";
+
+      $.ajax({
+        type: "GET",
+        url
+      })
+        .then(res => {
+          $('#update-modals-h').html(res)
+        })
+        .catch(err => {
+          showAlert(false, 'Could not load product edits. Please relaod page')
+        })
+    }
+
     // Add all event listeners
     function tagFormListeners() {
       addProduct();
@@ -163,8 +183,8 @@
 
     // Toggle button spinner
     function spin() {
-      $('#btn-txt').toggle()
-      $('#spinner').toggle()
+      $('.btn-txt').toggle()
+      $('.spin').toggle()
     }
 
     // Turn off errors

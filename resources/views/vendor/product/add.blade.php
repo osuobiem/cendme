@@ -29,12 +29,12 @@
           <div class="col-lg-9 col-md-7 row">
             <div class="form-group col-lg-6 col-md-12">
               <label class="form-label">Product Title <span class="text-danger">*</span></label>
-              <input type="text" class="form-control" fred name="title" placeholder="Product Title">
+              <input type="text" class="form-control" required name="title" placeholder="Product Title">
               <span class="text-danger error-message" id="a-title"></span>
             </div>
             <div class="form-group col-lg-3 col-md-6">
               <label class="form-label">Quantity <span class="text-danger">*</span></label>
-              <input type="number" class="form-control" fred name="quantity" placeholder="Quantity">
+              <input type="number" class="form-control" required name="quantity" placeholder="Quantity">
               <span class="text-danger error-message" id="a-quantity"></span>
             </div>
 
@@ -44,7 +44,7 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text p-1" id="basic-addon1">₦</span>
                 </div>
-                <input type="number" class="form-control" fred name="price" placeholder="Price" aria-label="Price"
+                <input type="number" class="form-control" required name="price" placeholder="Price" aria-label="Price"
                   aria-describedby="basic-addon1">
               </div>
               <span class="text-danger error-message" id="a-price"></span>
@@ -52,14 +52,14 @@
 
             <div class="form-group col-lg-6 col-md-6">
               <label class="form-label">Category <span class="text-danger">*</span></label>
-              <select class="form-control category" id="acategory" fred onchange="loadSubCategories(this.value)">
+              <select class="form-control category" id="acategory" required onchange="loadSubCategories(this.value)">
                 <option disabled selected>Select Category</option>
               </select>
               <span class="text-danger error-message" id="a-category"></span>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label class="form-label">Subcategory <span class="text-danger">*</span></label>
-              <select name="sub_category" fred class="form-control" id="asub_category">
+              <select name="sub_category" required class="form-control" id="asub_category">
               </select>
               <span class="text-danger error-message" id="a-sub_category"></span>
             </div>
@@ -72,9 +72,8 @@
 
           <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-3 ml-auto mr-auto">
             <button class="btn btn-sign hover-btn" type="submit" id="add-product-btn" type="submit">
-              <span id="btn-txt">Add Product</span>
-              <div id="spinner" style="display: none;" class="spinner-border spinner-border-sm text-light"
-                role="status">
+              <span class="btn-txt">Add Product</span>
+              <div style="display: none;" class="spinner-border spinner-border-sm text-light spin" role="status">
                 <span class="sr-only">Processing...</span>
               </div>
             </button>

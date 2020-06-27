@@ -75,6 +75,9 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
 
     // Get all Products
     Route::get('get', 'ProductController@get');
+
+    // Get update modals
+    Route::get('get-update-modals', 'ProductController@get_update_modals');
 });
 // ---------------
 

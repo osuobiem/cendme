@@ -14,4 +14,10 @@ class Product extends Model
     {
         return $this->belongsTo('App\Vendor');
     }
+
+    // Relationship with subcategory
+    public function subcategory()
+    {
+        return $this->belongsTo('App\SubCategory');
+    }
 }
