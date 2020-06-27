@@ -1,7 +1,7 @@
 @foreach ($products as $product)
 
 <tr>
-  <td><img class="prod-img-sm" src="{{ Storage::url('products/'.$product->photo) }}" alt=""></td>
+  <td><div class="prod-img-sm" style="background: url('{{ Storage::url('products/'.$product->photo) }}')"></td>
   <td>{{ $product->title }}</td>
   <td>₦{{ $product->price }}</td>
   <td>{{ $product->quantity }}</td>

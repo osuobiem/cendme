@@ -284,7 +284,7 @@ class ProductController extends Controller
         $vendor_id = Auth::user()->id;
 
         // Fetch products
-        $products = Product::where('vendor_id', $vendor_id)->orderBy('title', 'asc')->get();
+        $products = Product::where('vendor_id', $vendor_id)->orderBy('created_at', 'desc')->get();
 
         // Return view
         return view('vendor.product.list', ['products' => $products]);

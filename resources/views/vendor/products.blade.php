@@ -68,9 +68,12 @@
   @show
 
   <script>
+    DTInitialized = false;
+
     $(document).ready(function () {
       loadProducts();
       loadCategories();
+      tagFormListeners()
     });
 
     // Load Products
@@ -83,9 +86,12 @@
       })
         .then(res => {
           $('#products').html(res)
-          $('#products-table').DataTable({
-            "order": []
-          });
+          if (!DTInitialized) {
+            $('#products-table').DataTable({
+              "order": []
+            });
+            DTInitialized = true;
+          }
         })
         .catch(err => {
           showAlert(false, 'Could not load products. Please relaod page')
@@ -124,7 +130,7 @@
         })
     }
 
-    // 
+    // Fill Picked Image in Div
     function fillImage(input, fillId) {
       let img = document.getElementById(fillId)
 
@@ -145,10 +151,27 @@
       }
     }
 
+    // Add all event listeners
+    function tagFormListeners() {
+      addProduct();
+    }
+
     // Pick Image
     function pickImage(inputId) {
       $('#' + inputId).click();
     }
+
+    // Toggle button spinner
+    function spin() {
+      $('#btn-txt').toggle()
+      $('#spinner').toggle()
+    }
+
+    // Turn off errors
+    function offError() {
+      $('.error-message').html('')
+    }
+
   </script>
 
 </main>
