@@ -34,7 +34,7 @@
         <div class="card card-static-2 mb-30">
           <div class="card-title-2">
             <h4>Recent Orders</h4>
-            <a href="orders.html" class="view-btn hover-btn">View All</a>
+            <a href="{{ url('vendor/orders') }}" class="view-btn hover-btn">View All</a>
           </div>
 
           <hr style="margin: 0 !important;">
@@ -50,7 +50,11 @@
                     <th>View</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                  <tr>
+                    <td colspan="4" class="text-center">No Orders Yet!</td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -61,7 +65,7 @@
         <div class="card card-static-2 mb-30">
           <div class="card-title-2">
             <h4>Payment QR Code</h4>
-            <a href="orders.html" class="view-btn hover-btn"> <i class="fas fa-print"></i> Print</a>
+            <a href="#" onclick="cannotPrint()" class="view-btn hover-btn"> <i class="fas fa-print"></i> Print</a>
           </div>
           <hr style="margin: 0 !important;">
           <div class="card-body">
@@ -77,9 +81,9 @@
 
   <script>
     $(document).ready(function () {
-      $('#order-table').DataTable({
-        "order": []
-      });
+      // $('#order-table').DataTable({
+      //   "order": []
+      // });
 
       let qrcode = new QRCode("pay-qr-code", {
         text: "This code cannot work without Cendme mobile app",
@@ -93,6 +97,10 @@
 
     function ofsProducts() {
       location.href = "{{ url('vendor/products?sort=true') }}"
+    }
+
+    function cannotPrint() {
+      swal("QRCode print will be available when Cendme mobile application is ready!");
     }
   </script>
 </main>
