@@ -1,7 +1,7 @@
 @extends('vendor.layouts.master')
 
 {{-- Page Title --}}
-@section('title', 'Dashboard')
+@section('title', 'Products')
 
 {{-- Top Bar --}}
 @section('topbar')
@@ -95,8 +95,9 @@
         .then(res => {
           $('#products').html(res)
           if (!DTInitialized) {
+            order = '{{ $sort }}' == true ? [[3, 'asc']] : [];
             $('#products-table').DataTable({
-              "order": []
+              "order": order
             });
             DTInitialized = true;
           }

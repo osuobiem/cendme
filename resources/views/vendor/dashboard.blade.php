@@ -17,6 +17,18 @@
 @section('content')
 <main>
   <div class="container-fluid">
+
+    <div class="alert alert-danger mt-3 text-center {{ !$ofs_product ? 'd-none' : '' }}" role="alert">
+      <span>Some products will soon be <span class="alert-link">out of stock</span>!</span>
+      &nbsp;&nbsp;&nbsp;
+      <button class="btn btn-outline-dark btn-sm" onclick="ofsProducts()">
+        View Now
+      </button>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
     <div class="row mt-3">
       <div class="col-md-8">
         <div class="card card-static-2 mb-30">
@@ -78,6 +90,10 @@
         correctLevel: QRCode.CorrectLevel.H
       });
     });
+
+    function ofsProducts() {
+      location.href = "{{ url('vendor/products?sort=true') }}"
+    }
   </script>
 </main>
 @endsection

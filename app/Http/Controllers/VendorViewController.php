@@ -15,7 +15,15 @@ class VendorViewController extends Controller
      */
     public function dashboard()
     {
-        return view('vendor.dashboard');
+        // Extract vendor ID
+        $vendor_id = Auth::user()->id;
+
+        // Fetch products
+        $ofs_product = Product::where('vendor_id', $vendor_id)->where('quantity', '<', 10)->count();
+
+        $ofs_product = ($ofs_product > 0);
+
+        return view('vendor.dashboard', ['ofs_product' => $ofs_product]);
     }
 
     /**
@@ -29,9 +37,10 @@ class VendorViewController extends Controller
     /**
      * Products Page
      */
-    public function products()
+    public function products(Request $request)
     {
-        return view('vendor.products');
+        $sort = $request->query('sort') ? true : false;
+        return view('vendor.products', ['sort' => $sort]);
     }
 
     /**
