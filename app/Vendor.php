@@ -23,4 +23,10 @@ class Vendor extends Authenticatable
     {
         return $this->hasMany('App\Product');
     }
+
+    // Relationship with LGA
+    public function lga()
+    {
+        return $this->belongsTo('App\Lga');
+    }
 }

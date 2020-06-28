@@ -46,9 +46,17 @@ class VendorViewController extends Controller
     /**
      * Orders Page
      */
-    public function orders(Request $request)
+    public function orders()
     {
         return view('vendor.orders');
+    }
+
+    /**
+     * My Account Page
+     */
+    public function account()
+    {
+        return view('vendor.account');
     }
 
     /**

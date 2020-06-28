@@ -1,7 +1,7 @@
 @extends('vendor.layouts.master')
 
 {{-- Page Title --}}
-@section('title', 'Products')
+@section('title', 'Orders')
 
 {{-- Top Bar --}}
 @section('topbar')

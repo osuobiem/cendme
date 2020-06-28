@@ -60,3 +60,23 @@
     width: 43%;
     margin: auto;
 }
+
+.vendor-img-md {
+    border-radius: 5px;
+    height: 88px;
+    width: 88px;
+    background-position: center !important;
+    background-size: cover !important;
+}
+
+.shop_img,
+.shopowner-dts {
+    box-shadow: 0 2px 5px 1px #cacaca
+}
+
+.vendor-img-btn {
+    position: relative;
+    right: -50px;
+    top: -18px;
+    border-radius: 20px !important;
+}
