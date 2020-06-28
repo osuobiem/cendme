@@ -68,6 +68,14 @@ class VendorViewController extends Controller
     }
 
     /**
+     * Return product add form
+     */
+    public function product_add_form(Request $request)
+    {
+        return view('vendor.product.add');
+    }
+
+    /**
      * Get update modals
      * @return html
      */

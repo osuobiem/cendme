@@ -1,5 +1,6 @@
 <!-- Add product modal -->
-<div class="modal fade" id="add-product-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div id="add-form-h">
+  <div class="modal fade" id="add-product-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -85,6 +86,7 @@
     </div>
   </div>
 </div>
+</div>
 
 <script>
 
@@ -119,6 +121,7 @@
           setTimeout(() => {
             loadUpdateModals()
             loadViewModals()
+            loadAddForm()
           }, 2000)
         })
         .catch(err => {

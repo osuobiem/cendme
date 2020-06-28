@@ -62,6 +62,9 @@ Route::group(['prefix' => '/vendor'], function () {
         Route::get('products/update-modals', 'VendorViewController@product_update_modals');
 
         // Get product view modals
+        Route::get('products/add-form', 'VendorViewController@product_add_form');
+
+        // Get product view modals
         Route::get('products/view-modals', 'VendorViewController@product_view_modals');
 
         // Get all Categories

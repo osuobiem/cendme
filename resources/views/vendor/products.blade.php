@@ -161,6 +161,21 @@
     }
 
     // Load Update Modals
+    function loadAddForm() {
+      let url = "{{ url('vendor/products/add-form') }}";
+
+      $.ajax({
+        type: "GET",
+        url
+      })
+        .then(res => {
+          $('#add-form-h').html(res)
+        })
+        .catch(err => {
+        })
+    }
+
+    // Load Update Modals
     function loadUpdateModals() {
       let url = "{{ url('vendor/products/update-modals') }}";
 
