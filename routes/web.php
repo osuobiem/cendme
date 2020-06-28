@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 /**
  * VENDOR ROUTES
  */
-Route::group(['prefix' => 'vendor'], function () {
+Route::group(['prefix' => '/vendor'], function () {
 
     Route::group(['middleware' => 'guest:vendors'], function () {
 
@@ -31,7 +31,7 @@ Route::group(['prefix' => 'vendor'], function () {
 
         // UI -------
         // Vendor Login Page
-        Route::get('login', 'VendorViewController@login')->name('vendor.login');
+        Route::get('login', 'VendorViewController@login');
         // -----------
     });
 
