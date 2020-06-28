@@ -73,8 +73,11 @@ Route::group(['prefix' => '/vendor'], function () {
         // Get all Categories
         Route::get('categories', 'VendorViewController@get_categories');
 
-        // Get all SubCategories
+        // Get SubCategories by Category
         Route::get('subcategories/{category_id}', 'VendorViewController@get_subcategories');
+
+        // Get Lgas by State
+        Route::get('lgas/{state_id}', 'VendorViewController@get_lgas');
         // --------
     });
 });

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Lga;
 use App\Product;
+use App\State;
 use App\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +58,24 @@ class VendorViewController extends Controller
      */
     public function account()
     {
-        return view('vendor.account');
+        // Extract vendor object
+        $vendor = Auth::user();
+
+        // Get state id from lga object
+        $state_id = $vendor->lga->state_id;
+
+        // Get states and lgas
+        $states = State::orderBy('name', 'asc')->get();
+        $lgas = Lga::where('state_id', $state_id)->orderBy('name', 'asc')->get();
+
+        // Compose view data
+        $data = [
+            'vendor' => $vendor,
+            'states' => $states,
+            'lgas' => $lgas
+        ];
+
+        return view('vendor.account', $data);
     }
 
     /**
@@ -141,7 +160,7 @@ class VendorViewController extends Controller
     }
 
     /**
-     * Get all subcategories
+     * Get subcategories by category
      * @param string $category_id Base64 encoded category id
      * @return html
      */
@@ -155,5 +174,22 @@ class VendorViewController extends Controller
 
         // Return view
         return view('vendor.product.subcategories', ['subcategories' => $subcategories]);
+    }
+
+    /**
+     * Get local government areas by state
+     * @param string $state_id Base64 encoded state id
+     * @return html
+     */
+    public function get_lgas($state_id)
+    {
+        // Decode state id
+        $state_id = base64_decode($state_id);
+
+        // Fetch lgas
+        $lgas = Lga::where('state_id', $state_id)->orderBy('name')->get();
+
+        // Return view
+        return view('vendor.account.lgas', ['lgas' => $lgas]);
     }
 }
