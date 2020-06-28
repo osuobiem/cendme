@@ -31,7 +31,7 @@ Route::group(['prefix' => 'vendor'], function () {
 
         // UI -------
         // Vendor Login Page
-        Route::get('login', 'VendorViewController@login');
+        Route::get('login', 'VendorViewController@login')->name('vendor.login');
         // -----------
     });
 
