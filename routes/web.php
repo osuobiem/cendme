@@ -41,6 +41,9 @@ Route::group(['prefix' => '/vendor'], function () {
         // Vendor Update
         Route::post('update/{id}', 'VendorController@update');
 
+        // Update Vendor Photo
+        Route::post('update-photo/{id}', 'VendorController@update_photo');
+
         // Vendor Logout
         Route::get('logout', 'VendorController@logout');
         // ----------

@@ -29,10 +29,17 @@
 					<div class="card-body-table">
 						<div class="shopowner-content-left text-center pd-20">
 							<div class="shop_img mb-3">
-								<div class="vendor-img-md" style="background: url('{{ Storage::url('vendor/'.$vendor->photo) }}')">
-									<button class="btn btn-success btn-sm vendor-img-btn"><i class="fas fa-pen"></i></button>
+								<div class="vendor-img-md" id="u-photo-fill"
+									style="background: url('{{ Storage::url('vendors/'.$vendor->photo) }}')">
+									<button class="btn btn-success btn-sm vendor-img-btn" onclick="pickImage('photo')"><i
+											class="fas fa-pen"></i></button>
 								</div>
 							</div>
+							<form method="POST" id="photo-form">
+								@csrf
+								<input type="file" accept="image/*" name="photo" class="d-none" id="photo"
+									onchange="fillImage(this, 'u-photo-fill')">
+							</form>
 							<div class="shopowner-dt-left">
 								<h4>{{ $vendor->business_name }}</h4>
 							</div>
@@ -148,6 +155,7 @@
 <script>
 
 	$(document).ready(function () {
+		// Submit update form
 		$('#update-form').submit(el => {
 			el.preventDefault();
 
@@ -193,7 +201,56 @@
 					}
 				})
 		})
+
+		// Submit photo form
+		$('#photo-form').submit(el => {
+			el.preventDefault()
+
+			let data = new FormData(el.target)
+			let url = "{{ url('vendor/update-photo/'.base64_encode($vendor->id)) }}"
+
+			$.ajax({
+				type: "POST",
+				url,
+				data,
+				processData: false,
+				contentType: false,
+			})
+				.then(res => {
+					showAlert(true, 'Photo Updated Successfully')
+				})
+				.catch(err => {
+					showAlert(false, "Oops! Something's not right. Try Again");
+				})
+		})
 	})
+
+	// Pick Image
+	function pickImage(inputId) {
+		$('#' + inputId).click();
+	}
+
+	// Fill Picked Image in Div
+	function fillImage(input, fillId) {
+		let img = document.getElementById(fillId)
+
+		if (input.files && input.files[0]) {
+			if (input.files[0].size > 5120000) {
+				showAlert(false, 'Image size must not be more than 5MB')
+			} else if (input.files[0].type.split('/')[0] != 'image') {
+				showAlert(false, 'The file is not an image')
+			} else {
+				var reader = new FileReader();
+
+				reader.onload = e => {
+					img.setAttribute('style', "background: url(\"" + e.target.result + "\")")
+				}
+
+				reader.readAsDataURL(input.files[0]);
+				$('#photo-form').submit();
+			}
+		}
+	}
 
 	function showPass() {
 		if ($('#upass').val.length > 0) {

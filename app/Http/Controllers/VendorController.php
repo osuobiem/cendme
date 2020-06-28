@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class VendorController extends Controller
@@ -233,6 +234,85 @@ class VendorController extends Controller
             'address' => 'required|min:4',
             'password' => 'alpha_dash|min:6|max:30',
             'lga' => 'required|numeric|exists:lgas,id'
+        ]);
+    }
+
+    /**
+     * Update photo
+     * @param string $id Base64 encoded vendor id
+     * @return json
+     */
+    public function update_photo(Request $request, $id)
+    {
+        // Get validation rules
+        $validate = $this->update_photo_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ], 400);
+        }
+
+        // Decode vendor id
+        $id = base64_decode($id);
+
+        // Find vendor with supplied id
+        $vendor = Vendor::find($id);
+
+        if ($vendor) {
+            $stored = false;
+            $old_photo = $vendor->photo;
+
+            // Try photo upload
+            $photo = $request['photo'];
+            $stored = Storage::put('/public/vendors', $photo);
+
+            if ($stored) {
+                $vendor->photo = basename($stored);
+
+                // Try to update vendor profile
+                try {
+                    $vendor->save();
+                    $old_photo != 'placeholder.png' ? Storage::delete('/public/vendors/' . $old_photo) : '';
+
+                    return response()->json([
+                        "success" => true,
+                        "message" => "Photo Updated Successfully"
+                    ]);
+                } catch (\Throwable $th) {
+                    Log::error($th);
+                    $vendor->photo != 'placeholder.png' ? Storage::delete('/public/vendors/' . $vendor->photo) : '';
+
+                    return response()->json([
+                        "success" => false,
+                        "message" => "Internal Server Error"
+                    ], 500);
+                }
+            } else {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Could not upload photo"
+                ], 400);
+            }
+        } else {
+            return response()->json([
+                "success" => false,
+                "message" => "Vendor not found"
+            ], 404);
+        }
+    }
+
+    /**
+     * Update photo validation rules
+     * @return object The validator object
+     */
+    private function update_photo_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'photo' => 'required|image|max:5120'
         ]);
     }
     // -------------

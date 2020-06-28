@@ -14,6 +14,10 @@
           <div class="sb-nav-link-icon"><i class="fas fa-reply-all"></i></div>
           Orders
         </a>
+        {{-- <a class="nav-link {{ Request::is('vendor/orders') ? 'active' : '' }}" href="{{ url('vendor/orders') }}">
+          <div class="sb-nav-link-icon"><i class="fas fa-wallet"></i></div>
+          MyWallet
+        </a> --}}
         <a class="nav-link {{ Request::is('vendor/account') ? 'active' : '' }}" href="{{ url('vendor/account') }}">
           <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
           My Account
