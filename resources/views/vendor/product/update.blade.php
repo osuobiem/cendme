@@ -124,6 +124,11 @@
             $(`#e${id}-close-modal`).click()
             loadProducts()
           }, 1800)
+          
+          setTimeout(() => {
+            loadUpdateModals()
+            loadViewModals()
+          }, 2000)
         })
         .catch(err => {
           spin()

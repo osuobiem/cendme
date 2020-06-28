@@ -51,6 +51,21 @@ Route::group(['prefix' => 'vendor'], function () {
 
         // Products Page
         Route::get('products', 'VendorViewController@products');
+
+        // Get all Products
+        Route::get('products/get', 'VendorViewController@get_products');
+
+        // Get product update modals
+        Route::get('products/update-modals', 'VendorViewController@product_update_modals');
+
+        // Get product view modals
+        Route::get('products/view-modals', 'VendorViewController@product_view_modals');
+
+        // Get all Categories
+        Route::get('categories', 'VendorViewController@get_categories');
+
+        // Get all SubCategories
+        Route::get('subcategories/{category_id}', 'VendorViewController@get_subcategories');
         // --------
     });
 });
@@ -72,31 +87,5 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
 
     // Delete Product
     Route::delete('delete/{id}', 'ProductController@delete');
-
-    // Get all Products
-    Route::get('get', 'ProductController@get');
-
-    // Get update modals
-    Route::get('get-update-modals', 'ProductController@get_update_modals');
-});
-// ---------------
-
-/**
- * CATEGORY ROUTES
- */
-Route::group(['prefix' => 'category', 'middleware' => 'auth'], function () {
-
-    // Get all Categories
-    Route::get('get', 'CategoryController@get');
-});
-// ---------------
-
-/**
- * SUBCATEGORY ROUTES
- */
-Route::group(['prefix' => 'subcategory', 'middleware' => 'auth'], function () {
-
-    // Get all SubCategories
-    Route::get('get/{category_id}', 'SubCategoryController@get');
 });
 // ---------------

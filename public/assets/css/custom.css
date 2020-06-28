@@ -50,3 +50,13 @@
     background-size: cover !important;
     border: solid 1px !important;
 }
+
+.img-style-view {
+    border-radius: 5px;
+    height: 200px;
+    background-position: center !important;
+    background-size: cover !important;
+    border: solid 1px !important;
+    width: 43%;
+    margin: auto;
+}

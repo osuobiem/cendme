@@ -65,6 +65,9 @@
   <!-- Update Modals Container -->
   <div id="update-modals-h"></div>
 
+  <!-- View Modals Container -->
+  <div id="view-modals-h"></div>
+
   {{-- Add Product Modal --}}
   @section('add-product')
   @include('vendor.product.add')
@@ -77,12 +80,13 @@
       loadProducts();
       loadCategories();
       loadUpdateModals();
+      loadViewModals();
       tagFormListeners()
     });
 
     // Load Products
     function loadProducts() {
-      let url = "{{ url('product/get') }}";
+      let url = "{{ url('vendor/products/get') }}";
 
       $.ajax({
         type: "GET",
@@ -104,7 +108,7 @@
 
     // Load Product Categories
     function loadCategories() {
-      let url = "{{ url('category/get') }}";
+      let url = "{{ url('vendor/categories') }}";
 
       $.ajax({
         type: "GET",
@@ -120,7 +124,7 @@
 
     // Load Product SubCategories
     function loadSubCategories(id, container) {
-      let url = "{{ url('subcategory/get') }}/" + id;
+      let url = "{{ url('vendor/subcategories') }}/" + id;
 
       $.ajax({
         type: "GET",
@@ -157,7 +161,7 @@
 
     // Load Update Modals
     function loadUpdateModals() {
-      let url = "{{ url('product/get-update-modals') }}";
+      let url = "{{ url('vendor/products/update-modals') }}";
 
       $.ajax({
         type: "GET",
@@ -168,6 +172,22 @@
         })
         .catch(err => {
           showAlert(false, 'Could not load product edits. Please relaod page')
+        })
+    }
+
+    // Load View Modals
+    function loadViewModals() {
+      let url = "{{ url('vendor/products/view-modals') }}";
+
+      $.ajax({
+        type: "GET",
+        url
+      })
+        .then(res => {
+          $('#view-modals-h').html(res)
+        })
+        .catch(err => {
+          showAlert(false, 'Could not load product views. Please relaod page')
         })
     }
 
