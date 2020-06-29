@@ -48,21 +48,21 @@
                       <div class="form-group col-lg-12">
                         <label class="form-label" for="inputEmailAddress">Business Name <span
                             class="text-danger">*</span></label>
-                        <input class="form-control py-3" name="business_name" type="text" yer
+                        <input class="form-control py-3" name="business_name" type="text" required
                           placeholder="Business name">
                         <span class="text-danger error-message" id="business_name"></span>
                       </div>
                       <div class="form-group col-lg-6">
                         <label class="form-label" for="inputEmailAddress">Email <span
                             class="text-danger">*</span></label>
-                        <input class="form-control py-3" name="email" type="email" yer placeholder="Email address">
+                        <input class="form-control py-3" name="email" type="email" required placeholder="Email address">
                         <span class="text-danger error-message" id="email"></span>
                       </div>
 
                       <div class="form-group col-lg-6">
                         <label class="form-label" for="inputEmailAddress">Phone Number <span
                             class="text-danger">*</span></label>
-                        <input class="form-control py-3" name="phone" type="text" yer placeholder="Phone number">
+                        <input class="form-control py-3" name="phone" type="text" required placeholder="Phone number">
                         <span class="text-danger error-message" id="phone"></span>
                       </div>
                       <div class="form-group col-lg-6">
@@ -86,14 +86,15 @@
                       <div class="form-group col-lg-12">
                         <label class="form-label" for="inputPassword">Password <span
                             class="text-danger">*</span></label>
-                        <input class="form-control py-3" name="password" id="inputPassword" yer type="password"
+                        <input class="form-control py-3" name="password" id="inputPassword" required type="password"
                           placeholder="Enter password">
                         <span class="text-danger error-message" id="password"></span>
                       </div>
 
                       <div class="form-group col-lg-12">
                         <label class="form-label" for="inputPassword">Address <span class="text-danger">*</span></label>
-                        <textarea name="address" placeholder="Address" class="form-control" rows="4" yer></textarea>
+                        <textarea name="address" placeholder="Address" class="form-control" rows="4"
+                          required></textarea>
                         <span class="text-danger error-message" id="address"></span>
                       </div>
 
