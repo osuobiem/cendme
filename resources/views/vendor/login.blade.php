@@ -1,9 +1,26 @@
-@extends('vendor.layouts.master')
+<!DOCTYPE html>
+<html lang="en">
 
-{{-- Page Title --}}
-@section('title', 'Vendor Login')
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>Vendor Login | Cendme</title>
+  <link href="{{url('assets/css/styles.css')}}" rel="stylesheet">
+  <link href="{{url('assets/css/admin-style.css')}}" rel="stylesheet">
+  <link href="{{url('assets/css/custom.css')}}" rel="stylesheet">
 
-@section('content')
+  <!-- Vendor Stylesheets -->
+  <link href="{{url('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{url('assets/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
+  <link href="{{url('assets/vendor/DataTables/datatables.min.css')}}" rel="stylesheet">
+  <link href="{{url('assets/css/animate.min.css')}}" rel="stylesheet">
+
+  <script src="{{ url('assets/js/jquery-3.4.1.min.js') }}"></script>
+  <script src="{{ url('assets/js/custom.js') }}"></script>
+
+</head>
 
 <body>
 
@@ -30,14 +47,14 @@
                     <div class="form-group">
                       <label class="form-label" for="inputEmailAddress">Email <span class="text-danger">*</span></label>
                       <input class="form-control py-3" id="inputEmailAddress" name="email" type="email" required
-                        placeholder="Enter email address">
+                        placeholder="Email address">
                       <span class="text-danger error-message" id="email"></span>
                     </div>
 
                     <div class="form-group">
                       <label class="form-label" for="inputPassword">Password <span class="text-danger">*</span></label>
                       <input class="form-control py-3" name="password" id="inputPassword" required type="password"
-                        placeholder="Enter password">
+                        placeholder="Password">
                       <span class="text-danger error-message" id="password"></span>
                     </div>
 
@@ -49,7 +66,7 @@
                       </div>
                     </div>
 
-                    <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
+                    <div class="form-group d-flex align-items-center col-md-7 ml-auto mr-auto justify-content-between mt-4 mb-0">
                       <button class="btn btn-sign hover-btn" type="submit" id="login">
                         <span id="btn-txt">Login</span>
                         <div id="spinner" style="display: none;" class="spinner-border spinner-border-sm text-light"
@@ -60,6 +77,9 @@
                     </div>
                   </form>
                 </div>
+              </div>
+              <div class="text-center mt-3">
+                <span style="font-size: 14px">Don't have an account? <a class="breadcrumb-item active" href="{{ url('vendor/sign-up') }}">Sign up</a> now and start selling</span>
               </div>
             </div>
           </div>
@@ -144,4 +164,16 @@
     }
   </script>
 
-  @endsection
+  <div class="alert alert-success top-alert d-none" role="alert" id="success-alert">
+  </div>
+
+  <div class="alert alert-danger top-alert d-none" role="alert" id="error-alert">
+  </div>
+
+  <script src="{{ url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url('assets/vendor/DataTables/datatables.min.js') }}"></script>
+  <script src="{{ url('assets/vendor/sweetalert/sweetalert.min.js') }}"></script>
+  <script src="{{ url('assets/js/scripts.js') }}"></script>
+</body>
+
+</html>

@@ -37,6 +37,17 @@ class VendorViewController extends Controller
     }
 
     /**
+     * Vendor Sign up Page
+     */
+    public function sign_up()
+    {
+        // Get states
+        $states = State::orderBy('name', 'asc')->get();
+
+        return view('vendor.sign-up', ['states' => $states]);
+    }
+
+    /**
      * Products Page
      */
     public function products(Request $request)
@@ -181,7 +192,7 @@ class VendorViewController extends Controller
      * @param string $state_id Base64 encoded state id
      * @return html
      */
-    public function get_lgas($state_id)
+    public function get_lgas($state_id, $notlogged = false)
     {
         // Decode state id
         $state_id = base64_decode($state_id);
@@ -190,6 +201,10 @@ class VendorViewController extends Controller
         $lgas = Lga::where('state_id', $state_id)->orderBy('name')->get();
 
         // Return view
-        return view('vendor.account.lgas', ['lgas' => $lgas]);
+        if (!$notlogged) {
+            return view('vendor.account.lgas', ['lgas' => $lgas]);
+        } else {
+            return view('vendor.lgas', ['lgas' => $lgas]);
+        }
     }
 }

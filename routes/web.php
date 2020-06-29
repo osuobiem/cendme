@@ -32,6 +32,12 @@ Route::group(['prefix' => '/vendor'], function () {
         // UI -------
         // Vendor Login Page
         Route::get('login', 'VendorViewController@login');
+
+        // Vendor Signup Page
+        Route::get('sign-up', 'VendorViewController@sign_up');
+
+        // Get Lgas by State
+        Route::get('lgas/{state_id}/{logged?}', 'VendorViewController@get_lgas');
         // -----------
     });
 
@@ -78,9 +84,6 @@ Route::group(['prefix' => '/vendor'], function () {
 
         // Get SubCategories by Category
         Route::get('subcategories/{category_id}', 'VendorViewController@get_subcategories');
-
-        // Get Lgas by State
-        Route::get('lgas/{state_id}', 'VendorViewController@get_lgas');
         // --------
     });
 });
