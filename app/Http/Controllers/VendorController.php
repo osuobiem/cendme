@@ -133,7 +133,7 @@ class VendorController extends Controller
             // Attempt login
             $login = $this->fast_login($request);
 
-            return ['success' => true, 'status' => 200, 'message' => 'Signup Successful', 'data' => ['login' => $login]];
+            return ['success' => true, 'status' => 200, 'message' => 'Sign up Successful', 'data' => ['login' => $login]];
         } catch (\Throwable $th) {
             Log::error($th);
             return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
