@@ -80,3 +80,45 @@
     top: -18px;
     border-radius: 20px !important;
 }
+
+.home-banner {
+    position: relative !important;
+    top: -75px !important;
+    height: 350px !important;
+    background-size: cover !important;
+    background-position: bottom !important;
+    padding: 0 !important;
+}
+
+.header-layer {
+    width: 100%;
+    background: #0000009c;
+    height: 100%;
+}
+
+.banner-txt {
+    padding: 100px 0 5px 0;
+    color: #f1eeed;
+    font-size: 50px;
+    font-weight: 600;
+    text-shadow: 1px 4px 4px #000000b2;
+}
+
+.banner-txt-sm {
+    color: #fff;
+    font-size: 20px;
+}
+
+.banner-btn {
+    background: #ee5b2d !important;
+    color: #fff !important;
+    padding: 10px 20px !important;
+    font-size: 18px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 0 35px 1px #000 !important;
+}
+
+.banner-btn:hover {
+    background: #cf4216 !important;
+    color: #fff !important;
+}

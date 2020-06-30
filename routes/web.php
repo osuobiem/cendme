@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 /**
+ * MAIN ROUTES
+ */
+// Home/Landing Page
+Route::get('', 'HomeController@index');
+// -------------
+
+/**
  * VENDOR ROUTES
  */
 Route::group(['prefix' => '/vendor'], function () {
