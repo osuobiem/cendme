@@ -51,7 +51,7 @@
               <div class="text-center header-layer">
                 <h2 class="banner-txt">Stay Home, <span style="color: rgb(238, 91, 45);">Shop Online</span></h2>
                 <p class="banner-txt-sm">We'll deliver your orders at your doorstep</p>
-                <a class="btn banner-btn" href="{{ url('vendor/sign-up') }}">Shop Now</a>
+                <a class="btn banner-btn" href="#">Shop Now</a>
               </div>
             </li>
             <li class="splide__slide slide">
@@ -59,7 +59,8 @@
               <div class="text-center header-layer">
                 <h2 class="banner-txt">We'll do your <span style="color: rgb(238, 91, 45);">shopping</span></h2>
                 <p class="banner-txt-sm">Always ready to do the shopping in your supermarket of confidence</p>
-                <a class="btn banner-btn" href="{{ url('vendor/sign-up') }}">Become an Agent</a>
+                <span class="banner-txt-sm">Interested in making extra money?</span>&nbsp;&nbsp;
+                <a class="btn banner-btn" href="#">Become a Shopper</a>
               </div>
             </li>
             <li class="splide__slide">
@@ -74,12 +75,6 @@
           </ul>
         </div>
       </div>
-      <!-- style="background: url({{ url('assets/images/sup1.jpg') }});"
-         <div class="header-layer text-center">
-        <h2 class="banner-txt">STAY HOME, <span style="color: rgb(238, 91, 45);">SHOP ONLINE</span></h2>
-        <p class="banner-txt-sm">We'll deliver your orders at your doorstep</p>
-        <a class="btn banner-btn" href="{{ url('vendor/sign-up') }}">Shop Now</a>
-      </div> -->
     </div>
     <div class="life-gambo p-0">
       <div class="container">
@@ -143,9 +138,12 @@
               <p>Buying fresh products online is no longer a problem. Our shoppers will buy your products to order
                 respecting the cold
                 chain.</p>
-              <p>Your purchase will come home as if you had bought it. The freshest and highest quality products direct
+              <p class="d-none" id="more">Your purchase will come home as if you had bought it. The freshest and highest
+                quality
+                products direct
                 to your fridge.
                 In addition, you can buy frozen products and receive them in perfect condition.</p>
+              <a id="read-m-l" onclick="showMore(true)">Read more</a>
             </div>
           </div>
         </div>
@@ -231,6 +229,19 @@
         autoplay: true,
       }).mount();
     });
+
+    function showMore(status) {
+      if (status) {
+        $('#more').removeClass('d-none');
+        $('#read-m-l').attr('onclick', "showMore(false)");
+        $('#read-m-l').text('Less')
+      }
+      else {
+        $('#more').addClass('d-none');
+        $('#read-m-l').attr('onclick', "showMore(true)");
+        $('#read-m-l').text('Read more')
+      }
+    }
   </script>
 
   <script src="{{ url('assets/vendor/splide-2.4.4/dist/js/splide.min.js')}}"></script>
