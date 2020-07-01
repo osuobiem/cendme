@@ -59,6 +59,7 @@
               <div class="text-center header-layer">
                 <h2 class="banner-txt">We'll do your <span style="color: rgb(238, 91, 45);">shopping</span></h2>
                 <p class="banner-txt-sm">Always ready to do the shopping in your supermarket of confidence</p>
+                <br>
                 <span class="banner-txt-sm">Interested in making extra money?</span>&nbsp;&nbsp;
                 <a class="btn banner-btn" href="#">Become a Shopper</a>
               </div>

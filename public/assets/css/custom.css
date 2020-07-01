@@ -152,3 +152,7 @@
     background-size: cover !important;
     background-position: center !important;
 }
+
+.hover-btn:hover {
+    cursor: pointer;
+}
