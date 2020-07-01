@@ -81,7 +81,7 @@
         <div class="row">
           <div class="col-lg-6">
             <div class="default-title left-text">
-              <h2>What is Cendme?</h2>
+              <h2>Grocery shopping has never been so easy</h2>
             </div>
             <div class="about-content">
               <p>Cendme is a mobile app, where you can order
@@ -149,74 +149,78 @@
         </div>
       </div>
     </div>
-    <div class="how-order-gambo pt-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="default-title">
-              <h2>How it works</h2>
-              <img src="{{ url('assets/images/line.svg')}}" alt="">
-            </div>
-          </div>
-          <div class="col-lg-4 col-md-6">
-            <div class="how-order-steps">
-              <div class="how-order-icon">
-                <i class="uil uil-mobile-android"></i>
+
+    <div class="how-it-works-bg" style="background: url('{{ url('assets/images/su2.jpg') }}');">
+      <div class="how-order-gambo pt-5" style="background: #4e4b4b94;">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="default-title">
+                <h2 style="color: #fff;">How it works</h2>
+                <img src="{{ url('assets/images/line.svg')}}" alt="">
               </div>
-              <h4>Login to the App</h4>
             </div>
-          </div>
-          <div class="col-lg-4 col-md-6">
-            <div class="how-order-steps">
-              <div class="how-order-icon">
-                <i class="uil uil-shop"></i>
+            <div class="col-lg-4 col-md-6">
+              <div class="how-order-steps">
+                <div class="how-order-icon">
+                  <i class="uil uil-mobile-android"></i>
+                </div>
+                <h4>Login to the App</h4>
               </div>
-              <h4>Choose your preferred Store</h4>
             </div>
-          </div>
-          <div class="col-lg-4 col-md-6">
-            <div class="how-order-steps">
-              <div class="how-order-icon">
-                <i class="uil uil-list-ul"></i>
+            <div class="col-lg-4 col-md-6">
+              <div class="how-order-steps">
+                <div class="how-order-icon">
+                  <i class="uil uil-shop"></i>
+                </div>
+                <h4>Choose your preferred Store</h4>
               </div>
-              <h4>Scroll through to to select your groceries.</h4>
             </div>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <div class="how-order-steps">
-              <div class="how-order-icon">
-                <i class="uil uil-file-check-alt"></i>
+            <div class="col-lg-4 col-md-6">
+              <div class="how-order-steps">
+                <div class="how-order-icon">
+                  <i class="uil uil-list-ul"></i>
+                </div>
+                <h4>Scroll through to to select your groceries.</h4>
               </div>
-              <h4>Confirm your Items</h4>
             </div>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <div class="how-order-steps">
-              <div class="how-order-icon">
-                <i class="uil uil-envelope-send"></i>
+            <div class="col-lg-3 col-md-6">
+              <div class="how-order-steps">
+                <div class="how-order-icon">
+                  <i class="uil uil-file-check-alt"></i>
+                </div>
+                <h4>Confirm your Items</h4>
               </div>
-              <h4>Send a Request</h4>
             </div>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <div class="how-order-steps">
-              <div class="how-order-icon">
-                <i class="uil uil-shopping-basket"></i>
+            <div class="col-lg-3 col-md-6">
+              <div class="how-order-steps">
+                <div class="how-order-icon">
+                  <i class="uil uil-envelope-send"></i>
+                </div>
+                <h4>Send a Request</h4>
               </div>
-              <h4>Our Shoppers will care for your order</h4>
             </div>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <div class="how-order-steps">
-              <div class="how-order-icon">
-                <i class="uil uil-shopping-cart-alt"></i>
+            <div class="col-lg-3 col-md-6">
+              <div class="how-order-steps">
+                <div class="how-order-icon">
+                  <i class="uil uil-shopping-basket"></i>
+                </div>
+                <h4>Our Shoppers will care for your order</h4>
               </div>
-              <h4>Your Groceries delivered at your Door Step</h4>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="how-order-steps">
+                <div class="how-order-icon">
+                  <i class="uil uil-shopping-cart-alt"></i>
+                </div>
+                <h4>Your Groceries delivered at your Door Step</h4>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 
   <script>
