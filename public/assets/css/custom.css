@@ -84,24 +84,23 @@
 .home-banner {
     position: relative !important;
     top: -75px !important;
-    height: 350px !important;
+    height: 400px !important;
     background-size: cover !important;
     background-position: bottom !important;
     padding: 0 !important;
 }
 
 .header-layer {
-    width: 100%;
-    background: #0000009c;
+    padding: 10% 10px;
     height: 100%;
+    background: #00000067;
 }
 
 .banner-txt {
-    padding: 100px 0 5px 0;
     color: #f1eeed;
     font-size: 50px;
     font-weight: 600;
-    text-shadow: 1px 4px 4px #000000b2;
+    text-shadow: 1px 2px 2px #000000b2;
 }
 
 .banner-txt-sm {
@@ -121,4 +120,20 @@
 .banner-btn:hover {
     background: #cf4216 !important;
     color: #fff !important;
+}
+
+.why-ico {
+    color: #ee5b2d;
+    font-size: 60px;
+}
+
+.splide__track,
+.splide__list {
+    height: inherit !important;
+}
+
+@media(min-width: 768px) {
+    .slide {
+        background-position-y: top !important
+    }
 }

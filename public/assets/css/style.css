@@ -5307,14 +5307,14 @@ textarea {
 }
 
 .how-order-icon i {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     display: inline-block;
     background: #f55d2c;
     color: #fff;
     font-size: 30px;
     border-radius: 100%;
-    padding: 15px 0;
+    padding: 8px 0;
     text-align: center;
 }
 
