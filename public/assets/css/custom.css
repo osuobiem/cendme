@@ -170,3 +170,10 @@
 .hover-btn:hover {
     cursor: pointer;
 }
+
+.mobileMenu {
+    right: 2px !important;
+    top: 58px !important;
+    position: fixed !important;
+    text-align: left !important;
+}

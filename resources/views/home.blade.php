@@ -23,25 +23,72 @@
 
   <header class="header clearfix">
     <div class="top-header-group d-flex">
-      <div class="top-header">
+      <div class="top-header" style="padding-left: 15px;">
         <div class="main_logo" id="logo">
           <a href="index.html"><img src="{{ url('assets/images/cendme-logo-l.png') }}" alt=""></a>
           <a href="index.html"><img class="logo-inverse" src="{{ url('assets/images/cendme-logo-l.png') }}" alt=""></a>
         </div>
+
+        <div class="sub-header-group d-none d-lg-block">
+          <div class="sub-header justify-content-end">
+            <nav class="navbar navbar-expand-lg navbar-light py-3">
+              <div class="container-fluid">
+                <div
+                  class="collapse navbar-collapse d-flex flex-column flex-lg-row flex-xl-row justify-content-lg-end bg-dark1 p-3 p-lg-0 mt1-5 mt-lg-0">
+                  <ul class="navbar-nav main_nav align-self-stretch">
+                    <li class="nav-item"><a href="{{ url('/') }}" class="nav-link active" title="Home">Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link new_item" title="Shop Now">Shop Now</a>
+                    <li class="nav-item"><a href="#" class="nav-link new_item" title="Become a Shopper">Become a
+                        Shopper</a>
+                    </li>
+                    <li class="nav-item"><a href="{{ url('vendor') }}" class="nav-link" title="Start Selling">Start
+                        Selling</a></li>
+                  </ul>
+                </div>
+
+              </div>
+            </nav>
+          </div>
+        </div>
+
       </div>
       <div class="header_right">
         <div class="p-2" style="width: max-content;">
           @if(Auth::guest())
-          <a class="btn header-btn" href="{{ url('vendor') }}">Start Selling</a>
+          <a class="btn header-btn d-none d-lg-block" href="{{ url('vendor') }}">Start Selling</a>
           @else
-          <a class="btn header-btn" href="{{ url('vendor') }}"><i class="uil uil-user" style="font-size: inherit"></i> My Account</a>
+          <a class="btn header-btn d-none d-lg-block" href="{{ url('vendor') }}"><i class="uil uil-user"
+              style="font-size: inherit"></i>
+            My Account</a>
           @endif
+          <button onclick="openMenu(this)" class="navbar-toggler menu_toggle_btn d-lg-none" type="button"
+            data-target="#navbarSupportedContent">
+            <i class="uil uil-bars"></i>
+          </button>
         </div>
       </div>
     </div>
-
-    
   </header>
+  <div class="sub-header-group d-none d-lg-none" id="mobile-men">
+    <div class="sub-header">
+      <nav class="navbar navbar-expand-lg navbar-light py-3">
+        <div class="container-fluid">
+          <div class="collapse navbar-collapse flex-column bg-dark1 p-3 mobileMenu d-flex">
+            <ul class="navbar-nav main_nav align-self-stretch">
+              <li class="nav-item"><a href="{{ url('/') }}" class="nav-link active" title="Home">Home</a></li>
+              <li class="nav-item"><a href="#" class="nav-link new_item" title="Shop Now">Shop Now</a>
+              <li class="nav-item"><a href="#" class="nav-link new_item" title="Become a Shopper">Become a
+                  Shopper</a>
+              </li>
+              <li class="nav-item"><a href="{{ url('vendor') }}" class="nav-link" title="Start Selling">Start
+                  Selling</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </nav>
+    </div>
+  </div>
 
   <div class="wrapper pb-0">
     <div class="default-dt home-banner">
@@ -82,7 +129,7 @@
     <div class="life-gambo p-0">
       <div class="container">
         <div class="row">
-          <div class="col-lg-6">
+          <div class="col-md-6">
             <div class="default-title left-text">
               <h2>Grocery shopping has never been so easy</h2>
             </div>
@@ -92,7 +139,7 @@
                 door in as little as 1 hour!</p>
             </div>
           </div>
-          <div class="col-lg-6">
+          <div class="col-md-6">
             <div class="about-img">
               <img src="{{ url('assets/images/sub.jpg')}}" alt="">
             </div>
@@ -109,7 +156,7 @@
               <img src="{{ url('assets/images/line.svg')}}" alt="">
             </div>
           </div>
-          <div class="col-lg-3">
+          <div class="col-lg-3 col-md-6">
             <div class="about-step">
               <i class="uil uil-stopwatch why-ico"></i>
               <h4>Your shopping in 1 hour</h4>
@@ -117,7 +164,7 @@
                 We'll deliver it to you whenever you want in one-hour intervals.</p>
             </div>
           </div>
-          <div class="col-lg-3">
+          <div class="col-lg-3 col-md-6">
             <div class="about-step">
               <i class="uil uil-chat-bubble-user why-ico"></i>
               <h4>Personalized service</h4>
@@ -126,7 +173,7 @@
                 always looking for the best for you.</p>
             </div>
           </div>
-          <div class="col-lg-3">
+          <div class="col-lg-3 col-md-6">
             <div class="about-step">
               <i class="uil uil-user-check why-ico"></i>
               <h4>Trusted products</h4>
@@ -134,7 +181,7 @@
                 Choose from one of our online supermarkets to do your shopping.</p>
             </div>
           </div>
-          <div class="col-lg-3">
+          <div class="col-lg-3 col-md-6">
             <div class="about-step">
               <i class="uil uil-truck-loading why-ico"></i>
               <h4>Fresh products</h4>
@@ -227,50 +274,52 @@
   </div>
 
   <footer class="footer pt-5" style="background: #0000000d">
-		<div class="footer-first-row p-0">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6 col-sm-6 mt-2 text-center">
+    <div class="footer-first-row p-0">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 col-sm-6 mt-2 text-center">
             <p class="m-0" style="color:#424361">Contact us</p>
-						<ul class="call-email-alt">
-							<li><a href="tel:+234 801 2345 678" class="callemail"><i class="uil uil-phone"></i>+234 801 2345 678</a></li>
-							<li><a href="mailto:info@cendme.com" class="callemail"><i class="uil uil-envelope-alt"></i>info@cendme.com</a></li>
-						</ul>
-					</div>
-					<div class="col-md-6 col-sm-6 mt-2">
-						<div class="social-links-footer text-center">
+            <ul class="call-email-alt">
+              <li><a href="tel:+234 801 2345 678" class="callemail"><i class="uil uil-phone"></i>+234 801 2345 678</a>
+              </li>
+              <li><a href="mailto:info@cendme.com" class="callemail"><i
+                    class="uil uil-envelope-alt"></i>info@cendme.com</a></li>
+            </ul>
+          </div>
+          <div class="col-md-6 col-sm-6 mt-2">
+            <div class="social-links-footer text-center">
               <p class="m-0" style="color:#424361">Follow us on social media</p>
-							<ul>
-								<li><a href="#"><i class="uil uil-facebook"></i></a></li>
-								<li><a href="#"><i class="uil uil-twitter"></i></a></li>
-								<li><a href="#"><i class="uil uil-instagram"></i></a></li>
-							</ul>
-						</div>
-					</div>				
-				</div>
-			</div>
-		</div>
-		<div class="footer-last-row" style="background: unset">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="footer-bottom-links">
-							<ul>
-								<li><a href="#">Become a Shopper</a></li>
-								<li><a href="{{ url('vendor') }}">Start Selling</a></li>
-								<li><a href="#">Privacy Policy</a></li>
-								<li><a href="#">Term & Conditions</a></li>
-								<li><a href="#">Refund & Return Policy</a></li>
-							</ul>
-						</div>
-						<div class="copyright-text">
-							<i class="uil uil-copyright"></i>{{ date('Y') }} <b>Cendme</b>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer>
+              <ul>
+                <li><a href="#"><i class="uil uil-facebook"></i></a></li>
+                <li><a href="#"><i class="uil uil-twitter"></i></a></li>
+                <li><a href="#"><i class="uil uil-instagram"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-last-row" style="background: unset">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="footer-bottom-links">
+              <ul>
+                <li><a href="#">Become a Shopper</a></li>
+                <li><a href="{{ url('vendor') }}">Start Selling</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Term & Conditions</a></li>
+                <li><a href="#">Refund & Return Policy</a></li>
+              </ul>
+            </div>
+            <div class="copyright-text">
+              <i class="uil uil-copyright"></i>{{ date('Y') }} <b>Cendme</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -294,6 +343,18 @@
         $('#read-m-l').attr('onclick', "showMore(true)");
         $('#read-m-l').text('Read more')
       }
+    }
+
+    function openMenu(el) {
+      $('#mobile-men').removeClass('d-none')
+      $(el).html('<i class="uil uil-multiply"></i>')
+      $(el).attr('onclick', 'closeMenu(this)')
+    }
+
+    function closeMenu(el) {
+      $('#mobile-men').addClass('d-none')
+      $(el).html('<i class="uil uil-bars"></i>')
+      $(el).attr('onclick', 'openMenu(this)')
     }
   </script>
 
