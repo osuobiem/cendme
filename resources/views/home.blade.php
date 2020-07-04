@@ -41,8 +41,6 @@
                     <li class="nav-item"><a href="#" class="nav-link new_item" title="Become a Shopper">Become a
                         Shopper</a>
                     </li>
-                    <li class="nav-item"><a href="{{ url('vendor') }}" class="nav-link" title="Start Selling">Start
-                        Selling</a></li>
                   </ul>
                 </div>
 
