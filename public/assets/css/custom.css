@@ -122,6 +122,20 @@
     color: #fff !important;
 }
 
+.header-btn {
+    border: solid 1.3px #ee5b2d !important;
+    color: #ee5b2d !important;
+    padding: 10px !important;
+    font-size: 16px !important;
+    border-radius: 6px !important;
+    /* box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.651) !important; */
+}
+
+.header-btn:hover {
+    background: #ee5b2d !important;
+    color: #fff !important;
+}
+
 .why-ico {
     color: #ee5b2d;
     font-size: 60px;

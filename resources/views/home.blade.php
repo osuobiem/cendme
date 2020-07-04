@@ -30,18 +30,20 @@
         </div>
       </div>
       <div class="header_right">
-        <ul>
-          <li class="ui dropdown">
-            <!-- <a href="#" class="opts_account">
-              User
-            </a> -->
-          </li>
-        </ul>
+        <div class="p-2" style="width: max-content;">
+          @if(Auth::guest())
+          <a class="btn header-btn" href="{{ url('vendor') }}">Start Selling</a>
+          @else
+          <a class="btn header-btn" href="{{ url('vendor') }}"><i class="uil uil-user" style="font-size: inherit"></i> My Account</a>
+          @endif
+        </div>
       </div>
     </div>
+
+    
   </header>
 
-  <div class="wrapper">
+  <div class="wrapper pb-0">
     <div class="default-dt home-banner">
       <div id="image-slider" class="splide" style="height: inherit !important;">
         <div class="splide__track">
@@ -70,7 +72,7 @@
                 <h2 class="banner-txt">Selling Just Got Easier with <span style="color: rgb(238, 91, 45);">Cendme</span>
                 </h2>
                 <p class="banner-txt-sm">Let us put your business online</p>
-                <a class="btn banner-btn" href="{{ url('vendor/sign-up') }}">Start Selling</a>
+                <a class="btn banner-btn" href="{{ url('vendor') }}">Start Selling</a>
               </div>
             </li>
           </ul>
@@ -223,6 +225,52 @@
     </div>
 
   </div>
+
+  <footer class="footer pt-5" style="background: #0000000d">
+		<div class="footer-first-row p-0">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-sm-6 mt-2 text-center">
+            <p class="m-0" style="color:#424361">Contact us</p>
+						<ul class="call-email-alt">
+							<li><a href="tel:+234 801 2345 678" class="callemail"><i class="uil uil-phone"></i>+234 801 2345 678</a></li>
+							<li><a href="mailto:info@cendme.com" class="callemail"><i class="uil uil-envelope-alt"></i>info@cendme.com</a></li>
+						</ul>
+					</div>
+					<div class="col-md-6 col-sm-6 mt-2">
+						<div class="social-links-footer text-center">
+              <p class="m-0" style="color:#424361">Follow us on social media</p>
+							<ul>
+								<li><a href="#"><i class="uil uil-facebook"></i></a></li>
+								<li><a href="#"><i class="uil uil-twitter"></i></a></li>
+								<li><a href="#"><i class="uil uil-instagram"></i></a></li>
+							</ul>
+						</div>
+					</div>				
+				</div>
+			</div>
+		</div>
+		<div class="footer-last-row" style="background: unset">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="footer-bottom-links">
+							<ul>
+								<li><a href="#">Become a Shopper</a></li>
+								<li><a href="{{ url('vendor') }}">Start Selling</a></li>
+								<li><a href="#">Privacy Policy</a></li>
+								<li><a href="#">Term & Conditions</a></li>
+								<li><a href="#">Refund & Return Policy</a></li>
+							</ul>
+						</div>
+						<div class="copyright-text">
+							<i class="uil uil-copyright"></i>{{ date('Y') }} <b>Cendme</b>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {

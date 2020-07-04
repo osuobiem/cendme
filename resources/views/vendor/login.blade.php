@@ -35,7 +35,7 @@
             </div> --}}
             <div class="col-md-12 mt-3 text-center">
               <a href="{{ url('') }}" class="btn btn-sign hover-btn" style="width: fit-content !important;">
-                        <span id="btn-txt"><i class="fa fa-arrow-left"></i> Home</span>
+                        <span ><i class="fa fa-arrow-left"></i> Home</span>
               </a>
             </div>
             <div class="col-xl-5 col-lg-6">
