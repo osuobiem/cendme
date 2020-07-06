@@ -74,6 +74,9 @@ Route::group(['prefix' => '/vendor'], function () {
         // My Account Page
         Route::get('account', 'VendorViewController@account');
 
+        // My Wallet Page
+        Route::get('wallet', 'VendorViewController@wallet');
+
         // Get all Products
         Route::get('products/get', 'VendorViewController@get_products');
 

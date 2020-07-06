@@ -65,6 +65,14 @@ class VendorViewController extends Controller
     }
 
     /**
+     * My Wallet Page
+     */
+    public function wallet()
+    {
+        return view('vendor.wallet');
+    }
+
+    /**
      * My Account Page
      */
     public function account()
