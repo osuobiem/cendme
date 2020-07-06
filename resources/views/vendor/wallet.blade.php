@@ -22,7 +22,7 @@
       <li class="breadcrumb-item active">My Wallet</li>
     </ol>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4 mt-2">
         <div class="card card-static-2">
           <div class="card-title-2">
             <h4>Wallet Balance</h4>
@@ -30,13 +30,13 @@
 
           <hr style="margin: 0 !important;">
 
-          <div class="card-body text-center">
+          <div class="card-body text-center mt-2">
             <h1>₦{{ number_format(Auth::user()->balance) }}</h1>
-            <button class="save-btn hover-btn">Withdraw</button>
+            <button class="save-btn hover-btn" onclick="withdraw()">Withdraw</button>
           </div>
         </div>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-8 mt-2">
         <div class="card card-static-2">
           <div class="card-title-2">
             <h4>Transaction History</h4>
@@ -51,7 +51,7 @@
                   <tr>
                     <th>#</th>
                     <th>Transaction ID</th>
-                    <th>Price</th>
+                    <th>Amount</th>
                     <th>Date</th>
                     <th>View</th>
                   </tr>
@@ -73,6 +73,35 @@
     </div>
   </div>
 
+  {{-- Withdraw Modal --}}
+  <button id="pop-withdraw" class="d-none" data-toggle="modal" data-target="#withdraw-modal"></button>
+   @section('withdraw')
+      @include('vendor.account.withdraw')
+   @show
+
+  <script>
+    function withdraw() {
+      balance = parseFloat('{{ Auth::user()->balance }}');
+      
+      if(balance < 1000) {
+        showAlert(false, "You must have atleast ₦1000 in order to withdraw")
+      }
+      else {
+        $('#pop-withdraw').click()
+      }
+    }
+
+    // Toggle button spinner
+    function spin() {
+      $('.btn-txt').toggle()
+      $('.spin').toggle()
+    }
+
+    // Turn off errors
+    function offError() {
+      $('.error-message').html('')
+    }
+  </script>
 </main>
 @endsection
 
