@@ -316,4 +316,14 @@ class VendorController extends Controller
         ]);
     }
     // -------------
+
+    // TRANSACTION
+    public function withdraw(Request $request)
+    {
+        return response()->json([
+            "success" => false,
+            "message" => 'Still in process'
+        ], 400);
+    }
+    // -----------
 }

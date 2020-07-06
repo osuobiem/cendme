@@ -59,6 +59,9 @@ Route::group(['prefix' => '/vendor'], function () {
 
         // Vendor Logout
         Route::get('logout', 'VendorController@logout');
+
+        // Withdraw
+        Route::post('withdraw', 'VendorController@withdraw');
         // ----------
 
         // UI ------
