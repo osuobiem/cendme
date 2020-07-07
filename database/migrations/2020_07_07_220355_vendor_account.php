@@ -31,6 +31,6 @@ class VendorAccount extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('vendor_accounts');
     }
 }

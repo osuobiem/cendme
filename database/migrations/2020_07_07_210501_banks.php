@@ -13,7 +13,14 @@ class Banks extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('banks', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('code');
+
+            $table->softDeletes();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +30,6 @@ class Banks extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('banks');
     }
 }
