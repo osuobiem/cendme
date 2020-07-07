@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Bank;
 use App\Category;
 use App\Lga;
 use App\Product;
@@ -87,11 +88,15 @@ class VendorViewController extends Controller
         $states = State::orderBy('name', 'asc')->get();
         $lgas = Lga::where('state_id', $state_id)->orderBy('name', 'asc')->get();
 
+        // Get Banks
+        $banks = Bank::orderBy('name', 'asc')->get();
+
         // Compose view data
         $data = [
             'vendor' => $vendor,
             'states' => $states,
-            'lgas' => $lgas
+            'lgas' => $lgas,
+            'banks' => $banks
         ];
 
         return view('vendor.account', $data);

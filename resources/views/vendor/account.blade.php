@@ -25,37 +25,89 @@
 		<div class="row">
 
 			<div class="col-md-5">
-				<div class="card card-static-2 mb-30">
-					<div class="card-body-table">
-						<div class="shopowner-content-left text-center pd-20">
-							<div class="shop_img mb-3">
-								<div class="vendor-img-md" id="u-photo-fill"
-									style="background: url('{{ Storage::url('vendors/'.$vendor->photo) }}')">
-									<button class="btn btn-success btn-sm vendor-img-btn" onclick="pickImage('photo')"><i
-											class="fas fa-pen"></i></button>
+				<div class="col-md-12 p-0">
+					<div class="card card-static-2 mb-30">
+						<div class="card-body-table">
+							<div class="shopowner-content-left text-center pd-20">
+								<div class="shop_img mb-3">
+									<div class="vendor-img-md" id="u-photo-fill"
+										style="background: url('{{ Storage::url('vendors/'.$vendor->photo) }}')">
+										<button class="btn btn-success btn-sm vendor-img-btn" onclick="pickImage('photo')"><i
+												class="fas fa-pen"></i></button>
+									</div>
+								</div>
+								<form method="POST" id="photo-form">
+									@csrf
+									<input type="file" accept="image/*" name="photo" class="d-none" id="photo"
+										onchange="fillImage(this, 'u-photo-fill')">
+								</form>
+								<div class="shopowner-dt-left">
+									<h4>{{ $vendor->business_name }}</h4>
+								</div>
+								<div class="shopowner-dts">
+									<div class="shopowner-dt-list">
+										<span class="left-dt">Email</span>
+										<span class="right-dt">{{ $vendor->email }}</span>
+									</div>
+									<div class="shopowner-dt-list">
+										<span class="left-dt">Phone</span>
+										<span class="right-dt">{{ $vendor->phone }}</span>
+									</div>
+									<div class="shopowner-dt-list">
+										<span class="left-dt">Address</span>
+										<span class="right-dt">{{ $vendor->address }}<br>{{ $vendor->lga->name }}</span>
+									</div>
 								</div>
 							</div>
-							<form method="POST" id="photo-form">
-								@csrf
-								<input type="file" accept="image/*" name="photo" class="d-none" id="photo"
-									onchange="fillImage(this, 'u-photo-fill')">
-							</form>
-							<div class="shopowner-dt-left">
-								<h4>{{ $vendor->business_name }}</h4>
-							</div>
-							<div class="shopowner-dts">
-								<div class="shopowner-dt-list">
-									<span class="left-dt">Email</span>
-									<span class="right-dt">{{ $vendor->email }}</span>
-								</div>
-								<div class="shopowner-dt-list">
-									<span class="left-dt">Phone</span>
-									<span class="right-dt">{{ $vendor->phone }}</span>
-								</div>
-								<div class="shopowner-dt-list">
-									<span class="left-dt">Address</span>
-									<span class="right-dt">{{ $vendor->address }}<br>{{ $vendor->lga->name }}</span>
-								</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 p-0">
+					<div class="card card-static-2 mb-30">
+						<div class="card-title-2">
+							<h4>Bank Details</h4>
+						</div>
+						<div class="card-body-table">
+							<div class="news-content-right pd-20">
+								<form class="row" method="POST" id="bank-form">
+									@csrf
+									<div class="col-lg-12">
+										<div class="form-group mb-3">
+											<label class="form-label">Account Name <span class="text-danger">*</span></label>
+											<input type="text" name="account_name" class="form-control" value="" placeholder="Account Name"
+												required>
+											<span class="text-danger error-message" id="account_name"></span>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="form-group mb-3">
+											<label class="form-label">Account Number <span class="text-danger">*</span></label>
+											<input type="text" name="account_number" class="form-control" value=""
+												placeholder="Account Number" required>
+											<span class="text-danger error-message" id="account_number"></span>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<div class="form-group mb-3">
+											<label class="form-label">Bank <span class="text-danger">*</span></label>
+											<select class="form-control" required>
+												@foreach($banks as $bank)
+												<option value="{{ $bank->id }}">{{ $bank->name }}</option>
+												@endforeach
+											</select>
+											<span class="text-danger error-message" id="bank"></span>
+										</div>
+									</div>
+									<div class="col-lg-12">
+										<button class="save-btn hover-btn" type="submit">
+											<span id="bank-btn">Save Changes</span>
+											<div id="bank-btnspinner" style="display: none;"
+												class="spinner-border spinner-border-sm text-light" role="status">
+												<span class="sr-only">Processing...</span>
+											</div>
+										</button>
+									</div>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -74,7 +126,7 @@
 									<div class="form-group mb-3">
 										<label class="form-label">Business Name <span class="text-danger">*</span></label>
 										<input type="text" name="business_name" class="form-control" value="{{ $vendor->business_name }}"
-											placeholder="Enter First Name" required>
+											placeholder="Business Name" required>
 										<span class="text-danger error-message" id="business_name"></span>
 									</div>
 								</div>
@@ -202,6 +254,53 @@
 				})
 		})
 
+		// Submit Bank Form
+		$('#bank-form').submit(el => {
+			el.preventDefault();
+
+			offError();
+
+			let data = new FormData(el.target)
+			let url = "{{ url('vendor/update-bank-details/'.base64_encode($vendor->id)) }}"
+
+			spin('bank-btn')
+
+			$.ajax({
+				type: "POST",
+				url,
+				data,
+				processData: false,
+				contentType: false,
+			})
+				.then(res => {
+					spin('bank-btn')
+					showAlert(true, 'Update Successful')
+				})
+				.catch(err => {
+					spin('bank-btn')
+
+					if (err.status === 400) {
+						errors = err.responseJSON.message;
+
+						if (typeof errors === "object") {
+							for (const [key, value] of Object.entries(errors)) {
+								$('#' + key).html('');
+								[...value].forEach(m => {
+									$('#' + key).append(`<p>${m}</p>`)
+								})
+							}
+						}
+						else {
+							showAlert(false, errors)
+						}
+					}
+
+					else {
+						showAlert(false, "Oops! Something's not right. Try Again");
+					}
+				})
+		})
+
 		// Submit photo form
 		$('#photo-form').submit(el => {
 			el.preventDefault()
@@ -261,9 +360,15 @@
 		}
 	}
 
-	function spin() {
-		$('#btn-txt').toggle()
-		$('#spinner').toggle()
+	function spin(id = false) {
+		if (id) {
+			$('#' + id).toggle()
+			$('#' + id + 'spinner').toggle()
+		}
+		else {
+			$('#btn-txt').toggle()
+			$('#spinner').toggle()
+		}
 	}
 
 	function offError() {

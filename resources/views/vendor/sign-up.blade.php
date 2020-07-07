@@ -89,7 +89,7 @@
                         <label class="form-label" for="inputPassword">Password <span
                             class="text-danger">*</span></label>
                         <input class="form-control py-3" name="password" id="inputPassword" required type="password"
-                          placeholder="Enter password">
+                          placeholder="Password">
                         <span class="text-danger error-message" id="password"></span>
                       </div>
 
