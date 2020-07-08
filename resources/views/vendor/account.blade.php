@@ -75,7 +75,7 @@
 										<div class="form-group mb-3">
 											<label class="form-label">Account Name <span class="text-danger">*</span></label>
 											<input type="text" name="account_name" class="form-control"
-												value="{{ Auth::user()->account->account_name }}" placeholder="Account Name" required>
+												value="{{ $account ? $account->account_name : '' }}" placeholder="Account Name" required>
 											<span class="text-danger error-message" id="account_name"></span>
 										</div>
 									</div>
@@ -83,7 +83,7 @@
 										<div class="form-group mb-3">
 											<label class="form-label">Account Number <span class="text-danger">*</span></label>
 											<input type="text" name="account_number" class="form-control"
-												value="{{ Auth::user()->account->account_number }}" placeholder="Account Number" required>
+												value="{{ $account ? $account->account_number : '' }}" placeholder="Account Number" required>
 											<span class="text-danger error-message" id="account_number"></span>
 										</div>
 									</div>
@@ -93,7 +93,7 @@
 											<select class="form-control" name="bank" required>
 												@foreach($banks as $bank)
 												<option value="{{ $bank->id }}"
-													{{ Auth::user()->account->bank_id == $bank->id ? 'selected' : ''}}>{{ $bank->name }}</option>
+													{{$account ? $account->bank_id == $bank->id ? 'selected' : '' : ''}}>{{ $bank->name }}</option>
 												@endforeach
 											</select>
 											<span class="text-danger error-message" id="bank"></span>

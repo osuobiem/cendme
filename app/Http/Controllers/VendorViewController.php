@@ -96,7 +96,8 @@ class VendorViewController extends Controller
             'vendor' => $vendor,
             'states' => $states,
             'lgas' => $lgas,
-            'banks' => $banks
+            'banks' => $banks,
+            'account' => $vendor->account
         ];
 
         return view('vendor.account', $data);
