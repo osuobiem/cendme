@@ -16,7 +16,7 @@ class VendorAccount extends Migration
         Schema::create('vendor_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('account_name');
-            $table->integer('account_number');
+            $table->string('account_number');
             $table->foreignId('bank_id')->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->foreignId('vendor_id')->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->boolean('verified')->default(false);

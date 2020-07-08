@@ -60,6 +60,9 @@ Route::group(['prefix' => '/vendor'], function () {
         // Vendor Logout
         Route::get('logout', 'VendorController@logout');
 
+        // Update Bank Details
+        Route::post('update-bank-details/{id}', 'VendorController@update_bank_details');
+
         // Withdraw
         Route::post('withdraw', 'VendorController@withdraw');
         // ----------

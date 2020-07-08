@@ -29,4 +29,10 @@ class Vendor extends Authenticatable
     {
         return $this->belongsTo('App\Lga');
     }
+
+    // Relationship with Vendor Account
+    public function account()
+    {
+        return $this->hasOne('App\Vendor_account');
+    }
 }

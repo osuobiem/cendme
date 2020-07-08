@@ -74,25 +74,26 @@
 									<div class="col-lg-12">
 										<div class="form-group mb-3">
 											<label class="form-label">Account Name <span class="text-danger">*</span></label>
-											<input type="text" name="account_name" class="form-control" value="" placeholder="Account Name"
-												required>
+											<input type="text" name="account_name" class="form-control"
+												value="{{ Auth::user()->account->account_name }}" placeholder="Account Name" required>
 											<span class="text-danger error-message" id="account_name"></span>
 										</div>
 									</div>
 									<div class="col-lg-12">
 										<div class="form-group mb-3">
 											<label class="form-label">Account Number <span class="text-danger">*</span></label>
-											<input type="text" name="account_number" class="form-control" value=""
-												placeholder="Account Number" required>
+											<input type="text" name="account_number" class="form-control"
+												value="{{ Auth::user()->account->account_number }}" placeholder="Account Number" required>
 											<span class="text-danger error-message" id="account_number"></span>
 										</div>
 									</div>
 									<div class="col-lg-12">
 										<div class="form-group mb-3">
 											<label class="form-label">Bank <span class="text-danger">*</span></label>
-											<select class="form-control" required>
+											<select class="form-control" name="bank" required>
 												@foreach($banks as $bank)
-												<option value="{{ $bank->id }}">{{ $bank->name }}</option>
+												<option value="{{ $bank->id }}"
+													{{ Auth::user()->account->bank_id == $bank->id ? 'selected' : ''}}>{{ $bank->name }}</option>
 												@endforeach
 											</select>
 											<span class="text-danger error-message" id="bank"></span>

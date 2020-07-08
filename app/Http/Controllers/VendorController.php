@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Bank;
+use App\Credential;
 use App\Vendor;
+use App\Vendor_account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -313,6 +317,93 @@ class VendorController extends Controller
         // Make and return validation rules
         return Validator::make($request->all(), [
             'photo' => 'required|image|max:5120'
+        ]);
+    }
+
+    /**
+     * Update bank details
+     * @return json
+     */
+    public function update_bank_details(Request $request)
+    {
+        // Get validation rules
+        $validate = $this->update_bank_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ], 400);
+        }
+
+        // Extract data from request
+        $account_number = $request['account_number'];
+        $account_name = $request['account_name'];
+        $bank_id = $request['bank'];
+
+        // Get bank
+        $bank = Bank::find($bank_id);
+
+        // VERIFY ACCOUNT NUMBER
+        // Retrieve necessary credentials
+        $credentials = Credential::where('key', 'paystack_secret_key')->first();
+
+        // Ping Paystack's Resolve Account Number API
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $credentials->value
+        ])->get('https://api.paystack.co/bank/resolve?account_number=' . $account_number . '&bank_code=' . $bank->code);
+        // ---------------
+
+        $vendor_account = Auth::user()->account;
+        if ($vendor_account) {
+            $account = $vendor_account;
+        } else {
+            $account = new Vendor_account();
+        }
+
+        if ($response->successful()) {
+            $account->account_number = $account_number;
+            $account->account_name = $account_name;
+            $account->bank_id = $bank_id;
+            $account->vendor_id = Auth::user()->id;
+            $account->verified = true;
+
+            // Save verified vendor bank details
+            $account->save();
+
+            return response()->json([
+                "success" => true,
+                "message" => "Update Successful"
+            ]);
+        } else {
+            $account->account_number = $account_number;
+            $account->account_name = $account_name;
+            $account->bank_id = $bank_id;
+            $account->vendor_id = Auth::user()->id;
+            $account->verified = false;
+
+            // Save unverified vendor bank details
+            $account->save();
+
+            return response()->json([
+                "success" => false,
+                "message" => "Could not verify bank account. Check provided credentials"
+            ], 400);
+        }
+    }
+
+    /**
+     * Update bank details validation rules
+     * @return object The validator object
+     */
+    private function update_bank_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'account_name' => 'required',
+            'account_number' => 'required|numeric|digits:10',
+            'bank' => 'numeric|exists:banks,id'
         ]);
     }
     // -------------
