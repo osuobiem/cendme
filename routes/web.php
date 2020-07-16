@@ -146,9 +146,16 @@ Route::group(['prefix' => '/admin'], function () {
 
     Route::group(['middleware' => 'auth:admins'], function () {
 
+        // LOGIC ----
+        // Admin Logout
+        Route::get('logout', 'AdminController@logout');
+        // --------------
+
+
         // UI ------
         // Admin Dashboard Page
         Route::get('', 'AdminViewController@dashboard');
+        // -------------
     });
 });
 // ---------------

@@ -13,8 +13,8 @@
         <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">{{ Auth::guard('admins')->user()->name }}&nbsp;&nbsp;<i class="fas fa-user fa-fw"></i></a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-          <a class="dropdown-item admin-dropdown-item" href="{{ url('vendor/account') }}">My Account</a>
-          <a class="dropdown-item admin-dropdown-item" href="{{ url('vendor/logout') }}">Logout</a>
+          <a class="dropdown-item admin-dropdown-item" href="{{ url('admin/account') }}">My Account</a>
+          <a class="dropdown-item admin-dropdown-item" href="{{ url('admin/logout') }}">Logout</a>
         </div>
       </li>
     </ul>

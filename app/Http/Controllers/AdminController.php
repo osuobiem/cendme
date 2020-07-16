@@ -54,4 +54,16 @@ class AdminController extends Controller
             'password' => 'required|alpha_dash'
         ]);
     }
+
+    /**
+     * Logout admin
+     * @return object
+     */
+    public function logout()
+    {
+        Auth::logout();
+
+        return redirect('admin/login');
+    }
+    // ------------------
 }
