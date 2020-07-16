@@ -21,6 +21,7 @@ class Admin extends Migration
             $table->string('image')->default('placeholder.png');
             $table->string('type');
 
+            $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });
