@@ -28,7 +28,7 @@ class AdminController extends Controller
         $credentials = $credentials = $request->only('username', 'password');
 
         // Attempt admin login
-        $attempt = Auth::attempt($credentials, $request['remember_me']);
+        $attempt = Auth::guard('admins')->attempt($credentials, $request['remember_me']);
 
         $res = [
             'success' => false,

@@ -41,6 +41,11 @@ return [
             'provider' => 'vendors',
         ],
 
+        'admins' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
         'agents-web' => [
             'driver' => 'session',
             'provider' => 'agents',
@@ -90,6 +95,11 @@ return [
         'vendors' => [
             'driver' => 'eloquent',
             'model' => App\Vendor::class,
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Admin::class,
         ],
 
         'agents' => [

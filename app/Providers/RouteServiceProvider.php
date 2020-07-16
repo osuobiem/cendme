@@ -31,6 +31,20 @@ class RouteServiceProvider extends ServiceProvider
     public const VENDOR_LOGIN = 'vendor/login';
 
     /**
+     * The path to the "admin" route for your application.
+     *
+     * @var string
+     */
+    public const ADMIN = 'admin';
+
+    /**
+     * The path to the "admin/login" route for your application.
+     *
+     * @var string
+     */
+    public const ADMIN_LOGIN = 'admin/login';
+
+    /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @return void

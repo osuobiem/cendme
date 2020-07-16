@@ -22,6 +22,8 @@ class Authenticate extends Middleware
 
                 if ($request->is('vendor') || $request->is('vendor/*')) {
                     return url('vendor/login');
+                } elseif ($request->is('admin') || $request->is('admin/*')) {
+                    return url('admin/login');
                 }
                 // throw new HttpResponseException(response()->json(['success' => false, 'message' => "You're not logged in"],  401));
             }

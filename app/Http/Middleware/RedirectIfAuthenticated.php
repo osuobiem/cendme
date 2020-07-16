@@ -21,6 +21,8 @@ class RedirectIfAuthenticated
         if (Auth::guard($guard)->check()) {
             if ($request->is('vendor/*')) {
                 return redirect(RouteServiceProvider::VENDOR);
+            } elseif ($request->is('admin/*')) {
+                return redirect(RouteServiceProvider::ADMIN);
             }
         }
 

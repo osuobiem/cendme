@@ -123,3 +123,32 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
     Route::delete('delete/{id}', 'ProductController@delete');
 });
 // ---------------
+
+/**
+ * ADMIN ROUTES
+ */
+Route::group(['prefix' => '/admin'], function () {
+
+    Route::group(['middleware' => 'guest:admins'], function () {
+
+        // LOGIC -------
+
+        // Admin Login
+        Route::post('p-login', 'AdminController@login');
+        // ------------
+
+
+        // UI -------
+        // Admin Login Page
+        Route::get('login', 'AdminViewController@login');
+        // -----------
+    });
+
+    Route::group(['middleware' => 'auth:admins'], function () {
+
+        // UI ------
+        // Admin Dashboard Page
+        Route::get('', 'AdminViewController@dashboard');
+    });
+});
+// ---------------
