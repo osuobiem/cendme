@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(Credentials::class);
         // $this->call(CategorySeeder::class);
-        $this->call(SubCategorySeeder::class);
+        // $this->call(SubCategorySeeder::class);
         // $this->call(AgentLevelsSeeder::class);
+        $this->call(AdminSeeder::class);
     }
 }

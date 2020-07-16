@@ -1,6 +1,8 @@
 <?php
 
+use App\Admin;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
@@ -11,6 +13,11 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Admin::create([
+            'name' => 'Cendme Superadmin',
+            'username' => 'superadmin',
+            'password' => Hash::make('123456'),
+            'type' => 'superadmin'
+        ]);
     }
 }
