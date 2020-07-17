@@ -156,6 +156,9 @@ Route::group(['prefix' => '/admin'], function () {
         // Admin Dashboard Page
         Route::get('', 'AdminViewController@dashboard');
 
+        // Vendor Page
+        Route::get('vendors', 'AdminViewController@vendors');
+
         // Get all Vendors
         Route::get('vendors/get/{limit?}', 'AdminViewController@get_vendors');
 
@@ -164,6 +167,9 @@ Route::group(['prefix' => '/admin'], function () {
 
         // Get all Users
         Route::get('users/get/{limit?}', 'AdminViewController@get_users');
+
+        // Get vendor view modals
+        Route::get('vendors/view-modals', 'AdminViewController@vendor_view_modals');
         // -------------
     });
 });

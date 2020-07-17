@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Agent;
 use App\User;
 use App\Vendor;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class AdminViewController extends Controller
 {
@@ -27,6 +25,14 @@ class AdminViewController extends Controller
     }
 
     /**
+     * Vendors page
+     */
+    public function vendors()
+    {
+        return view('admin.vendor.index');
+    }
+
+    /**
      * Get vendors
      * @param int $limit Optional vendors fetch limit
      * 
@@ -38,7 +44,7 @@ class AdminViewController extends Controller
         $vendors = $limit ? Vendor::limit($limit)->orderBy('created_at', 'DESC')->get() : Vendor::orderBy('created_at', 'DESC')->get();
 
         // Return view
-        return view($limit ? 'admin.vendors.small_list' : 'admin.vendors.list', ['vendors' => $vendors]);
+        return view($limit ? 'admin.vendor.small_list' : 'admin.vendor.list', ['vendors' => $vendors]);
     }
 
     /**
@@ -53,7 +59,7 @@ class AdminViewController extends Controller
         $agents = $limit ? Agent::limit($limit)->orderBy('created_at', 'DESC')->get() : Agent::orderBy('created_at', 'DESC')->get();
 
         // Return view
-        return view($limit ? 'admin.agents.small_list' : 'admin.agents.list', ['agents' => $agents]);
+        return view($limit ? 'admin.agent.small_list' : 'admin.agent.list', ['agents' => $agents]);
     }
 
     /**
@@ -68,6 +74,19 @@ class AdminViewController extends Controller
         $users = $limit ? User::limit($limit)->orderBy('created_at', 'DESC')->get() : User::orderBy('created_at', 'DESC')->get();
 
         // Return view
-        return view($limit ? 'admin.users.small_list' : 'admin.users.list', ['users' => $users]);
+        return view($limit ? 'admin.user.small_list' : 'admin.user.list', ['users' => $users]);
+    }
+
+    /**
+     * Get view modals
+     * @return html
+     */
+    public function vendor_view_modals()
+    {
+        // Fetch Vendors
+        $vendors = Vendor::all();
+
+        // Return view
+        return view('admin.vendor.view', ['vendors' => $vendors]);
     }
 }
