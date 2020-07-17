@@ -149,6 +149,9 @@ Route::group(['prefix' => '/admin'], function () {
         // LOGIC ----
         // Admin Logout
         Route::get('logout', 'AdminController@logout');
+
+        // Delete Vendor
+        Route::delete('vendors/delete/{id}', 'AdminController@delete_vendor');
         // --------------
 
 

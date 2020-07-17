@@ -32,7 +32,7 @@
 
           <div class="card-body">
             <div class="table-responsive table-striped">
-              <table class="table ucp-table" id="vendors-table">
+              <table class="table ucp-table" id="agents-table">
                 <thead>
                   <tr>
                     <th>Business Name</th>
@@ -42,7 +42,7 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody id="vendors">
+                <tbody id="agents">
                   <tr class="text-center">
                     <td colspan="6">
                       <div id="spinner" class="spinner-border spinner-border-sm text-dark" role="status">
@@ -75,29 +75,29 @@
 
     // Load Vendors
     function loadVendors() {
-      let url = "{{ url('admin/vendors/get') }}";
+      let url = "{{ url('admin/agents/get') }}";
 
       $.ajax({
         type: "GET",
         url
       })
         .then(res => {
-          $('#vendors').html(res)
+          $('#agents').html(res)
           if (!DTInitialized) {
-            $('#vendors-table').DataTable({
+            $('#agents-table').DataTable({
               "order": [[3, 'desc']]
             });
             DTInitialized = true;
           }
         })
         .catch(err => {
-          showAlert(false, 'Could not load vendors. Please relaod page')
+          showAlert(false, 'Could not load agents. Please relaod page')
         })
     }
 
     // Load View Modals
     function loadViewModals() {
-      let url = "{{ url('admin/vendors/view-modals') }}";
+      let url = "{{ url('admin/agents/view-modals') }}";
 
       $.ajax({
         type: "GET",
@@ -107,7 +107,7 @@
           $('#view-modals-h').html(res)
         })
         .catch(err => {
-          showAlert(false, 'Could not load vendor views. Please relaod page')
+          showAlert(false, 'Could not load agent views. Please relaod page')
         })
     }
 
@@ -128,7 +128,7 @@
 
     // Delete Vendor
     function deleteVendor(id) {
-      let url = "{{ url('admin/vendors/delete') }}/" + id;
+      let url = "{{ url('admin/agents/delete') }}/" + id;
 
       $.ajax({
         type: "DELETE",
@@ -150,5 +150,5 @@
 
 {{-- Footer --}}
 @section('footer')
-@include('vendor.components.footer')
+@include('agent.components.footer')
 @endsection

@@ -2,7 +2,7 @@
   <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
     <div class="sb-sidenav-menu">
       <div class="nav">
-      <a class="nav-link {{ Request::is('vendor') ? 'active' : '' }}" href="{{ url('vendor') }}">
+      <a class="nav-link {{ Request::is('admin') ? 'active' : '' }}" href="{{ url('admin') }}">
           <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
           Dashboard
         </a>

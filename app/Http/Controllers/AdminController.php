@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
+    // ADMIN LOGIN
+
     /**
      * Login admin
      * @return json
@@ -65,5 +70,54 @@ class AdminController extends Controller
 
         return redirect('admin/login');
     }
-    // ------------------
+
+    // ---------------
+
+    // VENDOR
+
+    /**
+     * Delete vendor
+     * @param int $id Vendor ID
+     * @return json
+     */
+    public function delete_vendor($id)
+    {
+        // Find vendor with supplied id
+        $vendor = Vendor::find($id);
+
+        if ($vendor) {
+
+            // Try vendor delete or catch error if any
+            try {
+                $vendor->delete();
+
+                // Delete vendor photo
+                $vendor->photo != 'placeholder.png' ? Storage::delete('/public/vendors/' . $vendor->photo) : '';
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Vendor deleted'
+                ]);
+            } catch (\Throwable $th) {
+                Log::error($th);
+
+                // Return failure response
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Internal Server Error'
+                ]);
+            }
+        } else {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Vendor not found'
+                ],
+                404
+            );
+        }
+    }
+
+    //  -----------
+
 }
