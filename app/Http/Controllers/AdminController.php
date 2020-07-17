@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Agent;
 use App\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -91,9 +92,6 @@ class AdminController extends Controller
             try {
                 $vendor->delete();
 
-                // Delete vendor photo
-                $vendor->photo != 'placeholder.png' ? Storage::delete('/public/vendors/' . $vendor->photo) : '';
-
                 return response()->json([
                     'success' => true,
                     'message' => 'Vendor deleted'
@@ -120,4 +118,45 @@ class AdminController extends Controller
 
     //  -----------
 
+    // AGENT
+    /**
+     * Delete agent
+     * @param int $id Agent ID
+     * @return json
+     */
+    public function delete_agent($id)
+    {
+        // Find agent with supplied id
+        $agent = Agent::find($id);
+
+        if ($agent) {
+
+            // Try agent delete or catch error if any
+            try {
+                $agent->delete();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Shopper deleted'
+                ]);
+            } catch (\Throwable $th) {
+                Log::error($th);
+
+                // Return failure response
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Internal Server Error'
+                ]);
+            }
+        } else {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Shopper not found'
+                ],
+                404
+            );
+        }
+    }
+    // ------------
 }

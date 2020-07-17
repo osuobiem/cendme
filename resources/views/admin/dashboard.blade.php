@@ -60,7 +60,7 @@
         <div class="card card-static-2 mb-30">
           <div class="card-title-2">
             <h4>Shoppers</h4>
-            <a href="{{ url('admin/agents') }}" class="view-btn hover-btn">View All</a>
+            <a href="{{ url('admin/shoppers') }}" class="view-btn hover-btn">View All</a>
           </div>
 
           <hr style="margin: 0 !important;">

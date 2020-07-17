@@ -152,6 +152,9 @@ Route::group(['prefix' => '/admin'], function () {
 
         // Delete Vendor
         Route::delete('vendors/delete/{id}', 'AdminController@delete_vendor');
+
+        // Delete Agent
+        Route::delete('agents/delete/{id}', 'AdminController@delete_agent');
         // --------------
 
 
