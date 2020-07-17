@@ -176,6 +176,9 @@ Route::group(['prefix' => '/admin'], function () {
 
         // Get vendor view modals
         Route::get('vendors/view-modals', 'AdminViewController@vendor_view_modals');
+
+        // Get agent view modals
+        Route::get('agents/view-modals', 'AdminViewController@agent_view_modals');
         // -------------
     });
 });

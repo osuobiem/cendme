@@ -87,7 +87,7 @@
           $('#agents').html(res)
           if (!DTInitialized) {
             $('#agents-table').DataTable({
-              "order": [[3, 'desc']]
+              "order": [[5, 'desc']]
             });
             DTInitialized = true;
           }
@@ -123,13 +123,13 @@
       })
         .then((willDelete) => {
           if (willDelete) {
-            deleteVendor(id)
+            deleteAgent(id)
           }
         });
     }
 
-    // Delete Vendor
-    function deleteVendor(id) {
+    // Delete Agent
+    function deleteAgent(id) {
       let url = "{{ url('admin/agents/delete') }}/" + id;
 
       $.ajax({
@@ -138,7 +138,7 @@
       })
         .then(res => {
           showAlert(true, res.message)
-          loadVendors()
+          loadAgents()
         })
         .catch(err => {
           showAlert(false, "Oops! Something's not right. Try Again")

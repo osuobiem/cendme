@@ -10,10 +10,15 @@
           <div class="sb-nav-link-icon"><i class="fas fa-store"></i></div>
           Vendors
         </a>
+        <a class="nav-link {{ Request::is('admin/shoppers') ? 'active' : '' }}" href="{{ url('admin/shoppers') }}">
+          <div class="sb-nav-link-icon"><i class="fas fa-user-tie"></i></div>
+          Shoppers
+        </a>
         <a class="nav-link {{ Request::is('vendor/account') ? 'active' : '' }}" href="{{ url('vendor/account') }}">
           <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
           My Account
         </a>
+        
         <a class="nav-link" href="{{ url('admin/logout') }}">
           <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
           Logout

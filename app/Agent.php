@@ -20,6 +20,19 @@ class Agent extends Authenticatable
         'password', 'remember_token',
     ];
 
+    // Relationship with LGA
+    public function lga()
+    {
+        return $this->belongsTo('App\Lga');
+    }
+
+
+    // Relationship with Level
+    public function level()
+    {
+        return $this->belongsTo('App\AgentLevel');
+    }
+
     /**
      * Relationship with BVN Data
      */

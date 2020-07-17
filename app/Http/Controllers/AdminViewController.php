@@ -86,7 +86,7 @@ class AdminViewController extends Controller
     }
 
     /**
-     * Get view modals
+     * Get vendor view modals
      * @return html
      */
     public function vendor_view_modals()
@@ -96,5 +96,18 @@ class AdminViewController extends Controller
 
         // Return view
         return view('admin.vendor.view', ['vendors' => $vendors]);
+    }
+
+    /**
+     * Get agent view modals
+     * @return html
+     */
+    public function agent_view_modals()
+    {
+        // Fetch Agents
+        $agents = Agent::all();
+
+        // Return view
+        return view('admin.agent.view', ['agents' => $agents]);
     }
 }
