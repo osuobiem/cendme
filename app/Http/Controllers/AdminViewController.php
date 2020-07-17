@@ -33,6 +33,14 @@ class AdminViewController extends Controller
     }
 
     /**
+     * Agents page
+     */
+    public function agents()
+    {
+        return view('admin.agent.index');
+    }
+
+    /**
      * Get vendors
      * @param int $limit Optional vendors fetch limit
      * 

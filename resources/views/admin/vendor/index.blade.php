@@ -150,5 +150,5 @@
 
 {{-- Footer --}}
 @section('footer')
-@include('vendor.components.footer')
+@include('admin.components.footer')
 @endsection

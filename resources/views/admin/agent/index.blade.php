@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 {{-- Page Title --}}
-@section('title', 'Vendors')
+@section('title', 'Shoppers')
 
 {{-- Top Bar --}}
 @section('topbar')
@@ -19,13 +19,13 @@
   <div class="container-fluid">
     <ol class="breadcrumb mt-2 mb-1">
       <li class="breadcrumb-item"><a href="{{ url('admin') }}">Dashboard</a></li>
-      <li class="breadcrumb-item active">Vendors</li>
+      <li class="breadcrumb-item active">Shoppers</li>
     </ol>
     <div class="row">
       <div class="col-md-12">
         <div class="card card-static-2 mb-30">
           <div class="card-title-2">
-            <h4>Vendors</h4>
+            <h4>Shoppers</h4>
           </div>
 
           <hr style="margin: 0 !important;">
@@ -35,9 +35,11 @@
               <table class="table ucp-table" id="agents-table">
                 <thead>
                   <tr>
-                    <th>Business Name</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
                     <th>Email</th>
                     <th>Phone</th>
+                    <th>Verified</th>
                     <th>Joined</th>
                     <th>Action</th>
                   </tr>
@@ -69,12 +71,12 @@
     DTInitialized = false;
 
     $(document).ready(function () {
-      loadVendors();
+      loadAgents();
       loadViewModals();
     });
 
-    // Load Vendors
-    function loadVendors() {
+    // Load Agents
+    function loadAgents() {
       let url = "{{ url('admin/agents/get') }}";
 
       $.ajax({
@@ -91,7 +93,7 @@
           }
         })
         .catch(err => {
-          showAlert(false, 'Could not load agents. Please relaod page')
+          showAlert(false, 'Could not load shoppers. Please relaod page')
         })
     }
 
@@ -107,7 +109,7 @@
           $('#view-modals-h').html(res)
         })
         .catch(err => {
-          showAlert(false, 'Could not load agent views. Please relaod page')
+          showAlert(false, 'Could not load shopper views. Please relaod page')
         })
     }
 
@@ -150,5 +152,5 @@
 
 {{-- Footer --}}
 @section('footer')
-@include('agent.components.footer')
+@include('admin.components.footer')
 @endsection

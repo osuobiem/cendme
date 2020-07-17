@@ -159,8 +159,11 @@ Route::group(['prefix' => '/admin'], function () {
         // Admin Dashboard Page
         Route::get('', 'AdminViewController@dashboard');
 
-        // Vendor Page
+        // Vendors Page
         Route::get('vendors', 'AdminViewController@vendors');
+
+        // Agents Page
+        Route::get('shoppers', 'AdminViewController@agents');
 
         // Get all Vendors
         Route::get('vendors/get/{limit?}', 'AdminViewController@get_vendors');
