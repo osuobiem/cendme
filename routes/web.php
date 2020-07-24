@@ -155,6 +155,9 @@ Route::group(['prefix' => '/admin'], function () {
 
         // Delete Agent
         Route::delete('agents/delete/{id}', 'AdminController@delete_agent');
+
+        // Delete User
+        Route::delete('users/delete/{id}', 'AdminController@delete_user');
         // --------------
 
 
@@ -167,6 +170,9 @@ Route::group(['prefix' => '/admin'], function () {
 
         // Agents Page
         Route::get('shoppers', 'AdminViewController@agents');
+
+        // Users Page
+        Route::get('users', 'AdminViewController@users');
 
         // Get all Vendors
         Route::get('vendors/get/{limit?}', 'AdminViewController@get_vendors');
@@ -182,6 +188,9 @@ Route::group(['prefix' => '/admin'], function () {
 
         // Get agent view modals
         Route::get('agents/view-modals', 'AdminViewController@agent_view_modals');
+
+        // Get user view modals
+        Route::get('users/view-modals', 'AdminViewController@user_view_modals');
         // -------------
     });
 });

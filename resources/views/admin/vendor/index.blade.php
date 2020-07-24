@@ -111,7 +111,7 @@
         })
     }
 
-    // Delete Product Warning
+    // Delete Vendor Warning
     function deleteWarn(id) {
       swal({
         title: "Are you sure?",

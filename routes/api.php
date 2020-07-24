@@ -27,7 +27,7 @@ Route::group(['namespace' => 'API'], function () {
     Route::group(['prefix' => 'user'], function () {
 
         // User Signup
-        Route::post('signup', 'UserController@create');
+        Route::post('sign-up', 'UserController@create');
 
         // User Login
         Route::post('login', 'UserController@login');

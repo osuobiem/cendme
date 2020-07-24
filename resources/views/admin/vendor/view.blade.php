@@ -1,5 +1,5 @@
 @foreach ($vendors as $vendor)
-<!-- Update product modal -->
+
 <div class="modal fade" id="view{{ $vendor->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-md">

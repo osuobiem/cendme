@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 {{-- Page Title --}}
-@section('title', 'Shoppers')
+@section('title', 'Users')
 
 {{-- Top Bar --}}
 @section('topbar')
@@ -19,32 +19,32 @@
   <div class="container-fluid">
     <ol class="breadcrumb mt-2 mb-1">
       <li class="breadcrumb-item"><a href="{{ url('admin') }}">Dashboard</a></li>
-      <li class="breadcrumb-item active">Shoppers</li>
+      <li class="breadcrumb-item active">Users</li>
     </ol>
     <div class="row">
       <div class="col-md-12">
         <div class="card card-static-2 mb-30">
           <div class="card-title-2">
-            <h4>Shoppers</h4>
+            <h4>Users</h4>
           </div>
 
           <hr style="margin: 0 !important;">
 
           <div class="card-body">
             <div class="table-responsive table-striped">
-              <table class="table ucp-table" id="agents-table">
+              <table class="table ucp-table" id="users-table">
                 <thead>
                   <tr>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Verified</th>
+                    <th>Gender</th>
                     <th>Joined</th>
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody id="agents">
+                <tbody id="users">
                   <tr class="text-center">
                     <td colspan="6">
                       <div id="spinner" class="spinner-border spinner-border-sm text-dark" role="status">
@@ -71,35 +71,35 @@
     DTInitialized = false;
 
     $(document).ready(function () {
-      loadAgents();
+      loadUsers();
       loadViewModals();
     });
 
-    // Load Agents
-    function loadAgents() {
-      let url = "{{ url('admin/agents/get') }}";
+    // Load Users
+    function loadUsers() {
+      let url = "{{ url('admin/users/get') }}";
 
       $.ajax({
         type: "GET",
         url
       })
         .then(res => {
-          $('#agents').html(res)
+          $('#users').html(res)
           if (!DTInitialized) {
-            $('#agents-table').DataTable({
+            $('#users-table').DataTable({
               "order": [[5, 'desc']]
             });
             DTInitialized = true;
           }
         })
         .catch(err => {
-          showAlert(false, 'Could not load shoppers. Please relaod page')
+          showAlert(false, 'Could not load users. Please relaod page')
         })
     }
 
     // Load View Modals
     function loadViewModals() {
-      let url = "{{ url('admin/agents/view-modals') }}";
+      let url = "{{ url('admin/users/view-modals') }}";
 
       $.ajax({
         type: "GET",
@@ -109,11 +109,11 @@
           $('#view-modals-h').html(res)
         })
         .catch(err => {
-          showAlert(false, 'Could not load shopper views. Please relaod page')
+          showAlert(false, 'Could not load user views. Please relaod page')
         })
     }
 
-    // Delete Agent Warning
+    // Delete User Warning
     function deleteWarn(id) {
       swal({
         title: "Are you sure?",
@@ -123,14 +123,14 @@
       })
         .then((willDelete) => {
           if (willDelete) {
-            deleteAgent(id)
+            deleteUser(id)
           }
         });
     }
 
-    // Delete Agent
-    function deleteAgent(id) {
-      let url = "{{ url('admin/agents/delete') }}/" + id;
+    // Delete Users
+    function deleteUser(id) {
+      let url = "{{ url('admin/users/delete') }}/" + id;
 
       $.ajax({
         type: "DELETE",
@@ -138,7 +138,7 @@
       })
         .then(res => {
           showAlert(true, res.message)
-          loadAgents()
+          loadUsers()
         })
         .catch(err => {
           showAlert(false, "Oops! Something's not right. Try Again")

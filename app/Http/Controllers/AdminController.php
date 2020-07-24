@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Agent;
+use App\User;
 use App\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -153,6 +154,48 @@ class AdminController extends Controller
                 [
                     'success' => false,
                     'message' => 'Shopper not found'
+                ],
+                404
+            );
+        }
+    }
+    // ------------
+
+    // USER
+    /**
+     * Delete user
+     * @param int $id User ID
+     * @return json
+     */
+    public function delete_user($id)
+    {
+        // Find user with supplied id
+        $user = User::find($id);
+
+        if ($user) {
+
+            // Try user delete or catch error if any
+            try {
+                $user->delete();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'User deleted'
+                ]);
+            } catch (\Throwable $th) {
+                Log::error($th);
+
+                // Return failure response
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Internal Server Error'
+                ]);
+            }
+        } else {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'User not found'
                 ],
                 404
             );

@@ -41,6 +41,14 @@ class AdminViewController extends Controller
     }
 
     /**
+     * Users page
+     */
+    public function users()
+    {
+        return view('admin.user.index');
+    }
+
+    /**
      * Get vendors
      * @param int $limit Optional vendors fetch limit
      * 
@@ -109,5 +117,18 @@ class AdminViewController extends Controller
 
         // Return view
         return view('admin.agent.view', ['agents' => $agents]);
+    }
+
+    /**
+     * Get users view modals
+     * @return html
+     */
+    public function user_view_modals()
+    {
+        // Fetch Users
+        $users = User::all();
+
+        // Return view
+        return view('admin.user.view', ['users' => $users]);
     }
 }
