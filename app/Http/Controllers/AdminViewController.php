@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Agent;
 use App\User;
 use App\Vendor;
+use Illuminate\Support\Facades\Auth;
 
 class AdminViewController extends Controller
 {
@@ -46,6 +47,16 @@ class AdminViewController extends Controller
     public function users()
     {
         return view('admin.user.index');
+    }
+
+    /**
+     * Account page
+     */
+    public function account()
+    {
+        $admin = Auth::guard('admins')->user();
+
+        return view('admin.account', ['admin' => $admin]);
     }
 
     /**

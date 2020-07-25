@@ -11,10 +11,14 @@
           Vendors
         </a>
         <a class="nav-link {{ Request::is('admin/shoppers') ? 'active' : '' }}" href="{{ url('admin/shoppers') }}">
-          <div class="sb-nav-link-icon"><i class="fas fa-user-tie"></i></div>
+          <div class="sb-nav-link-icon"><i class="fas fa-shopping-basket"></i></div>
           Shoppers
         </a>
-        <a class="nav-link {{ Request::is('vendor/account') ? 'active' : '' }}" href="{{ url('vendor/account') }}">
+        <a class="nav-link {{ Request::is('admin/users') ? 'active' : '' }}" href="{{ url('admin/users') }}">
+          <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+          Users
+        </a>
+        <a class="nav-link {{ Request::is('admin/account') ? 'active' : '' }}" href="{{ url('admin/account') }}">
           <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
           My Account
         </a>

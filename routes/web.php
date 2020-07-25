@@ -150,6 +150,9 @@ Route::group(['prefix' => '/admin'], function () {
         // Admin Logout
         Route::get('logout', 'AdminController@logout');
 
+        // Admin Update
+        Route::post('update', 'AdminController@update');
+
         // Delete Vendor
         Route::delete('vendors/delete/{id}', 'AdminController@delete_vendor');
 
@@ -173,6 +176,9 @@ Route::group(['prefix' => '/admin'], function () {
 
         // Users Page
         Route::get('users', 'AdminViewController@users');
+
+        // Account Page
+        Route::get('account', 'AdminViewController@account');
 
         // Get all Vendors
         Route::get('vendors/get/{limit?}', 'AdminViewController@get_vendors');
