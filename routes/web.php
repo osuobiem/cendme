@@ -180,6 +180,9 @@ Route::group(['prefix' => '/admin'], function () {
         // Account Page
         Route::get('account', 'AdminViewController@account');
 
+        // Credential Settings Page
+        Route::get('settings/credentials', 'AdminViewController@credential_settings');
+
         // Get all Vendors
         Route::get('vendors/get/{limit?}', 'AdminViewController@get_vendors');
 

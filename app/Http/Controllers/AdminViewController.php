@@ -60,6 +60,14 @@ class AdminViewController extends Controller
     }
 
     /**
+     * Settings page
+     */
+    public function settings()
+    {
+        return view('admin.settings.index');
+    }
+
+    /**
      * Get vendors
      * @param int $limit Optional vendors fetch limit
      * 
