@@ -180,8 +180,8 @@ Route::group(['prefix' => '/admin'], function () {
         // Account Page
         Route::get('account', 'AdminViewController@account');
 
-        // Credential Settings Page
-        Route::get('settings/credentials', 'AdminViewController@credential_settings');
+        // Settings Page
+        Route::get('settings/{page}', 'AdminViewController@settings');
 
         // Get all Vendors
         Route::get('vendors/get/{limit?}', 'AdminViewController@get_vendors');
@@ -204,3 +204,18 @@ Route::group(['prefix' => '/admin'], function () {
     });
 });
 // ---------------
+
+/**
+ * SETTING ROUTES
+ */
+Route::group(['prefix' => '/settings'], function () {
+    Route::group(['middleware' => ['auth:admins']], function () {
+        // LOGIC
+        // Load Settings
+        Route::post('load/{page}', 'SettingController@settings');
+
+        // Upadte Credentails
+        Route::post('credentials/{type}', 'SettingController@credentials');
+        // ---------
+    });
+});

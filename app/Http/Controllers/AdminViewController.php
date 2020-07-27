@@ -62,9 +62,9 @@ class AdminViewController extends Controller
     /**
      * Settings page
      */
-    public function settings()
+    public function settings($page)
     {
-        return view('admin.settings.index');
+        return view('admin.settings.index', ['page' => $page]);
     }
 
     /**

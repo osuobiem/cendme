@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Admin;
 use App\Agent;
+use App\Credential;
 use App\User;
 use App\Vendor;
 use Illuminate\Http\Request;
