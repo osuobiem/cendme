@@ -138,8 +138,7 @@ class UserController extends Controller
         $user = new User();
 
         // Assign user object properties
-        $user->firstname = ucfirst(strtolower($request['firstname']));
-        $user->lastname = ucfirst(strtolower($request['lastname']));
+        $user->name = ucfirst(strtolower($request['name']));
         $user->email = strtolower($request['email']);
         $user->phone = $request['phone'];
         $user->password = Hash::make(strtolower($request['password']));
@@ -176,8 +175,7 @@ class UserController extends Controller
     {
         // Make and return validation rules
         return Validator::make($request->all(), [
-            'firstname' => 'required|alpha',
-            'lastname' => 'required|alpha',
+            'name' => 'required',
             'email' => 'required|email|unique:users',
             'phone' => 'required|numeric|digits:11',
             'password' => 'required|alpha_dash|min:6|max:30'
@@ -189,10 +187,9 @@ class UserController extends Controller
     // UPDATE USER
     /**
      * Update user data
-     * @param int $id User id to update with
      * @return json
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         // Get validation rules
         $validate = $this->update_rules($request);
@@ -206,7 +203,7 @@ class UserController extends Controller
         }
 
         // Store user data
-        $store = $this->ustore($request, $id);
+        $store = $this->ustore($request);
         $status = $store['status'];
         unset($store['status']);
         return response()->json($store, $status);
@@ -214,25 +211,19 @@ class UserController extends Controller
 
     /**
      * Process user data update
-     * @param int $id User id to update with
      * @return array Update status
      */
-    public function ustore(Request $request, $id)
+    public function ustore(Request $request)
     {
-        // Decode user id
-        $id = base64_decode($id);
-
-        // Find user with supplied id
-        $user = User::find($id);
+        $user = $request->user();
 
         if ($user) {
             // Assign user object properties
-            $user->firstname = ucfirst(strtolower($request['firstname']));
-            $user->lastname = ucfirst(strtolower($request['lastname']));
+            $user->name = ucfirst(strtolower($request['name']));
             $user->phone = $request['phone'];
             $user->gender = ucfirst(strtolower($request['gender']));
             $user->address = $request['address'];
-            $user->lga_id = $request['lga'];
+            $user->area_id = $request['area'];
             if ($request['password']) {
                 $user->password = Hash::make(strtolower($request['password']));
             }
@@ -258,12 +249,11 @@ class UserController extends Controller
     {
         // Make and return validation rules
         return Validator::make($request->all(), [
-            'firstname' => 'required|alpha',
-            'lastname' => 'required|alpha',
+            'name' => 'required',
             'phone' => 'required|numeric|digits:11',
             'gender' => 'required|alpha|min:4|max:6',
             'address' => 'required|min:4',
-            'lga' => 'required|numeric|exists:lgas,id',
+            'area' => 'required|numeric|exists:areas,id',
             'password' => 'alpha_dash|min:6|max:30',
         ]);
     }

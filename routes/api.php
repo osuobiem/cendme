@@ -35,7 +35,7 @@ Route::group(['namespace' => 'API'], function () {
         Route::group(['middleware' => 'auth:users-api'], function () {
 
             // User Update
-            Route::post('update/{id}', 'UserController@update');
+            Route::post('update', 'UserController@update');
         });
     });
     // ----------------
