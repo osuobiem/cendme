@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
 
-class Agent extends Authenticatable
+class Shopper extends Authenticatable
 {
     use HasApiTokens;
     use SoftDeletes;
@@ -20,17 +20,17 @@ class Agent extends Authenticatable
         'password', 'remember_token',
     ];
 
-    // Relationship with LGA
-    public function lga()
+    // Relationship with Area
+    public function area()
     {
-        return $this->belongsTo('App\Lga');
+        return $this->belongsTo('App\Area');
     }
 
 
     // Relationship with Level
     public function level()
     {
-        return $this->belongsTo('App\AgentLevel');
+        return $this->belongsTo('App\ShopperLevel');
     }
 
     /**

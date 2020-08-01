@@ -9,9 +9,9 @@ class State extends Model
 {
     use SoftDeletes;
 
-    // Relationship with Lga
-    public function lga()
+    // Relationship with area
+    public function area()
     {
-        return $this->hasMany('App\Lga');
+        return $this->hasMany('App\Area');
     }
 }

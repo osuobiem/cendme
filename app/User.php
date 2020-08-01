@@ -20,9 +20,9 @@ class User extends Authenticatable
     'password', 'remember_token',
   ];
 
-  // Relationship with LGA
-  public function lga()
+  // Relationship with Area
+  public function area()
   {
-    return $this->belongsTo('App\Lga');
+    return $this->belongsTo('App\Area');
   }
 }

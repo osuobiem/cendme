@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Agents extends Migration
+class Shoppers extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class Agents extends Migration
      */
     public function up()
     {
-        Schema::create('agents', function (Blueprint $table) {
+        Schema::create('shoppers', function (Blueprint $table) {
             $table->id();
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
@@ -28,14 +28,14 @@ class Agents extends Migration
             $table->string('password');
             $table->json('other_details')->nullable();
             $table->string('photo')->default('placeholder.png');
-            $table->foreignId('lga_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
+            $table->foreignId('area_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->bigInteger('level_id')->unsigned();
             $table->boolean('verified')->default(false);
             $table->boolean('status')->default(true);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('level_id')->references('id')->on('agent_levels')->onDelete('cascade')->onUpdate('no action');
+            $table->foreign('level_id')->references('id')->on('shopper_levels')->onDelete('cascade')->onUpdate('no action');
         });
     }
 
@@ -46,6 +46,6 @@ class Agents extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('agents');
+        Schema::dropIfExists('shoppers');
     }
 }

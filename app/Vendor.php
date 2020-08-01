@@ -24,10 +24,10 @@ class Vendor extends Authenticatable
         return $this->hasMany('App\Product');
     }
 
-    // Relationship with LGA
-    public function lga()
+    // Relationship with Area
+    public function area()
     {
-        return $this->belongsTo('App\Lga');
+        return $this->belongsTo('App\Area');
     }
 
     // Relationship with Vendor Account

@@ -21,8 +21,7 @@ class BvnData extends Migration
             $table->string('formatted_dob');
             $table->string('mobile');
             $table->string('bvn');
-            $table->unsignedBigInteger('agent_id');
-            $table->foreign('agent_id')->references('id')->on('agents')->onDelete('no action')->onUpdate('no action');
+            $table->foreignId('shopper_id')->constrained()->onDelete('no action')->onUpdate('no action');
             $table->timestamps();
             $table->softDeletes();
         });

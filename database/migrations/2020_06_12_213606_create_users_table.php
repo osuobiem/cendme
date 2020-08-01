@@ -15,8 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('firstname');
-            $table->string('lastname');
+            $table->string('name');
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('gender')->nullable();
@@ -25,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('photo')->default('placeholder.png');
             $table->string('password');
             $table->json('other_details')->nullable();
-            $table->foreignId('lga_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
+            $table->foreignId('area_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

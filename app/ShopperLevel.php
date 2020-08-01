@@ -9,5 +9,5 @@ class AgentLevel extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'agent_levels';
+    protected $table = 'shopper_levels';
 }
