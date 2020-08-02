@@ -243,19 +243,16 @@ class UserController extends Controller
         try {
             $user->save();
 
-            $res = ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
-
             // Delete old photo
             if ($request['photo']) {
                 $old_photo = $upload['old_photo'];
                 $old_photo != 'placeholder.png' ? Storage::delete('/public/users/' . $old_photo) : '';
-
-                $res['data'] = [
-                    'photo' => url('/') . Storage::url('users/' . $user->photo)
-                ];
             }
 
-            return $res;
+            // Get photo url
+            $user->photo = url('/') . Storage::url('users/' . $user->photo);
+
+            return ['success' => true, 'status' => 200, 'message' => 'Update Successful', 'data' => $user];
         } catch (\Throwable $th) {
             Log::error($th);
 
