@@ -217,30 +217,84 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        if ($user) {
-            // Assign user object properties
-            $user->name = ucfirst(strtolower($request['name']));
-            $user->phone = $request['phone'];
-            $user->gender = ucfirst(strtolower($request['gender']));
-            $user->address = $request['address'];
-            $user->area_id = $request['area'];
-            if ($request['password']) {
-                $user->password = Hash::make(strtolower($request['password']));
-            }
+        // Assign user object properties
+        $user->name = ucfirst(strtolower($request['name']));
+        $user->phone = $request['phone'];
+        $user->gender = ucfirst(strtolower($request['gender']));
+        $user->address = $request['address'];
+        $user->area_id = $request['area'];
+        if ($request['password']) {
+            $user->password = Hash::make(strtolower($request['password']));
+        }
 
-            // Try user save or catch error if any
-            try {
-                $user->save();
-                return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
-            } catch (\Throwable $th) {
-                Log::error($th);
+        // Check if photo is available
+        if ($request['photo']) {
+            $upload = $this->update_photo($request, $user);
+
+            // Check upload status
+            if (!$upload['success']) {
                 return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }
-        } else {
-            return ['success' => false, 'status' => 404, 'message' => 'No user exists with this ID'];
+
+            $user = $upload['user'];
+        }
+
+        // Try user save or catch error if any
+        try {
+            $user->save();
+
+            $res = ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
+
+            // Delete old photo
+            if ($request['photo']) {
+                $old_photo = $upload['old_photo'];
+                $old_photo != 'placeholder.png' ? Storage::delete('/public/users/' . $old_photo) : '';
+
+                $res['data'] = [
+                    'photo' => url('/') . Storage::url('users/' . $user->photo)
+                ];
+            }
+
+            return $res;
+        } catch (\Throwable $th) {
+            Log::error($th);
+
+            // Delete uploaded photo
+            if ($request['photo']) {
+                $user->photo != 'placeholder.png' ? Storage::delete('/public/users/' . $user->photo) : '';
+            }
+
+            return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
         }
     }
 
+    /**
+     * Update user photo
+     * @param oject $user The user object
+     * @return array
+     */
+    public function update_photo(Request $request, $user)
+    {
+        $stored = false;
+        $old_photo = $user->photo;
+
+        // Try photo upload
+        $photo = $request['photo'];
+        $stored = Storage::put('/public/users', $photo);
+
+        if ($stored) {
+            $user->photo = basename($stored);
+            return [
+                'success' => true,
+                'user' => $user,
+                'old_photo' => $old_photo
+            ];
+        } else {
+            return [
+                'success' => false
+            ];
+        }
+    }
     /**
      * User Update Validation Rules
      * @return object The validator object
@@ -255,6 +309,7 @@ class UserController extends Controller
             'address' => 'required|min:4',
             'area' => 'required|numeric|exists:areas,id',
             'password' => 'alpha_dash|min:6|max:30',
+            'photo' => 'image|max:5120'
         ]);
     }
     // ------------
