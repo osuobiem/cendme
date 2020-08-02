@@ -72,4 +72,14 @@ Route::group(['namespace' => 'API'], function () {
         Route::post('create', 'OrderController@create');
     });
     // ----------------
+
+    /**
+     * GENERIC ROUTES
+     */
+    // Get all states
+    Route::get('states', 'StateController@list');
+
+    // Get all areas according to state
+    Route::get('areas/{state_id}', 'AreaController@list');
+    // --------------
 });
