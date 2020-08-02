@@ -97,7 +97,7 @@ class UserController extends Controller
                 200
             );
         } else {
-            return response()->json($res, 400);
+            return response()->json($res, 200);
         }
     }
     // -----------
@@ -118,7 +118,7 @@ class UserController extends Controller
             return response()->json([
                 "success" => false,
                 "message" => $validate->errors()
-            ], 400);
+            ], 200);
         }
 
         // Store user data
@@ -199,7 +199,7 @@ class UserController extends Controller
             return response()->json([
                 "success" => false,
                 "message" => $validate->errors()
-            ], 400);
+            ], 200);
         }
 
         // Store user data
