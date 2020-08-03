@@ -252,7 +252,7 @@ class UserController extends Controller
             // Get photo url
             $user->photo = url('/') . Storage::url('users/' . $user->photo);
 
-            return ['success' => true, 'status' => 200, 'message' => 'Update Successful', 'data' => $user];
+            return ['success' => true, 'status' => 200, 'message' => 'Update Successful', 'data' => ['user' => $user]];
         } catch (\Throwable $th) {
             Log::error($th);
 
