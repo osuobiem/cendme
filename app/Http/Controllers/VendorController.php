@@ -417,4 +417,21 @@ class VendorController extends Controller
         ], 400);
     }
     // -----------
+
+    // GET
+    /**
+     * Get all vendors according to area
+     * @param int $area_id Area that vendor falls under
+     * @return json
+     */
+    public function list($area_id)
+    {
+        // Get vendors
+        $vendors = Vendor::where('area_id', $area_id)
+            ->orderBy('orders_count', 'desc')
+            ->orderBy('name', 'asc')->get();
+
+        return response()->json($vendors);
+    }
+    // -----------
 }

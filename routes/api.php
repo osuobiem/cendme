@@ -81,5 +81,9 @@ Route::group(['namespace' => 'API'], function () {
 
     // Get all areas according to state
     Route::get('areas/{state_id}', 'AreaController@list');
+
+    // Get all vendors according to area
+    Route::get('vendors/{area_id}', 'VendorController@list');
+
     // --------------
 });
