@@ -15,7 +15,7 @@ class Vendor extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'orders_count'
     ];
 
     // Relationship with Product

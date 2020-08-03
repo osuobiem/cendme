@@ -82,8 +82,11 @@ Route::group(['namespace' => 'API'], function () {
     // Get all areas according to state
     Route::get('areas/{state_id}', 'AreaController@list');
 
-    // Get all vendors according to area
-    Route::get('vendors/{area_id}', 'VendorController@list');
+    // PROTECTED ROUTES
+    Route::group(['middleware' => ['auth:users-api']], function () {
 
+        // Get all vendors according to area
+        Route::get('vendors/{area_id}', 'VendorController@list');
+    });
     // --------------
 });

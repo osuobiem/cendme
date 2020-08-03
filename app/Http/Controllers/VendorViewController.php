@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Area;
 use App\Bank;
 use App\Category;
-use App\Lga;
 use App\Product;
 use App\State;
 use App\SubCategory;
@@ -81,12 +81,12 @@ class VendorViewController extends Controller
         // Extract vendor object
         $vendor = Auth::user();
 
-        // Get state id from lga object
-        $state_id = $vendor->lga->state_id;
+        // Get state id from area object
+        $state_id = $vendor->area->state_id;
 
-        // Get states and lgas
+        // Get states and areas
         $states = State::orderBy('name', 'asc')->get();
-        $lgas = Lga::where('state_id', $state_id)->orderBy('name', 'asc')->get();
+        $areas = Area::where('state_id', $state_id)->orderBy('name', 'asc')->get();
 
         // Get Banks
         $banks = Bank::orderBy('name', 'asc')->get();
@@ -95,7 +95,7 @@ class VendorViewController extends Controller
         $data = [
             'vendor' => $vendor,
             'states' => $states,
-            'lgas' => $lgas,
+            'areas' => $areas,
             'banks' => $banks,
             'account' => $vendor->account
         ];
@@ -206,19 +206,19 @@ class VendorViewController extends Controller
      * @param string $state_id Base64 encoded state id
      * @return html
      */
-    public function get_lgas($state_id, $notlogged = false)
+    public function get_areas($state_id, $notlogged = false)
     {
         // Decode state id
         $state_id = base64_decode($state_id);
 
-        // Fetch lgas
-        $lgas = Lga::where('state_id', $state_id)->orderBy('name')->get();
+        // Fetch areas
+        $areas = Area::where('state_id', $state_id)->orderBy('name')->get();
 
         // Return view
         if (!$notlogged) {
-            return view('vendor.account.lgas', ['lgas' => $lgas]);
+            return view('vendor.account.areas', ['areas' => $areas]);
         } else {
-            return view('vendor.lgas', ['lgas' => $lgas]);
+            return view('vendor.areas', ['areas' => $areas]);
         }
     }
 }

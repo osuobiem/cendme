@@ -128,7 +128,7 @@ class VendorController extends Controller
         $vendor->phone = $request['phone'];
         $vendor->address = $request['address'];
         $vendor->password = Hash::make(strtolower($request['password']));
-        $vendor->lga_id = $request['lga'];
+        $vendor->area_id = $request['area'];
 
         // Try vendor save or catch error if any
         try {
@@ -156,7 +156,7 @@ class VendorController extends Controller
             'email' => 'required|email|unique:vendors',
             'phone' => 'required|numeric|digits:11',
             'address' => 'required|min:4',
-            'lga' => 'required|numeric|exists:lgas,id',
+            'area' => 'required|numeric|exists:areas,id',
             'password' => 'required|alpha_dash|min:6|max:30'
         ]);
     }
@@ -207,7 +207,7 @@ class VendorController extends Controller
             $vendor->business_name = $request['business_name'];
             $vendor->phone = $request['phone'];
             $vendor->address = $request['address'];
-            $vendor->lga_id = $request['lga'];
+            $vendor->area_id = $request['area'];
             if ($request['password']) {
                 $vendor->password = Hash::make(strtolower($request['password']));
             }
@@ -237,7 +237,7 @@ class VendorController extends Controller
             'phone' => 'required|numeric|digits:11',
             'address' => 'required|min:4',
             'password' => 'alpha_dash|min:6|max:30',
-            'lga' => 'required|numeric|exists:lgas,id'
+            'area' => 'required|numeric|exists:areas,id'
         ]);
     }
 
@@ -415,23 +415,6 @@ class VendorController extends Controller
             "success" => false,
             "message" => 'Still in process'
         ], 400);
-    }
-    // -----------
-
-    // GET
-    /**
-     * Get all vendors according to area
-     * @param int $area_id Area that vendor falls under
-     * @return json
-     */
-    public function list($area_id)
-    {
-        // Get vendors
-        $vendors = Vendor::where('area_id', $area_id)
-            ->orderBy('orders_count', 'desc')
-            ->orderBy('name', 'asc')->get();
-
-        return response()->json($vendors);
     }
     // -----------
 }

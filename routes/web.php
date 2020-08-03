@@ -43,8 +43,8 @@ Route::group(['prefix' => '/vendor'], function () {
         // Vendor Signup Page
         Route::get('sign-up', 'VendorViewController@sign_up');
 
-        // Get Lgas by State
-        Route::get('lgas/{state_id}/{logged?}', 'VendorViewController@get_lgas');
+        // Get Areas by State
+        Route::get('areas/{state_id}/{logged?}', 'VendorViewController@get_areas');
         // -----------
     });
 

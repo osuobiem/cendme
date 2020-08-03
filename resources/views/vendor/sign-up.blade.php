@@ -70,7 +70,7 @@
                       <div class="form-group col-lg-6">
                         <label class="form-label" for="inputEmailAddress">State <span
                             class="text-danger">*</span></label>
-                        <select id="state" class="form-control" onchange="loadLgas(this.value)">
+                        <select id="state" class="form-control" onchange="loadAreas(this.value)">
                           <option disabled selected>Select State</option>
                           @foreach($states as $state)
                           <option value="{{ base64_encode($state->id) }}">{{ $state->name }}</option>
@@ -79,10 +79,10 @@
                       </div>
 
                       <div class="form-group col-lg-6">
-                        <label class="form-label" for="inputEmailAddress">LGA <span class="text-danger">*</span></label>
-                        <select id="slga" class="form-control" name="lga">
+                        <label class="form-label" for="inputEmailAddress">Area <span class="text-danger">*</span></label>
+                        <select id="sarea" class="form-control" name="area">
                         </select>
-                        <span class="text-danger error-message" id="lga"></span>
+                        <span class="text-danger error-message" id="area"></span>
                       </div>
 
                       <div class="form-group col-lg-12">
@@ -200,16 +200,16 @@
       $('.error-message').html('')
     }
 
-    // Load Lgas
-    function loadLgas(id) {
-      let url = "{{ url('vendor/lgas') }}/" + id + '/true';
+    // Load Areas
+    function loadAreas(id) {
+      let url = "{{ url('vendor/areas') }}/" + id + '/true';
 
       $.ajax({
         type: "GET",
         url
       })
         .then(res => {
-          $('#slga').html(res)
+          $('#sarea').html(res)
         })
         .catch(err => {
           showAlert(false, 'An Error Occured!. Please relaod page')
