@@ -22,8 +22,12 @@ class VendorController extends Controller
             ->orderBy('business_name', 'asc')->get();
 
         return response()->json([
-            'vendors' => $vendors,
-            'photo_url' => url('/') . Storage::url('vendors/')
+            'success' => true,
+            'message' => 'Fetch Successful',
+            'data' => [
+                'vendors' => $vendors,
+                'photo_url' => url('/') . Storage::url('vendors/')
+            ]
         ]);
     }
 }
