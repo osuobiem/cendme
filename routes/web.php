@@ -25,6 +25,11 @@ Route::get('', 'HomeController@index');
  */
 Route::group(['prefix' => '/vendor'], function () {
 
+    // GENERIC
+    // Get Areas by State
+    Route::get('areas/{state_id}/{logged?}', 'VendorViewController@get_areas');
+    // --------
+
     Route::group(['middleware' => 'guest:vendors'], function () {
 
         // LOGIC -------
@@ -42,9 +47,6 @@ Route::group(['prefix' => '/vendor'], function () {
 
         // Vendor Signup Page
         Route::get('sign-up', 'VendorViewController@sign_up');
-
-        // Get Areas by State
-        Route::get('areas/{state_id}/{logged?}', 'VendorViewController@get_areas');
         // -----------
     });
 

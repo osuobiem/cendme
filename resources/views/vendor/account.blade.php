@@ -55,7 +55,7 @@
 									</div>
 									<div class="shopowner-dt-list">
 										<span class="left-dt">Address</span>
-										<span class="right-dt">{{ $vendor->address }}<br>{{ $vendor->lga->name }}</span>
+										<span class="right-dt">{{ $vendor->address }}<br>{{ $vendor->area->name }}</span>
 									</div>
 								</div>
 							</div>
@@ -149,25 +149,25 @@
 								<div class="col-lg-6">
 									<div class="form-group mb-3">
 										<label class="form-label">State <span class="text-danger">*</span></label>
-										<select class="form-control" id="ustate" required onchange="loadLgas(this.value)">
+										<select class="form-control" id="ustate" required onchange="loadAreas(this.value)">
 											@foreach($states as $state)
 											<option value="{{ base64_encode($state->id) }}"
-												{{ $state->id == $vendor->lga->state_id ? 'selected' : '' }}>{{ $state->name }}</option>
+												{{ $state->id == $vendor->area->state_id ? 'selected' : '' }}>{{ $state->name }}</option>
 											@endforeach
 										</select>
 									</div>
 								</div>
 								<div class="col-lg-6">
 									<div class="form-group mb-3">
-										<label class="form-label">LGA <span class="text-danger">*</span></label>
-										<select class="form-control" id="ulga" name="lga" required>
-											@foreach($lgas as $lga)
-											<option value="{{ $lga->id }}" {{ $lga->id == $vendor->lga->id ? 'selected' : '' }}>
-												{{ $lga->name }}
+										<label class="form-label">Area <span class="text-danger">*</span></label>
+										<select class="form-control" id="uarea" name="area" required>
+											@foreach($areas as $area)
+											<option value="{{ $area->id }}" {{ $area->id == $vendor->area->id ? 'selected' : '' }}>
+												{{ $area->name }}
 											</option>
 											@endforeach
 										</select>
-										<span class="text-danger error-message" id="lga"></span>
+										<span class="text-danger error-message" id="area"></span>
 									</div>
 								</div>
 								<div class="col-lg-12">
@@ -376,16 +376,16 @@
 		$('.error-message').html('')
 	}
 
-	// Load Lgas
-	function loadLgas(id) {
-		let url = "{{ url('vendor/lgas') }}/" + id;
+	// Load Areas
+	function loadAreas(id) {
+		let url = "{{ url('vendor/areas') }}/" + id;
 
 		$.ajax({
 			type: "GET",
 			url
 		})
 			.then(res => {
-				$('#ulga').html(res)
+				$('#uarea').html(res)
 			})
 			.catch(err => {
 				showAlert(false, 'An Error Occured!. Please relaod page')
