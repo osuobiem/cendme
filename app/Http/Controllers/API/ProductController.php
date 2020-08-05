@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Category;
 use App\Http\Controllers\Controller;
 use App\Product;
+use App\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,6 +30,43 @@ class ProductController extends Controller
                 'products' => $products,
                 'last_id' => $products[count($products) - 1]->id,
                 'photo_url' => url('/') . Storage::url('products/')
+            ]
+        ]);
+    }
+
+    /**
+     * Get Product Categories
+     * @return json
+     */
+    public function categories()
+    {
+        // Get Categories
+        $categories = Category::orderBy('name')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Fetch Successful',
+            'data' => [
+                'categories' => $categories
+            ]
+        ]);
+    }
+
+    /**
+     * Get Product SubCategories according to Category
+     * @param int $category_id Category that Subcategory falls under
+     * @return json
+     */
+    public function subcategories($category_id)
+    {
+        // Get Subcategories
+        $subcategories = SubCategory::where('category_id', $category_id)->orderBy('name')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Fetch Successful',
+            'data' => [
+                'subcategories' => $subcategories
             ]
         ]);
     }
