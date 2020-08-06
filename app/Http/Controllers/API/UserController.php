@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Area;
 use App\Http\Controllers\Controller;
 use App\User;
 use Carbon\Carbon;
@@ -80,6 +81,7 @@ class UserController extends Controller
             // Compose response data
             $data = [
                 'user' => $user,
+                'area' => $user->area->name,
                 'token' => $token->accessToken,
                 'token_type' => 'Bearer',
                 'token_expires' => Carbon::parse(
