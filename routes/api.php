@@ -101,6 +101,9 @@ Route::group(['namespace' => 'API'], function () {
 
         // Decrease product quantity in cart
         Route::get('minus/{product_id}', 'CartController@minus');
+
+        // Remove product from cart
+        Route::get('remove/{product_id}', 'CartController@remove');
     });
     // -------------
 

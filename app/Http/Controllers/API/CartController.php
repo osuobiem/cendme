@@ -205,4 +205,29 @@ class CartController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Remove product from cart
+     * @param int $product_id Product ID
+     * @return json
+     */
+    public function remove(Request $request, $product_id)
+    {
+        $entry = Cart::where('product_id', $product_id)
+            ->where('user_id', $request->user()->id)->first();
+
+        // Check if product is in cart
+        if (!$entry) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found in cart'
+            ]);
+        }
+
+        // Remove entry from cart
+        $entry->delete();
+
+        // Call list to return latest cart data
+        $this->list($request);
+    }
 }
