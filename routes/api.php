@@ -91,6 +91,9 @@ Route::group(['namespace' => 'API'], function () {
         // Get all products according to vendor
         Route::get('products/all/{vendor_id}', 'ProductController@list_random');
 
+        // Get all products according to vendor, category and subcategory
+        Route::get('products/{vendor_id}/{category_id?}/{subcategory_id?}', 'ProductController@list');
+
         // Get product categories
         Route::get('categories', 'ProductController@categories');
 

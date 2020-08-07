@@ -14,4 +14,10 @@ class Category extends Model
     {
         return $this->hasMany('App\SubCategory');
     }
+
+    // Relationship with product
+    public function product()
+    {
+        return $this->hasManyThrough('App\Product', 'App\SubCategory', 'category_id', 'subcategory_id');
+    }
 }

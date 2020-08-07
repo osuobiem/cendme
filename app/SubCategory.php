@@ -16,4 +16,10 @@ class SubCategory extends Model
     {
         return $this->belongsTo('App\Category');
     }
+
+    // Relationship with Product
+    public function product()
+    {
+        return $this->hasMany('App\Product');
+    }
 }

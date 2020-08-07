@@ -70,4 +70,39 @@ class ProductController extends Controller
             ]
         ]);
     }
+
+    /**
+     * Get Products by Vendor, Category and SubCategory
+     * @param int $vendor_id Vendor ID
+     * @param int $category_id Category ID
+     * @param int $subcategory_id SubCategory ID
+     * @return json
+     */
+    public function list($vendor_id, $category_id = false, $subcategory_id = false)
+    {
+        // Get Products by Category
+        if ($category_id && !$subcategory_id) {
+            $category = Category::find($category_id);
+            $products = $category->product()
+                ->where('vendor_id', $vendor_id)
+                ->take(15)->get();
+        }
+
+        // Get Products by SubCategory
+        elseif ($category_id && $subcategory_id) {
+            $products = Product::where('vendor_id', $vendor_id)
+                ->where('subcategory_id', $subcategory_id)
+                ->take(15)->get();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Fetch Successful',
+            'data' => [
+                'products' => $products,
+                'last_id' => count($products) > 0 ? $products[count($products) - 1]->id : null,
+                'photo_url' => url('/') . Storage::url('products/')
+            ]
+        ]);
+    }
 }
