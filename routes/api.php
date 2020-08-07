@@ -74,6 +74,31 @@ Route::group(['namespace' => 'API'], function () {
     // ----------------
 
     /**
+     * PRODUCT ROUTES
+     */
+    Route::group(['prefix' => 'products', 'middleware' => ['auth:users-api']], function () {
+
+        // Get all products according to vendor
+        Route::get('all/{vendor_id}', 'ProductController@list_random');
+
+        // Get all products according to vendor, category and subcategory
+        Route::get('all/{vendor_id}/{category_id?}/{subcategory_id?}', 'ProductController@list');
+
+        // Search for vendor products
+        Route::get('search/{vendor_id}/{keyword}', 'ProductController@search');
+    });
+    // -------------
+
+    /**
+     * CART ROUTES
+     */
+    Route::group(['prefix' => 'cart', 'middleware' => ['auth:users-api']], function () {
+        // Add product to cart
+        Route::get('add/{product_id}', 'CartController@add');
+    });
+    // -------------
+
+    /**
      * GENERIC ROUTES
      */
     // Get all states
@@ -88,20 +113,11 @@ Route::group(['namespace' => 'API'], function () {
         // Get all vendors according to area
         Route::get('vendors/{area_id}', 'VendorController@list');
 
-        // Get all products according to vendor
-        Route::get('products/all/{vendor_id}', 'ProductController@list_random');
-
-        // Get all products according to vendor, category and subcategory
-        Route::get('products/all/{vendor_id}/{category_id?}/{subcategory_id?}', 'ProductController@list');
-
         // Get product categories
         Route::get('categories', 'ProductController@categories');
 
         // Get product subcategories according to category
         Route::get('subcategories/{category_id}', 'ProductController@subcategories');
-
-        // Search for vendor products
-        Route::get('products/search/{vendor_id}/{keyword}', 'ProductController@search');
     });
     // --------------
 });
