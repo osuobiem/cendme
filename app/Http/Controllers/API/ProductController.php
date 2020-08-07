@@ -20,6 +20,7 @@ class ProductController extends Controller
     {
         // Get products
         $products = Product::where('vendor_id', $vendor_id)
+            ->where('quantity', '>', 0)
             ->orderBy('updated_at', 'desc')
             ->take(15)->get();
 
@@ -80,18 +81,24 @@ class ProductController extends Controller
      */
     public function list($vendor_id, $category_id = false, $subcategory_id = false)
     {
+        $products = [];
+
         // Get Products by Category
         if ($category_id && !$subcategory_id) {
             $category = Category::find($category_id);
             $products = $category->product()
+                ->where('quantity', '>', 0)
                 ->where('vendor_id', $vendor_id)
+                ->orderBy('updated_at', 'desc')
                 ->take(15)->get();
         }
 
         // Get Products by SubCategory
         elseif ($category_id && $subcategory_id) {
             $products = Product::where('vendor_id', $vendor_id)
+                ->where('quantity', '>', 0)
                 ->where('subcategory_id', $subcategory_id)
+                ->orderBy('updated_at', 'desc')
                 ->take(15)->get();
         }
 
@@ -101,6 +108,23 @@ class ProductController extends Controller
             'data' => [
                 'products' => $products,
                 'last_id' => count($products) > 0 ? $products[count($products) - 1]->id : null,
+                'photo_url' => url('/') . Storage::url('products/')
+            ]
+        ]);
+    }
+
+    public function search($vendor_id, $keyword)
+    {
+        // Search for products
+        $results = Product::where('vendor_id', $vendor_id)
+            ->where('quantity', '>', 0)
+            ->where('title', 'LIKE', '%' . $keyword . '%')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Search Successful',
+            'data' => [
+                'products' => $results,
                 'photo_url' => url('/') . Storage::url('products/')
             ]
         ]);
