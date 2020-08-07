@@ -95,6 +95,12 @@ Route::group(['namespace' => 'API'], function () {
     Route::group(['prefix' => 'cart', 'middleware' => ['auth:users-api']], function () {
         // Add product to cart
         Route::get('add/{product_id}', 'CartController@add');
+
+        // Increase product quantity in cart
+        Route::get('plus/{product_id}', 'CartController@plus');
+
+        // Decrease product quantity in cart
+        Route::get('minus/{product_id}', 'CartController@minus');
     });
     // -------------
 
