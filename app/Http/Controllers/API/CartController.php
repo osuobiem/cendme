@@ -123,6 +123,7 @@ class CartController extends Controller
                 'message' => 'Increment successful',
                 'data' => [
                     'product' => [
+                        'id' => $product->id,
                         'photo' => url('/') . Storage::url('products/' . $product->photo),
                         'title' => $product->title,
                         'price' => $entry->price,
