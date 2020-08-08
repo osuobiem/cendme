@@ -189,6 +189,7 @@ class CartController extends Controller
                 'message' => 'Decrement successful',
                 'data' => [
                     'product' => [
+                        'id' => $product->id,
                         'photo' => url('/') . Storage::url('products/' . $product->photo),
                         'title' => $product->title,
                         'price' => $entry->price,
@@ -255,6 +256,7 @@ class CartController extends Controller
 
             // Push composed entry to products array
             array_push($products, [
+                'id' => $product->id,
                 'photo' => url('/') . Storage::url('products/' . $product->photo),
                 'title' => $product->title,
                 'price' => $entry->price,
