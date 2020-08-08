@@ -227,7 +227,47 @@ class CartController extends Controller
         // Remove entry from cart
         $entry->delete();
 
-        // Call list to return latest cart data
-        $this->list($request);
+        // Return latest cart data
+        return $this->list($request);
+    }
+
+    /**
+     * List Products in cart
+     * @return json
+     */
+    public function list(Request $request)
+    {
+        // Get user cart entries
+        $entries = Cart::where('user_id', $request->user()->id)->get();
+
+        // Check if cart is empty
+        if (count($entries) < 1) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cart is empty'
+            ]);
+        }
+
+        $products = [];
+
+        foreach ($entries as $entry) {
+            $product = Product::find($entry->product_id);
+
+            // Push composed entry to products array
+            array_push($products, [
+                'photo' => url('/') . Storage::url('products/' . $product->photo),
+                'title' => $product->title,
+                'price' => $entry->price,
+                'quantity' => $entry->quantity
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cart Fetched',
+            'data' => [
+                'products' => $products
+            ]
+        ]);
     }
 }

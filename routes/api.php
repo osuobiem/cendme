@@ -104,6 +104,9 @@ Route::group(['namespace' => 'API'], function () {
 
         // Remove product from cart
         Route::get('remove/{product_id}', 'CartController@remove');
+
+        // List Cart Entries
+        Route::get('view', 'CartController@list');
     });
     // -------------
 

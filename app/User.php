@@ -25,4 +25,10 @@ class User extends Authenticatable
   {
     return $this->belongsTo('App\Area');
   }
+
+  // Relationship with Cart
+  public function cart()
+  {
+    return $this->hasMany('App\Cart');
+  }
 }
