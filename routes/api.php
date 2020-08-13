@@ -130,6 +130,9 @@ Route::group(['namespace' => 'API'], function () {
 
         // Get product subcategories according to category
         Route::get('subcategories/{category_id}', 'ProductController@subcategories');
+
+        // Get Paystack Payment Credentials
+        Route::get('paystack/credentials', 'AuthController@get_paystack');
     });
     // --------------
 });
