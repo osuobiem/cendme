@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Credential;
 use App\Http\Controllers\Controller;
+use App\Order;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -30,5 +31,20 @@ class AuthController extends Controller
                 'credentials' => $formatted_cred
             ]
         ]);
+    }
+
+    /**
+     * Initialize Payment
+     * @return json
+     */
+    public function initialize(Request $request) {
+        $user = $request->user();
+
+        // Get user cart
+        $cart_list = $user->cart;
+
+        // Compose order object
+        $order = new Order();
+        $order->
     }
 }

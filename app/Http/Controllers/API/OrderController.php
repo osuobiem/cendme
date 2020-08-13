@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Cart;
 use App\Credential;
 use App\Http\Controllers\Controller;
 use App\Lga;
@@ -53,26 +54,30 @@ class OrderController extends Controller
         // Assign order object properties
         $order->user_id = $request->user()->id;
 
-        $user = User::find($request->user()->id);
+        $user = $request->user();
 
-        // Get LGA and state to be appended to addresses
-        $lga_ob = $user->lga;
-        $lga = $lga_ob->name;
-        $state = Lga::find($lga_ob->id)->state->name;
+        // Get area and state to be appended to addresses
+        $area = $user->area;
+        $state = $area->state;
+
+        // Get product list from cart
+        $list = Cart::where('user_id', $user->id)->get();
+
 
         $products = [];
-        $p_price = 0;
-        $vendor_addresses = [];
-        $current_v = false;
+        $price_accumulator = 0;
 
-        // Extract product data from input
-        foreach ($request['products'] as $product) {
+        // Extract product data from cart list
+        foreach ($list as $l) {
+            $product = $l->product;
 
-            // Create and push new OrderProduct(pivot data) object
-            array_push($products, new OrderProduct([
-                'product_id' => $product['id'],
-                'quantity' => $product['quantity']
-            ]));
+            array_push($products, [
+                'product_id' => $product->id,
+                'quantity' => $l->quantity,
+                'price' => $l->price
+            ]);
+
+            $price_accumulator += $l->price;
 
             $prod = Product::find($product['id']);
 

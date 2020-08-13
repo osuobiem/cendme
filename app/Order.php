@@ -9,12 +9,6 @@ class Order extends Model
 {
     use SoftDeletes;
 
-    // Relationship with OrderProduct
-    public function order_product()
-    {
-        return $this->hasMany('App\OrderProduct');
-    }
-
     // Relationship with Product
     public function product()
     {

@@ -132,7 +132,10 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('subcategories/{category_id}', 'ProductController@subcategories');
 
         // Get Paystack Payment Credentials
-        Route::get('paystack/credentials', 'AuthController@get_paystack');
+        Route::get('payment/credentials', 'AuthController@get_paystack');
+
+        // Initialize Payment
+        Route::get('payment/initialize', 'AuthController@initialize');
     });
     // --------------
 });
