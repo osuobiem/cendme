@@ -135,7 +135,7 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('payment/credentials', 'AuthController@get_paystack');
 
         // Initialize Payment
-        Route::get('payment/initialize/{type}', 'AuthController@initialize');
+        Route::post('payment/initialize', 'AuthController@initialize');
     });
     // --------------
 });

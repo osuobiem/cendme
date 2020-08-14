@@ -20,7 +20,9 @@ class CreateTransactionsTable extends Migration
             $table->integer('status')->default(0);
             $table->string('type');
             $table->foreignId('order_id')->nullable()->constrained()->onUpdate('no action')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onUpdate('no action')->onDelete('cascade');
+            $table->foreignId('shopper_id')->nullable()->constrained()->onUpdate('no action')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onUpdate('no action')->onDelete('cascade');
+            $table->foreignId('vendor_id')->nullable()->constrained()->onUpdate('no action')->onDelete('cascade');
             $table->timestamps();
         });
     }
