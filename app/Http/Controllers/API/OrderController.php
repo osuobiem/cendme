@@ -97,7 +97,7 @@ class OrderController extends Controller
         } else if (count($vendor_addresses) == 1) {
             $distance = $this->calculate_distance($vendor_addresses[0], $user->address . ', ' . $area->name . ', ' . $state->name);
         } else {
-            return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
+            return ['success' => false, 'status' => 500, 'message' => 'User cart is empty'];
         }
 
         // Convert m to km
