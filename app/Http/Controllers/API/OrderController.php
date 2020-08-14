@@ -109,12 +109,20 @@ class OrderController extends Controller
         // Multiply fare by 2 for to and fro travel
         // $fare *= 2;
 
+        // Total of transaction without gateway charge
+        $initial_total = $price_accumulator + ($price_accumulator * 0.1) + $fare;
+
+        // Payment gateway charge
+        $payment_charge = $initial_total < 2500 ? $initial_total * 0.015 : ($initial_total * 0.015) + 100;
+        $payment_charge = $payment_charge > 2000 ? 2000 : $payment_charge;
+
         // Amount breakdown
         $amount = [
             "products" => $price_accumulator,
             "service_charge" => $price_accumulator * 0.1, // NOTE: Percentage value should retrieved from DB
-            "agent_transport_fare" => $fare,
-            "total" => $price_accumulator + ($price_accumulator * 0.1) + $fare
+            "shopper_transport_fare" => $fare,
+            'payment_charge' => $payment_charge,
+            "total" => $initial_total + $payment_charge
         ];
 
         $order->amount = json_encode($amount);
