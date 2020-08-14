@@ -150,6 +150,6 @@ class AuthController extends Controller
         $seg1 = substr(str_shuffle($this->alpha), 0, 10);
         $seg2 = date('YmdHis');
 
-        return 'CNDME-' . $seg1 . '-' . $seg2;
+        return 'TRANS-' . $seg1 . '-' . $seg2;
     }
 }

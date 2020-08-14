@@ -5,18 +5,17 @@ namespace App\Http\Controllers\API;
 use App\Cart;
 use App\Credential;
 use App\Http\Controllers\Controller;
-use App\Lga;
 use App\Order;
-use App\OrderProduct;
 use App\Product;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
+    // String of English letters
+    private $alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
     // CREATE ORDER
     /**
      * Create an order
@@ -120,6 +119,9 @@ class OrderController extends Controller
 
         $order->amount = json_encode($amount);
 
+        $ref = $this->generate_ref();
+        $order->reference = $ref;
+
         // Try to save order or catch error if any
         try {
             $order->save();
@@ -129,7 +131,10 @@ class OrderController extends Controller
                 'status' => 200,
                 'message' => 'Order Created',
                 'data' => [
-                    "amount" => $amount
+                    "order" => [
+                        'amount' => $amount,
+                        'reference' => $ref
+                    ]
                 ]
             ];
         } catch (\Throwable $th) {
@@ -158,5 +163,17 @@ class OrderController extends Controller
 
         // Extract and return distance from response
         return $resp['rows'][0]['elements'][0]['distance']['value'];
+    }
+
+    /**
+     * Generate unique order reference
+     * @return string
+     */
+    public function generate_ref()
+    {
+        $seg1 = substr(str_shuffle($this->alpha), 0, 10);
+        $seg2 = date('YmdHis');
+
+        return 'ORDER-' . $seg1 . '-' . $seg2;
     }
 }

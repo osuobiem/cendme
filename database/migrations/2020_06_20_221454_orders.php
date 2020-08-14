@@ -19,6 +19,7 @@ class Orders extends Migration
             $table->foreignId('shopper_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->json('amount')->nullable();
             $table->string('status')->default('pending');
+            $table->string('reference');
             $table->boolean('paid')->default(false);
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
