@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    // String of English letters
+    private $alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+
     /**
      * Get Paystack Credentials
      * @return json
@@ -35,16 +39,24 @@ class AuthController extends Controller
 
     /**
      * Initialize Payment
+     * @param string $type Payment type
      * @return json
      */
-    public function initialize(Request $request) {
+    public function initialize(Request $request, $type)
+    {
+        dd($this->generate_ref());
         $user = $request->user();
+    }
 
-        // Get user cart
-        $cart_list = $user->cart;
+    /**
+     * Generate unique payment reference
+     * @return string
+     */
+    public function generate_ref()
+    {
+        $seg1 = substr(str_shuffle($this->alpha), 0, 15);
+        $seg2 = date('YmdHis');
 
-        // Compose order object
-        $order = new Order();
-        $order->
+        return $seg1 . '-' . $seg2;
     }
 }
