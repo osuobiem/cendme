@@ -18,7 +18,9 @@ class CreateTransactionsTable extends Migration
             $table->string('reference');
             $table->string('amount');
             $table->integer('status')->default(0);
-            $table->foreignId('order_id')->constrained()->onUpdate('no action')->onDelete('cascade');
+            $table->string('type');
+            $table->foreignId('order_id')->nullable()->constrained()->onUpdate('no action')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onUpdate('no action')->onDelete('cascade');
             $table->timestamps();
         });
     }

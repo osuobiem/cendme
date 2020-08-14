@@ -69,7 +69,7 @@ Route::group(['namespace' => 'API'], function () {
      * ORDER ROUTES
      */
     Route::group(['prefix' => 'order', 'middleware' => ['auth:users-api']], function () {
-        Route::post('create', 'OrderController@create');
+        Route::get('create', 'OrderController@create');
     });
     // ----------------
 

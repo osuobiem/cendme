@@ -24,17 +24,6 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
-        // Get validation rules
-        $validate = $this->create_rules($request);
-
-        // Run validation
-        if ($validate->fails()) {
-            return response()->json([
-                "success" => false,
-                "message" => $validate->errors()
-            ], 400);
-        }
-
         // Store order data
         $store = $this->cstore($request);
         $status = $store['status'];
@@ -66,6 +55,8 @@ class OrderController extends Controller
 
         $products = [];
         $price_accumulator = 0;
+        $vendor_addresses = [];
+        $current_v = false;
 
         // Extract product data from cart list
         foreach ($list as $l) {
@@ -81,18 +72,16 @@ class OrderController extends Controller
 
             $prod = Product::find($product['id']);
 
-            // Calculate product price with respect to quantity
-            $p_price += ($prod->price * $product['quantity']);
 
             /* Push vendor addresses to the vendor address holder so they can be
                 used for distance calculation*/
             if (!$current_v) {
                 $current_v = $prod->vendor->id;
-                array_push($vendor_addresses, $prod->vendor->address . ', ' . $lga . ', ' . $state);
+                array_push($vendor_addresses, $prod->vendor->address . ', ' . $prod->vendor->area->name . ', ' . $prod->vendor->area->state->name);
             } else {
                 if ($current_v != $prod->vendor->id) {
                     $current_v = $prod->vendor->id;
-                    array_push($vendor_addresses, $prod->vendor->address . ', ' . $lga . ', ' . $state);
+                    array_push($vendor_addresses, $prod->vendor->address . ', ' . $prod->vendor->area->name . ', ' . $prod->vendor->area->state->name);
                 }
             }
         }
@@ -106,27 +95,27 @@ class OrderController extends Controller
                 $distance +=
                     $key + 1 != count($vendor_addresses) ?
                     $this->calculate_distance($address, $vendor_addresses[$key + 1])
-                    : $this->calculate_distance($address, $user->address . ', ' . $lga . ', ' . $state);
+                    : $this->calculate_distance($address, $user->address . ', ' . $area->name . ', ' . $state->name);
             }
         } else {
-            $distance = $this->calculate_distance($vendor_addresses[0], $user->address . ', ' . $lga . ', ' . $state);
+            $distance = $this->calculate_distance($vendor_addresses[0], $user->address . ', ' . $area->name . ', ' . $state->name);
         }
 
         // Convert m to km
         $distance = $distance / 1000;
 
         // Calculate agent transport fare
-        $fare = is_int($distance) ? $distance * 200 : ($distance + 1) * 200; // NOTE: Fare default should be retrieved from DB
+        $fare = is_int($distance) ? $distance * 200 : (((int) $distance) + 1) * 200; // NOTE: Fare default should be retrieved from DB
 
         // Multiply fare by 2 for to and fro travel
-        $fare *= 2;
+        // $fare *= 2;
 
         // Amount breakdown
         $amount = [
-            "products" => $p_price,
-            "service_charge" => $p_price * 0.1, // NOTE: Percentage value should retrieved from DB
+            "products" => $price_accumulator,
+            "service_charge" => $price_accumulator * 0.1, // NOTE: Percentage value should retrieved from DB
             "agent_transport_fare" => $fare,
-            "total" => $p_price + ($p_price * 0.1) + $fare
+            "total" => $price_accumulator + ($price_accumulator * 0.1) + $fare
         ];
 
         $order->amount = json_encode($amount);
@@ -134,7 +123,6 @@ class OrderController extends Controller
         // Try to save order or catch error if any
         try {
             $order->save();
-            $order->order_product()->saveMany($products);
 
             return [
                 'success' => true,
@@ -171,17 +159,4 @@ class OrderController extends Controller
         // Extract and return distance from response
         return $resp['rows'][0]['elements'][0]['distance']['value'];
     }
-
-    /**
-     * Order Creation Validation Rules
-     * @return object The validator object
-     */
-    private function create_rules(Request $request)
-    {
-        // Make and return validation rules
-        return Validator::make($request->all(), [
-            'products' => 'required'
-        ]);
-    }
-    // --------------
 }
