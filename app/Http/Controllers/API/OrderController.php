@@ -69,18 +69,16 @@ class OrderController extends Controller
 
             $price_accumulator += $l->price;
 
-            $prod = Product::find($product['id']);
-
-
             /* Push vendor addresses to the vendor address holder so they can be
                 used for distance calculation*/
+
             if (!$current_v) {
-                $current_v = $prod->vendor->id;
-                array_push($vendor_addresses, $prod->vendor->address . ', ' . $prod->vendor->area->name . ', ' . $prod->vendor->area->state->name);
+                $current_v = $product->vendor->id;
+                array_push($vendor_addresses, $product->vendor->address . ', ' . $product->vendor->area->name . ', ' . $product->vendor->area->state->name);
             } else {
-                if ($current_v != $prod->vendor->id) {
-                    $current_v = $prod->vendor->id;
-                    array_push($vendor_addresses, $prod->vendor->address . ', ' . $prod->vendor->area->name . ', ' . $prod->vendor->area->state->name);
+                if ($current_v != $product->vendor->id) {
+                    $current_v = $product->vendor->id;
+                    array_push($vendor_addresses, $product->vendor->address . ', ' . $product->vendor->area->name . ', ' . $product->vendor->area->state->name);
                 }
             }
         }
@@ -96,8 +94,10 @@ class OrderController extends Controller
                     $this->calculate_distance($address, $vendor_addresses[$key + 1])
                     : $this->calculate_distance($address, $user->address . ', ' . $area->name . ', ' . $state->name);
             }
-        } else {
+        } else if (count($vendor_addresses) == 1) {
             $distance = $this->calculate_distance($vendor_addresses[0], $user->address . ', ' . $area->name . ', ' . $state->name);
+        } else {
+            return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
         }
 
         // Convert m to km
