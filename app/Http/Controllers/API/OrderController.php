@@ -86,7 +86,7 @@ class OrderController extends Controller
         $distance = 0;
 
         /* Loop through vendor addresses and calculate probable product 
-        purchase travel distance by agent */
+        purchase travel distance by shopper */
         if (count($vendor_addresses) > 1) {
             foreach ($vendor_addresses as $key => $address) {
                 $distance +=
@@ -103,7 +103,7 @@ class OrderController extends Controller
         // Convert m to km
         $distance = $distance / 1000;
 
-        // Calculate agent transport fare
+        // Calculate shopper transport fare
         $fare = is_int($distance) ? $distance * 200 : (((int) $distance) + 1) * 200; // NOTE: Fare default should be retrieved from DB
 
         // Multiply fare by 2 for to and fro travel
