@@ -10,6 +10,7 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -23,6 +24,14 @@ class OrderController extends Controller
      */
     public function create(Request $request)
     {
+        // Try to add products to cart
+        if (!$this->create_cart($request)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong. Please try again'
+            ]);
+        }
+
         // Store order data
         $store = $this->cstore($request);
         $status = $store['status'];
@@ -183,5 +192,60 @@ class OrderController extends Controller
         $seg2 = date('YmdHis');
 
         return 'ORDER-' . $seg1 . '-' . $seg2;
+    }
+
+    /**
+     * Add products to Cart
+     * @return json
+     */
+    public function create_cart(Request $request)
+    {
+        // Get validation rules
+        $validate = $this->cart_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return false;
+        }
+
+        $products = $request['products'];
+
+        // Try to save cart entry or catch error if any
+        try {
+            Cart::where('user_id', $request->user()->id)->delete();
+
+            foreach ($products as $product) {
+                $p = Product::findOrFail($product['id']);
+
+                $cart = new Cart();
+                $cart->user_id = $request->user()->id;
+                $cart->price = $p->price * $product['quantity'];
+                $cart->quantity = $product['quantity'];
+                $cart->product_id = $product['id'];
+
+                $cart->save();
+            }
+
+            return true;
+        } catch (\Throwable $th) {
+            Log::error($th);
+            Cart::where('user_id', $request->user()->id)->delete();
+
+            return false;
+        }
+    }
+
+    /**
+     * Cart creation Validation Rules
+     * @return object The validator object
+     */
+    private function cart_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'products' => 'required|array',
+            'products.*.id' => 'required|numeric',
+            'products.*.quantity' => 'required|numeric'
+        ]);
     }
 }

@@ -81,7 +81,7 @@ class UserController extends Controller
             // Compose response data
             $data = [
                 'user' => $user,
-                'area' => $user->area->name,
+                'area' => $user->area ? $user->area->name : null,
                 'token' => $token->accessToken,
                 'token_type' => 'Bearer',
                 'token_expires' => Carbon::parse(
