@@ -67,10 +67,29 @@ class AuthController extends Controller
 
         $transaction = new Transaction();
 
-        // Extract actor from transaction type
-        $actor = explode('_', $type)[0];
+        $data = [];
 
-        switch ($actor) {
+        switch ($type) {
+            case 'user_fund_wallet':
+                $transaction->user_id = $originator->id;
+
+                if ($request['status']) {
+                    $originator->balance += $request['amount'];
+
+                    // Try to save order or catch error if any
+                    try {
+                        $originator->save();
+                        $data = $originator;
+                    } catch (\Throwable $th) {
+                        Log::error($th);
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Internal Server Error'
+                        ], 500);
+                    }
+                }
+                break;
+
             default:
                 $transaction->user_id = $originator->id;
 
@@ -93,19 +112,35 @@ class AuthController extends Controller
                     ]);
                 }
 
+                if (!$request['direct_pay']) {
+                    // Check if user's wallet balance is sufficient
+                    if ($originator->balance < $amount) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Insufficient Balance'
+                        ]);
+                    }
+
+                    $originator->balance -= $amount;
+                }
+
                 $transaction->order_id = $order->id;
 
-                $order->status = 'paid';
+                if ($request['status']) {
+                    $order->status = 'paid';
 
-                // Try to save order or catch error if any
-                try {
-                    $order->save();
-                } catch (\Throwable $th) {
-                    Log::error($th);
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Internal Server Error'
-                    ], 500);
+                    // Try to save order or catch error if any
+                    try {
+                        $order->save();
+                        $originator->save();
+                        $data = $originator;
+                    } catch (\Throwable $th) {
+                        Log::error($th);
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Internal Server Error'
+                        ], 500);
+                    }
                 }
 
                 break;
@@ -123,7 +158,8 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Transaction Finalized'
+                'message' => 'Transaction Finalized',
+                'data' => $data
             ]);
         } catch (\Throwable $th) {
             Log::error($th);
@@ -147,7 +183,8 @@ class AuthController extends Controller
             'type' => 'required|in:' . $types,
             'amount' => 'required|numeric',
             'status' => 'required|boolean',
-            'ref' => 'required'
+            'ref' => 'required',
+            'direct_pay' => 'boolean'
         ]);
     }
 
