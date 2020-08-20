@@ -17,7 +17,7 @@ class AuthController extends Controller
 
     // Transaction types
     private $transaction_types = [
-        'user_fund_wallet', 'agent_fund_wallet', 'agent_withdrawal', 'vendor_withdrawal', 'pay_for_order'
+        'user_fund_wallet', 'agent_fund_wallet', 'agent_withdrawal', 'vendor_withdrawal', 'complete_order'
     ];
 
     /**
@@ -45,13 +45,13 @@ class AuthController extends Controller
     }
 
     /**
-     * Initialize Payment
+     * Finalize Payment/Transaction
      * @return json
      */
-    public function initialize(Request $request)
+    public function finalize(Request $request)
     {
         // Get validation rules
-        $validate = $this->init_rules($request);
+        $validate = $this->fin_rules($request);
 
         // Run validation
         if ($validate->fails()) {
@@ -74,37 +74,48 @@ class AuthController extends Controller
             default:
                 $transaction->user_id = $originator->id;
 
-                // Check if user wants to pay for order directly
-                if ($type == 'pay_for_order') {
-                    $order = Order::where('user_id', $originator->id)
-                        ->where('status', 'pending')->first();
+                $order = Order::where('user_id', $originator->id)
+                    ->where('status', 'pending')->first();
 
-                    if (!$order) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Invalid transaction. No pending order for this user.'
-                        ]);
-                    }
-
-                    $order_amount = json_decode($order->amount)->total;
-
-                    if ($amount != $order_amount) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Invalid amount'
-                        ]);
-                    }
-
-                    $transaction->order_id = $order->id;
+                if (!$order) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No pending order for this user.'
+                    ]);
                 }
+
+                $order_amount = json_decode($order->amount)->total;
+
+                if ($amount != $order_amount) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid amount'
+                    ]);
+                }
+
+                $transaction->order_id = $order->id;
+
+                $order->status = 'paid';
+
+                // Try to save order or catch error if any
+                try {
+                    $order->save();
+                } catch (\Throwable $th) {
+                    Log::error($th);
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Internal Server Error'
+                    ], 500);
+                }
+
                 break;
         }
 
         // Fill new transaction object
-        $ref = $this->generate_ref();
-        $transaction->reference = $ref;
+        $transaction->reference = $request['ref'];
         $transaction->amount = $amount;
         $transaction->type = $type;
+        $transaction->status = $request['status'];
 
         // Try to save transaction or catch error if any
         try {
@@ -112,10 +123,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Transaction Initialized',
-                'data' => [
-                    "reference" => $ref
-                ]
+                'message' => 'Transaction Finalized'
             ]);
         } catch (\Throwable $th) {
             Log::error($th);
@@ -127,17 +135,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Payment Init Validation Rules
+     * Payment/Transaction Finalization Validation Rules
      * @return object The validator object
      */
-    private function init_rules(Request $request)
+    private function fin_rules(Request $request)
     {
         $types = implode(',', $this->transaction_types);
 
         // Make and return validation rules
         return Validator::make($request->all(), [
             'type' => 'required|in:' . $types,
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric',
+            'status' => 'required|boolean',
+            'ref' => 'required'
         ]);
     }
 
