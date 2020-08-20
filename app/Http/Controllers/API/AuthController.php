@@ -70,6 +70,7 @@ class AuthController extends Controller
         $data = [];
 
         switch ($type) {
+                // Fund User Wallet
             case 'user_fund_wallet':
                 $transaction->user_id = $originator->id;
 
@@ -90,6 +91,7 @@ class AuthController extends Controller
                 }
                 break;
 
+                // Pay for Order
             default:
                 $transaction->user_id = $originator->id;
 
