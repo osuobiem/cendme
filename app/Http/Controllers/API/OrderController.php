@@ -45,11 +45,8 @@ class OrderController extends Controller
      */
     public function cstore(Request $request)
     {
-        $old_order = Order::where('user_id', $request->user()->id)
-            ->where('status', 'pending')->first();
-
         // New order object
-        $order = $old_order ? $old_order : new Order();
+        $order = new Order();
 
         // Assign order object properties
         $order->user_id = $request->user()->id;
