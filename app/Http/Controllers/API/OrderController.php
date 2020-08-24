@@ -138,6 +138,7 @@ class OrderController extends Controller
 
         $ref = $this->generate_ref();
         $order->reference = $ref;
+        $order->products = json_encode($request['products']);
 
         // Try to save order or catch error if any
         try {
@@ -251,10 +252,32 @@ class OrderController extends Controller
 
     /**
      * Get Orders
+     * @param string $id Order ID (Optional)
      * @return json
      */
-    public function get(Request $request)
+    public function get(Request $request, $id = false)
     {
+        // Check if order id was supplied
+        if ($id) {
+            // Get single order
+            $order = Order::find($id);
+
+            if ($order) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Fetch Successful',
+                    'data' => [
+                        'order' => $order
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Order not found'
+                ]);
+            }
+        }
+
         // Get Orders
         $orders = $request->user()->orders()->orderByDesc('status')->orderByDesc('updated_at')->get();
 

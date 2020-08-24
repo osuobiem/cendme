@@ -73,7 +73,7 @@ Route::group(['namespace' => 'API'], function () {
         Route::post('create', 'OrderController@create');
 
         // Get Orders
-        Route::get('get', 'OrderController@get');
+        Route::get('get/{id?}', 'OrderController@get');
     });
     // ----------------
 
