@@ -93,15 +93,36 @@ class AuthController extends Controller
 
                 // Pay for Order
             default:
+                // Check if order reference is in request object
+                if (!$request['order_ref']) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => [
+                            'order_ref' => [
+                                'The order reference field is required'
+                            ]
+                        ]
+                    ]);
+                }
+
                 $transaction->user_id = $originator->id;
 
-                $order = Order::where('user_id', $originator->id)
-                    ->where('status', 'pending')->first();
+                $order = Order::where('reference', $request['order_ref'])->first();
 
+                // Check if the order exists
                 if (!$order) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'No pending order for this user.'
+                        'message' => 'Order not found'
+                    ]);
+                }
+
+                // Check if the order has not been completed
+                if ($order->status != 'pending') {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Transaction Finalized',
+                        'data' => $request->user()
                     ]);
                 }
 
@@ -114,7 +135,7 @@ class AuthController extends Controller
                     ]);
                 }
 
-                if (!$request['direct_pay']) {
+                if ($request['direct_pay']) {
                     // Check if user's wallet balance is sufficient
                     if ($originator->balance < $amount) {
                         return response()->json([
