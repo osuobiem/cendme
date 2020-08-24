@@ -10,6 +10,7 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
@@ -197,19 +198,22 @@ class OrderController extends Controller
 
     /**
      * Add products to Cart
+     * @param array $products Optional products parameter
      * @return json
      */
-    public function create_cart(Request $request)
+    public function create_cart(Request $request, $products = false)
     {
-        // Get validation rules
-        $validate = $this->cart_rules($request);
+        if (!$products) {
+            // Get validation rules
+            $validate = $this->cart_rules($request);
 
-        // Run validation
-        if ($validate->fails()) {
-            return false;
+            // Run validation
+            if ($validate->fails()) {
+                return false;
+            }
+
+            $products = $request['products'];
         }
-
-        $products = $request['products'];
 
         // Try to save cart entry or catch error if any
         try {
@@ -263,11 +267,37 @@ class OrderController extends Controller
             $order = Order::find($id);
 
             if ($order) {
+
+                // Try to add products to cart
+                if (!$this->create_cart($request, json_decode($order->products, true))) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Something went wrong. Please try again'
+                    ]);
+                }
+
+                $entries = $request->user()->cart;
+                $cart = [];
+
+                foreach ($entries as $entry) {
+                    $product = Product::find($entry->product_id);
+
+                    // Push composed entry to products array
+                    array_push($cart, [
+                        'id' => $product->id,
+                        'photo' => url('/') . Storage::url('products/' . $product->photo),
+                        'title' => $product->title,
+                        'price' => $entry->price,
+                        'quantity' => $entry->quantity
+                    ]);
+                }
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Fetch Successful',
                     'data' => [
-                        'order' => $order
+                        'order' => $order,
+                        'cart' => $cart
                     ]
                 ]);
             } else {
