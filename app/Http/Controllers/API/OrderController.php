@@ -248,4 +248,22 @@ class OrderController extends Controller
             'products.*.quantity' => 'required|numeric'
         ]);
     }
+
+    /**
+     * Get Orders
+     * @return json
+     */
+    public function get(Request $request)
+    {
+        // Get Orders
+        $orders = $request->user()->orders()->orderByDesc('status')->orderByDesc('updated_at')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Fetch Successful',
+            'data' => [
+                'orders' => $orders
+            ]
+        ]);
+    }
 }
