@@ -99,7 +99,7 @@ class AuthController extends Controller
                         'success' => false,
                         'message' => [
                             'order_ref' => [
-                                'The order reference field is required'
+                                'The order ref field is required'
                             ]
                         ]
                     ]);
@@ -135,7 +135,7 @@ class AuthController extends Controller
                     ]);
                 }
 
-                if ($request['direct_pay']) {
+                if (!$request['direct_pay']) {
                     // Check if user's wallet balance is sufficient
                     if ($originator->balance < $amount) {
                         return response()->json([
