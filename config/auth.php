@@ -46,14 +46,14 @@ return [
             'provider' => 'admins',
         ],
 
-        'agents-web' => [
+        'shoppers-web' => [
             'driver' => 'session',
-            'provider' => 'agents',
+            'provider' => 'shoppers',
         ],
 
-        'agents-api' => [
+        'shoppers-api' => [
             'driver' => 'passport',
-            'provider' => 'agents',
+            'provider' => 'shoppers',
             'hash' => false,
         ],
 
@@ -102,9 +102,9 @@ return [
             'model' => App\Admin::class,
         ],
 
-        'agents' => [
+        'shoppers' => [
             'driver' => 'eloquent',
-            'model' => App\Agent::class,
+            'model' => App\Shopper::class,
         ],
     ],
 

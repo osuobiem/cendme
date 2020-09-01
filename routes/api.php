@@ -41,26 +41,26 @@ Route::group(['namespace' => 'API'], function () {
     // ----------------
 
     /**
-     * AGENT ROUTES
+     * SHOPPER ROUTES
      */
-    Route::group(['prefix' => 'agent'], function () {
+    Route::group(['prefix' => 'shopper'], function () {
 
-        // Agent Signup
-        Route::post('signup', 'AgentController@create');
+        // Shopper Signup
+        Route::post('signup', 'ShopperController@create');
 
-        // Agent Login
-        Route::post('login', 'AgentController@login');
+        // Shopper Login
+        Route::post('login', 'ShopperController@login');
 
-        Route::group(['middleware' => 'auth:agents-api'], function () {
+        Route::group(['middleware' => 'auth:shoppers-api'], function () {
 
-            // Agent Update (after verification)
-            Route::post('update/{id}', 'AgentController@update');
+            // Shopper Update (after verification)
+            Route::post('update/{id}', 'ShopperController@update');
 
-            // Agent Update (before verification)
-            Route::post('update/{id}/before', 'AgentController@update_b');
+            // Shopper Update (before verification)
+            Route::post('update/{id}/before', 'ShopperController@update_b');
 
-            // Verify agent using BVN
-            Route::get('verify/{id}', 'AgentController@verify');
+            // Verify shopper using BVN
+            Route::get('verify/{id}', 'ShopperController@verify');
         });
     });
     // ----------------
