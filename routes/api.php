@@ -36,6 +36,9 @@ Route::group(['namespace' => 'API'], function () {
 
             // User Update
             Route::post('update', 'UserController@update');
+
+            // Update Photo
+            Route::post('update-photo', 'UserController@update_photo');
         });
     });
     // ----------------

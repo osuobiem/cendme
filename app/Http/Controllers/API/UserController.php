@@ -229,27 +229,9 @@ class UserController extends Controller
             $user->password = Hash::make(strtolower($request['password']));
         }
 
-        // Check if photo is available
-        if ($request['photo']) {
-            $upload = $this->update_photo($request, $user);
-
-            // Check upload status
-            if (!$upload['success']) {
-                return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
-            }
-
-            $user = $upload['user'];
-        }
-
         // Try user save or catch error if any
         try {
             $user->save();
-
-            // Delete old photo
-            if ($request['photo']) {
-                $old_photo = $upload['old_photo'];
-                $old_photo != 'placeholder.png' ? Storage::delete('/public/users/' . $old_photo) : '';
-            }
 
             // Get photo url
             $user->photo = url('/') . Storage::url('users/' . $user->photo);
@@ -258,22 +240,29 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             Log::error($th);
 
-            // Delete uploaded photo
-            if ($request['photo']) {
-                $user->photo != 'placeholder.png' ? Storage::delete('/public/users/' . $user->photo) : '';
-            }
-
             return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
         }
     }
 
     /**
      * Update user photo
-     * @param oject $user The user object
      * @return array
      */
-    public function update_photo(Request $request, $user)
+    public function update_photo(Request $request)
     {
+        // Get validation rules
+        $validate = $this->update_photo_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ]);
+        }
+
+        $user = $request->user();
+
         $stored = false;
         $old_photo = $user->photo;
 
@@ -283,17 +272,44 @@ class UserController extends Controller
 
         if ($stored) {
             $user->photo = basename($stored);
-            return [
-                'success' => true,
-                'user' => $user,
-                'old_photo' => $old_photo
-            ];
+
+            try {
+                $user->save();
+
+                // Delete old photo
+                $old_photo != 'placeholder.png' ? Storage::delete('/public/users/' . $old_photo) : '';
+
+                // Get photo url
+                $user->photo = url('/') . Storage::url('users/' . $user->photo);
+
+                return response()->json(['success' => true, 'message' => 'Update Successful', 'data' => ['user' => $user]]);
+            } catch (\Throwable $th) {
+                Log::error($th);
+
+                // Delete uploaded photo
+                if ($request['photo']) {
+                    $user->photo != 'placeholder.png' ? Storage::delete('/public/users/' . $user->photo) : '';
+                }
+
+                return response()->json(['success' => false, 'message' => 'Internal Server Error'], 500);
+            }
         } else {
-            return [
-                'success' => false
-            ];
+            return response()->json(['success' => false, 'message' => 'Internal Server Error'], 500);
         }
     }
+
+    /**
+     * User Update Photo Validation Rules
+     * @return object The validator object
+     */
+    private function update_photo_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'photo' => 'required|image|max:5120'
+        ]);
+    }
+
     /**
      * User Update Validation Rules
      * @return object The validator object
