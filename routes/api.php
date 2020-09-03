@@ -74,6 +74,9 @@ Route::group(['namespace' => 'API'], function () {
 
         // Get Orders
         Route::get('get/{id?}', 'OrderController@get');
+
+        // Delete Order
+        Route::get('delete/{id}', 'OrderController@delete');
     });
     // ----------------
 

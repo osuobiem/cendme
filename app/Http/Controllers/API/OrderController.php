@@ -319,4 +319,19 @@ class OrderController extends Controller
             ]
         ]);
     }
+
+    /**
+     * Delete Order
+     * @param int $id Order ID
+     * @return json
+     */
+    public function delete($id)
+    {
+        Order::findOrFail($id)->forceDelete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order Deleted'
+        ]);
+    }
 }
