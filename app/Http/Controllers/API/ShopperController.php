@@ -319,7 +319,13 @@ class ShopperController extends Controller
         // Try shopper save or catch error if any
         try {
             $shopper->save();
-            return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
+
+            // Get shopper photo url
+            $shopper->photo = url('/') . Storage::url('shoppers/' . $shopper->photo);
+            return [
+                'success' => true, 'status' => 200, 'message' => 'Update Successful',
+                'data' => ['shopper' => $shopper]
+            ];
         } catch (\Throwable $th) {
             Log::error($th);
             return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
