@@ -190,10 +190,9 @@ class ShopperController extends Controller
     // After verification
     /**
      * Update shopper data (after verification)
-     * @param int $id Shopper id to update with
      * @return json
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         // Get validation rules
         $validate = $this->update_rules($request);
@@ -225,6 +224,7 @@ class ShopperController extends Controller
         if ($request['about']) {
             $shopper->about = $request['about'];
         }
+        $shopper->phone = $request['phone'];
         $shopper->address = $request['address'];
         $shopper->area_id = $request['area'];
 
@@ -234,8 +234,13 @@ class ShopperController extends Controller
 
         // Try shopper save or catch error if any
         try {
-            $shopper->save();
-            return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
+            // Get shopper photo url
+            $shopper->photo = url('/') . Storage::url('shoppers/' . $shopper->photo);
+
+            return [
+                'success' => true, 'status' => 200, 'message' => 'Update Successful',
+                'data' => ['shopper' => $shopper]
+            ];
         } catch (\Throwable $th) {
             Log::error($th);
             return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
