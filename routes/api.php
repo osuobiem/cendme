@@ -57,10 +57,10 @@ Route::group(['namespace' => 'API'], function () {
             Route::post('update/{id}', 'ShopperController@update');
 
             // Shopper Update (before verification)
-            Route::post('update/{id}/before', 'ShopperController@update_b');
+            Route::post('update/before', 'ShopperController@update_b');
 
             // Verify shopper using BVN
-            Route::get('verify/{id}', 'ShopperController@verify');
+            Route::get('verify', 'ShopperController@verify');
         });
     });
     // ----------------
