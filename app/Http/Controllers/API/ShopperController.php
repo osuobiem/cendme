@@ -162,7 +162,7 @@ class ShopperController extends Controller
                     'data' => $login
                 ];
             } else {
-                return ['success' => false, 'status' => 500, 'message' => 'Server Error'];
+                return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
             }
         } catch (\Throwable $th) {
             Log::error($th);
@@ -207,7 +207,7 @@ class ShopperController extends Controller
         }
 
         // Store shopper data
-        $store = $this->ustore($request, $id);
+        $store = $this->ustore($request);
         $status = $store['status'];
         unset($store['status']);
         return response()->json($store, $status);
@@ -215,39 +215,30 @@ class ShopperController extends Controller
 
     /**
      * Process shopper data update
-     * @param int $id Shopper id to update with
      * @return array Update status
      */
-    public function ustore(Request $request, $id)
+    public function ustore(Request $request)
     {
-        // Decode shopper id
-        $id = base64_decode($id);
+        $shopper = $request->user();
 
-        // Find shopper with supplied id
-        $shopper = Shopper::find($id);
+        // Assign shopper object properties
+        if ($request['about']) {
+            $shopper->about = $request['about'];
+        }
+        $shopper->address = $request['address'];
+        $shopper->area_id = $request['area'];
 
-        if ($shopper) {
-            // Assign shopper object properties
-            if ($request['about']) {
-                $shopper->about = $request['about'];
-            }
-            $shopper->address = $request['address'];
-            $shopper->lga_id = $request['lga'];
+        if ($request['password']) {
+            $shopper->password = Hash::make(strtolower($request['password']));
+        }
 
-            if ($request['password']) {
-                $shopper->password = Hash::make(strtolower($request['password']));
-            }
-
-            // Try shopper save or catch error if any
-            try {
-                $shopper->save();
-                return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
-            } catch (\Throwable $th) {
-                Log::error($th);
-                return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
-            }
-        } else {
-            return ['success' => false, 'status' => 200, 'message' => 'Shopper not found'];
+        // Try shopper save or catch error if any
+        try {
+            $shopper->save();
+            return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
         }
     }
 
@@ -269,41 +260,31 @@ class ShopperController extends Controller
     // Before Verification
     /**
      * Update shopper data (before verification)
-     * @param int $id Shopper id to update with
      * @return json
      */
-    public function update_b(Request $request, $id)
+    public function update_b(Request $request)
     {
-        // Decode shopper id
-        $id = base64_decode($id);
+        $shopper = $request->user();
 
-        // Find shopper with supplied id
-        $shopper = Shopper::find($id);
+        // Get validation rules
+        $validate = $this->update_rules_b($request, $shopper);
 
-        if ($shopper) {
-
-            // Get validation rules
-            $validate = $this->update_rules_b($request, $shopper);
-
-            // Run validation
-            if ($validate->fails()) {
-                return response()->json([
-                    "success" => false,
-                    "message" => $validate->errors()
-                ], 400);
-            }
-
-            // Store shopper data
-            $store = $this->ustore_b($request, $shopper);
-            $status = $store['status'];
-            unset($store['status']);
-            return response()->json($store, $status);
-        } else {
+        // Run validation
+        if ($validate->fails()) {
             return response()->json([
                 "success" => false,
-                "message" => 'Shopper not found'
-            ], 404);
+                "message" => $validate->errors()
+            ], 400);
         }
+
+        // Verify Shopper
+        $this->verify($request);
+
+        // Store shopper data
+        $store = $this->ustore_b($request, $shopper);
+        $status = $store['status'];
+        unset($store['status']);
+        return response()->json($store, $status);
     }
 
     /**
@@ -311,8 +292,10 @@ class ShopperController extends Controller
      * @param object $shopper Shopper object
      * @return array Update status
      */
-    public function ustore_b(Request $request, $shopper)
+    public function ustore_b(Request $request)
     {
+        $shopper = $request->user();
+
         // Assign shopper object properties
         $shopper->firstname = ucfirst(strtolower($request['firstname']));
         $shopper->lastname = ucfirst(strtolower($request['lastname']));
@@ -324,7 +307,7 @@ class ShopperController extends Controller
             $shopper->about = $request['about'];
         }
         $shopper->address = $request['address'];
-        $shopper->lga_id = $request['lga'];
+        $shopper->area_id = $request['area'];
 
         if ($request['password']) {
             $shopper->password = Hash::make(strtolower($request['password']));
@@ -364,7 +347,7 @@ class ShopperController extends Controller
             ],
             'dob' => 'required|date',
             'address' => 'required|min:4',
-            'lga' => 'required|numeric|exists:lgas,id',
+            'area' => 'required|numeric|exists:areas,id',
             'password' => 'alpha_dash|min:6|max:30',
         ]);
     }
