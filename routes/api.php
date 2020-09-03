@@ -54,13 +54,10 @@ Route::group(['namespace' => 'API'], function () {
         Route::group(['middleware' => 'auth:shoppers-api'], function () {
 
             // Shopper Update (after verification)
-            Route::post('update/{id}', 'ShopperController@update');
+            Route::post('update', 'ShopperController@update');
 
             // Shopper Update (before verification)
             Route::post('update/before', 'ShopperController@update_b');
-
-            // Verify shopper using BVN
-            Route::get('verify', 'ShopperController@verify');
         });
     });
     // ----------------

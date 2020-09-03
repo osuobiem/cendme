@@ -274,11 +274,14 @@ class ShopperController extends Controller
             return response()->json([
                 "success" => false,
                 "message" => $validate->errors()
-            ], 400);
+            ]);
         }
 
         // Verify Shopper
-        $this->verify($request);
+        $verify = $this->verify($request);
+        if (!$verify['success']) {
+            return response()->json($verify);
+        }
 
         // Store shopper data
         $store = $this->ustore_b($request, $shopper);
@@ -357,7 +360,7 @@ class ShopperController extends Controller
     // SHOPPER VERIFICATION
     /**
      * Verify shopper's identity using bvn + paystack API endpoint
-     * @return json
+     * @return array
      */
     public function verify(Request $request)
     {
@@ -366,32 +369,39 @@ class ShopperController extends Controller
         // Try to retrieve already saved bvn data
         $bvn_data = $shopper->bvn_data;
 
+        $shopper_data = (object) [
+            'firstname' => $request['firstname'],
+            'lastname' => $request['lastname'],
+            'phone' => $request['phone'],
+            'dob' => $request['dob'],
+            'bvn' => $request['bvn']
+        ];
+
         if ($bvn_data) {
+
             // Try shopper verification
-            $errors = $this->check_shopper($bvn_data, $shopper);
+            $errors = $this->check_shopper($bvn_data, $shopper_data);
 
             // Do extra BVN check
-            if ($bvn_data->bvn != $shopper->bvn) {
-                array_push($errors, [
-                    "bvn" => [
-                        "Invalid BVN - Please update or confirm from your bank."
-                    ]
-                ]);
+            if ($bvn_data->bvn != $shopper_data->bvn) {
+                $errors['bvn'] = [
+                    "Invalid BVN - Please update or confirm from your bank."
+                ];
             }
 
             // Return error if verification fails
             if ($errors) {
-                return response()->json([
+                return [
                     "success" => false,
                     "message" => $errors
-                ]);
+                ];
             }
 
             // Update shopper verification status
             $shopper->verified = true;
             $shopper->save();
 
-            return true;
+            return ['success' => true];
         } else {
             // Retrieve necessary credentials
             $credentials = Credential::where('key', 'paystack_secret_key')->first();
@@ -399,7 +409,7 @@ class ShopperController extends Controller
             // Ping Paystack's BVN API
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $credentials->value
-            ])->get('https://api.paystack.co/bank/resolve_bvn/' . $shopper->bvn);
+            ])->get('https://api.paystack.co/bank/resolve_bvn/' . $shopper_data->bvn);
 
             if ($response->successful()) {
                 $data = $response->json()['data'];
@@ -420,30 +430,30 @@ class ShopperController extends Controller
                 // Try shopper verification
 
                 $data = (object) $data;
-                $errors = $this->check_shopper($data, $shopper);
+                $errors = $this->check_shopper($data, $shopper_data);
 
                 // Return error if verification fails
                 if ($errors) {
-                    return response()->json([
+                    return [
                         "success" => false,
                         "message" => $errors
-                    ]);
+                    ];
                 }
 
                 // Update shopper verification status
                 $shopper->verified = true;
                 $shopper->save();
 
-                return true;
+                return ['success' => true];
             } else {
-                return response()->json([
+                return [
                     "success" => false,
                     "message" => [
                         "bvn" => [
                             "Invalid BVN - Please update or confirm from your bank."
                         ]
                     ]
-                ]);
+                ];
             }
         }
     }
@@ -460,35 +470,27 @@ class ShopperController extends Controller
         $errors = [];
 
         if (strtolower($data->first_name) != strtolower($shopper->firstname)) {
-            array_push($errors, [
-                'firstname' => [
-                    'Firstname does not match BVN records'
-                ]
-            ]);
+            $errors['firstname'] = [
+                'Firstname does not match BVN records'
+            ];
         }
 
         if (strtolower($data->last_name) != strtolower($shopper->lastname)) {
-            array_push($errors, [
-                'lastname' => [
-                    'Lastname does not match BVN records'
-                ]
-            ]);
+            $errors['lastname'] = [
+                'Lastname does not match BVN records'
+            ];
         }
 
         if ($data->formatted_dob != date('Y-m-d', strtotime($shopper->dob))) {
-            array_push($errors, [
-                'dob' => [
-                    'Date of birth does not match BVN records'
-                ]
-            ]);
+            $errors['dob'] = [
+                'Date of birth does not match BVN records'
+            ];
         }
 
         if ($data->mobile != $shopper->phone) {
-            array_push($errors, [
-                'phone' => [
-                    'Phone number does not match BVN records'
-                ]
-            ]);
+            $errors['phone'] = [
+                'Phone number does not match BVN records'
+            ];
         }
 
         return $errors;
