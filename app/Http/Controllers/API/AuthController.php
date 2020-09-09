@@ -127,11 +127,11 @@ class AuthController extends Controller
 
                 // Check if the order has not been completed
                 if ($order->status != 'pending') {
-                    $request->user()->photo = url('/') . Storage::url('users/' . $request->user()->photo);
+                    $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
                     return response()->json([
                         'success' => true,
                         'message' => 'Transaction Finalized',
-                        'data' => $request->user()
+                        'data' => $originator
                     ]);
                 }
 
