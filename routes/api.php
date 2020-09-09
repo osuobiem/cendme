@@ -39,6 +39,12 @@ Route::group(['namespace' => 'API'], function () {
 
             // Update Photo
             Route::post('update-photo', 'UserController@update_photo');
+
+            // Get Paystack Payment Credentials
+            Route::get('payment/credentials', 'AuthController@get_paystack');
+
+            // Initialize Payment
+            Route::post('transaction/finalize', 'AuthController@finalize');
         });
     });
     // ----------------
@@ -61,6 +67,12 @@ Route::group(['namespace' => 'API'], function () {
 
             // Shopper Update (before verification)
             Route::post('update/before', 'ShopperController@update_b');
+
+            // Get Paystack Payment Credentials
+            Route::get('payment/credentials', 'AuthController@get_paystack');
+
+            // Initialize Payment
+            Route::post('transaction/finalize', 'AuthController@finalize');
         });
     });
     // ----------------
@@ -137,12 +149,6 @@ Route::group(['namespace' => 'API'], function () {
 
         // Get product subcategories according to category
         Route::get('subcategories/{category_id}', 'ProductController@subcategories');
-
-        // Get Paystack Payment Credentials
-        Route::get('payment/credentials', 'AuthController@get_paystack');
-
-        // Initialize Payment
-        Route::post('transaction/finalize', 'AuthController@finalize');
     });
     // --------------
 });

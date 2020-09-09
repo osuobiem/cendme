@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class Authenticate extends Middleware
 {
@@ -15,6 +17,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
+
         if (!$request->expectsJson()) {
             if ($request->is('api/*')) {
                 throw new HttpResponseException(response()->json(['success' => false, 'message' => 'Auth token required!'],  401));
@@ -25,7 +28,6 @@ class Authenticate extends Middleware
                 } elseif ($request->is('admin') || $request->is('admin/*')) {
                     return url('admin/login');
                 }
-                // throw new HttpResponseException(response()->json(['success' => false, 'message' => "You're not logged in"],  401));
             }
         }
     }

@@ -8,6 +8,7 @@ use App\Order;
 use App\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -17,7 +18,7 @@ class AuthController extends Controller
 
     // Transaction types
     private $transaction_types = [
-        'user_fund_wallet', 'agent_fund_wallet', 'agent_withdrawal', 'vendor_withdrawal', 'complete_order'
+        'fund_wallet', 'complete_order'
     ];
 
     /**
@@ -70,9 +71,15 @@ class AuthController extends Controller
         $data = [];
 
         switch ($type) {
-                // Fund User Wallet
-            case 'user_fund_wallet':
-                $transaction->user_id = $originator->id;
+                // Fund Wallet
+            case 'fund_wallet':
+                if ($originator->level_id) {
+                    $transaction->shopper_id = $originator->id;
+                    $originator->photo = url('/') . Storage::url('shoppers/' . $originator->photo);
+                } else {
+                    $transaction->user_id = $originator->id;
+                    $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
+                }
 
                 if ($request['status']) {
                     $originator->balance += $request['amount'];
