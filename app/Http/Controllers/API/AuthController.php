@@ -87,6 +87,7 @@ class AuthController extends Controller
                     // Try to save order or catch error if any
                     try {
                         $originator->save();
+                        $originator->photo = $originator->level_id ? url('/') . Storage::url('shoppers/' . $originator->photo) : url('/') . Storage::url('users/' . $originator->photo);
                         $data = $originator;
                     } catch (\Throwable $th) {
                         Log::error($th);
@@ -163,6 +164,7 @@ class AuthController extends Controller
                     try {
                         $order->save();
                         $originator->save();
+                        $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
                         $data = $originator;
                     } catch (\Throwable $th) {
                         Log::error($th);
