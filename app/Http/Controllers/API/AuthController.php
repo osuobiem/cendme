@@ -75,10 +75,8 @@ class AuthController extends Controller
             case 'fund_wallet':
                 if ($originator->level_id) {
                     $transaction->shopper_id = $originator->id;
-                    $originator->photo = url('/') . Storage::url('shoppers/' . $originator->photo);
                 } else {
                     $transaction->user_id = $originator->id;
-                    $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
                 }
 
                 if ($request['status']) {
