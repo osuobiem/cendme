@@ -11,6 +11,8 @@
         "php": "^7.2.5",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
+        "google/cloud-firestore": "^1.15",
+        "grpc/grpc": "^1.30",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "^7.0",
         "laravel/passport": "^9.2",

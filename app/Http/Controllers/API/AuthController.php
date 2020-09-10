@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Credential;
 use App\Http\Controllers\Controller;
 use App\Order;
+use App\Shopper;
 use App\Transaction;
+use Google\Cloud\Firestore\FirestoreClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -70,6 +72,9 @@ class AuthController extends Controller
 
         $data = [];
 
+        // Initial response message
+        $message = 'Transaction Finalized';
+
         switch ($type) {
                 // Fund Wallet
             case 'fund_wallet':
@@ -123,12 +128,23 @@ class AuthController extends Controller
                     ]);
                 }
 
+                $price = json_decode($order->amount)->products;
+                $shoppers = $this->get_qualified_shoppers($price, $originator->area_id);
+
+                // Check if any shopper qualified
+                if (count($shoppers) < 1) {
+                    $message = "No suitable shopper found!";
+                }
+
                 // Check if the order has not been completed
                 if ($order->status != 'pending') {
                     $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
+
+                    // Send request notification data
+                    $this->fire_add_data($order->reference, $shoppers);
                     return response()->json([
                         'success' => true,
-                        'message' => 'Transaction Finalized',
+                        'message' => $message,
                         'data' => $originator
                     ]);
                 }
@@ -165,6 +181,9 @@ class AuthController extends Controller
                         $originator->save();
                         $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
                         $data = $originator;
+
+                        // Send request notification data
+                        $this->fire_add_data($order->reference, $shoppers);
                     } catch (\Throwable $th) {
                         Log::error($th);
                         return response()->json([
@@ -189,7 +208,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Transaction Finalized',
+                'message' => $message,
                 'data' => $data
             ]);
         } catch (\Throwable $th) {
@@ -229,5 +248,38 @@ class AuthController extends Controller
         $seg2 = date('YmdHis');
 
         return 'TRANS-' . $seg1 . '-' . $seg2;
+    }
+
+    /**
+     * Store order request notification on cloud firestore
+     * @param string $order_ref Order Reference
+     * @param array $agents Qualified Shoppers array
+     */
+    public function fire_add_data($order_ref, $shoppers)
+    {
+        // Initialize Firestore Client
+        $firestore = new FirestoreClient();
+
+        // Get Collection, document and store data
+        $order_not = $firestore->collection('order-requests')->document($order_ref);
+        $order_not->set([
+            'shoppers' => $shoppers,
+            'created_at' => date('Y-m-d h:i'),
+            'expires_at' => date('Y-m-d h:i', time() + 900),
+            'status' => 0
+        ]);
+    }
+
+    public function get_qualified_shoppers($price, $area)
+    {
+        // Get qualified shoppers
+        $shoppers = Shopper::where('area_id', $area)->where('balance', '>=', $price)->where('verified', true)->get();
+
+        $ids = [];
+        foreach ($shoppers as $shopper) {
+            array_push($ids, $shopper->id);
+        }
+
+        return $ids;
     }
 }
