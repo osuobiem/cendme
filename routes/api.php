@@ -68,6 +68,9 @@ Route::group(['namespace' => 'API'], function () {
             // Shopper Update (before verification)
             Route::post('update/before', 'ShopperController@update_b');
 
+            // Update Photo
+            Route::post('update-photo', 'ShopperController@update_photo');
+
             // Get Paystack Payment Credentials
             Route::get('payment/credentials', 'AuthController@get_paystack');
 

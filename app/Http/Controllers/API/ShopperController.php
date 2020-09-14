@@ -470,6 +470,72 @@ class ShopperController extends Controller
     }
 
     /**
+     * Update shopper photo
+     * @return array
+     */
+    public function update_photo(Request $request)
+    {
+        // Get validation rules
+        $validate = $this->update_photo_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ]);
+        }
+
+        $shopper = $request->user();
+
+        $stored = false;
+        $old_photo = $shopper->photo;
+
+        // Try photo upload
+        $photo = $request['photo'];
+        $stored = Storage::put('/public/shoppers', $photo);
+
+        if ($stored) {
+            $shopper->photo = basename($stored);
+
+            try {
+                $shopper->save();
+
+                // Delete old photo
+                $old_photo != 'placeholder.png' ? Storage::delete('/public/shoppers/' . $old_photo) : '';
+
+                // Get photo url
+                $shopper->photo = url('/') . Storage::url('shoppers/' . $shopper->photo);
+
+                return response()->json(['success' => true, 'message' => 'Update Successful', 'data' => ['shopper' => $shopper]]);
+            } catch (\Throwable $th) {
+                Log::error($th);
+
+                // Delete uploaded photo
+                if ($request['photo']) {
+                    $shopper->photo != 'placeholder.png' ? Storage::delete('/public/shoppers/' . $shopper->photo) : '';
+                }
+
+                return response()->json(['success' => false, 'message' => 'Internal Server Error'], 500);
+            }
+        } else {
+            return response()->json(['success' => false, 'message' => 'Internal Server Error'], 500);
+        }
+    }
+
+    /**
+     * Shopper Update Photo Validation Rules
+     * @return object The validator object
+     */
+    private function update_photo_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'photo' => 'required|image|max:5120'
+        ]);
+    }
+
+    /**
      * Match BVN data against strored shopper data
      * @param object $data BVN Data
      * @param object $shopper Stored shopper object
