@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->float('balance')->default(0);
             $table->string('photo')->default('placeholder.png');
             $table->string('password');
+            $table->string('device_unique');
             $table->json('other_details')->nullable();
             $table->foreignId('area_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->rememberToken();
