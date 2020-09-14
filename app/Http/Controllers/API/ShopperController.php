@@ -145,6 +145,7 @@ class ShopperController extends Controller
         $shopper->email = strtolower($request['email']);
         $shopper->password = Hash::make(strtolower($request['password']));
         $shopper->level_id = 1;
+        $shopper->device_unique = md5(time() . '-' . rand(1000, 10000));
 
         // Try shopper save or catch error if any
         try {

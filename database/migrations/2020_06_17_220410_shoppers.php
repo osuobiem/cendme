@@ -28,6 +28,7 @@ class Shoppers extends Migration
             $table->string('password');
             $table->json('other_details')->nullable();
             $table->string('photo')->default('placeholder.png');
+            $table->string('device_unique');
             $table->foreignId('area_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->bigInteger('level_id')->unsigned();
             $table->boolean('verified')->default(false);
