@@ -144,7 +144,7 @@ class UserController extends Controller
         $user->email = strtolower($request['email']);
         $user->phone = $request['phone'];
         $user->password = Hash::make(strtolower($request['password']));
-        $user->device_unique = md5(time() . '-' . rand(1000, 10000));
+        $user->device_unique = $request['device_unique'];
 
         // Try user save or catch error if any
         try {
@@ -181,7 +181,8 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'phone' => 'required|numeric|digits:11',
-            'password' => 'required|alpha_dash|min:6|max:30'
+            'password' => 'required|alpha_dash|min:6|max:30',
+            'device_unique' => 'required'
         ]);
     }
     // -----------

@@ -145,7 +145,7 @@ class ShopperController extends Controller
         $shopper->email = strtolower($request['email']);
         $shopper->password = Hash::make(strtolower($request['password']));
         $shopper->level_id = 1;
-        $shopper->device_unique = md5(time() . '-' . rand(1000, 10000));
+        $shopper->device_unique = $request['device_unique'];
 
         // Try shopper save or catch error if any
         try {
@@ -180,7 +180,8 @@ class ShopperController extends Controller
         // Make and return validation rules
         return Validator::make($request->all(), [
             'email' => 'required|email|unique:shoppers',
-            'password' => 'required|alpha_dash|min:6|max:30'
+            'password' => 'required|alpha_dash|min:6|max:30',
+            'device_unique' => 'required'
         ]);
     }
     // -----------
