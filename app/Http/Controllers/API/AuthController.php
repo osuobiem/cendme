@@ -137,19 +137,9 @@ class AuthController extends Controller
                     $message = "No suitable shopper found!";
                 }
 
-                // Check if the order has not been completed
+                // Check if the order has been completed
                 if ($order->status != 'pending') {
                     $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
-
-                    // Loop through shoppers to extract device unique/token
-                    $device_tokens = [];
-                    foreach ($shoppers as $shopper) {
-                        array_push($device_tokens, $shopper->device_unique);
-                    }
-
-                    // Send order request notification
-                    $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
-                    $this->send_request_notification($device_tokens, $body, $order->reference);
 
                     return response()->json([
                         'success' => true,
@@ -186,13 +176,20 @@ class AuthController extends Controller
 
                     // Try to save order or catch error if any
                     try {
-                        $order->save();
-                        $originator->save();
-                        $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
-                        $data = $originator;
+                        // $order->save();
+                        // $originator->save();
+                        // $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
+                        // $data = $originator;
 
-                        // Send request notification data
-                        $this->fire_add_data($order->reference, $shoppers);
+                        // Loop through shoppers to extract device unique/token
+                        $device_tokens = [];
+                        foreach ($shoppers as $shopper) {
+                            array_push($device_tokens, $shopper->device_unique);
+                        }
+
+                        // Send order request notification
+                        $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
+                        $this->send_request_notification($device_tokens, $body, $order->reference);
                     } catch (\Throwable $th) {
                         Log::error($th);
                         return response()->json([
@@ -269,22 +266,21 @@ class AuthController extends Controller
      */
     public function send_request_notification($device_tokens, $body, $order_ref)
     {
+
         // Initialize Firebase Cloud Messaging Component
         $messaging = app('firebase.messaging');
 
         // Create message object
-        $message = CloudMessage::new();
+        // $message = CloudMessage::new();
 
-        // Compose and attach notification to message
-        $notification = Notification::create('Cendme Order Request', $body);
-        $message->withNotification($notification);
+        $message = CloudMessage::withTarget('token', 'ekg-I-7kSgmS6de3zOAxhG:APA91bG8rQ7IH8mHrwGtc1OC3ZpHu2Hnyxx-JXpV_OzfEnLkt9GsDgzsEA5c_9GIQELks9vDotWXNx9teV88K8ivOZbRkpecvjfV7eesib3sbeUSLno70JLDPICXJRisq0KQbFJEfq8f')
+            ->withNotification(Notification::create('Title', 'Body'))
+            ->withData(['key' => 'value']);
 
-        // Compose and attach data to message
-        $data = ['order_ref' => $order_ref];
-        $message->withData($data);
+        $messaging->send($message);
 
-        $report = $messaging->sendMulticast($message, $device_tokens);
-
+        $report = $messaging->send($message);
+        dd($report);
         echo 'Successful sends: ' . $report->successes()->count() . PHP_EOL;
         echo 'Failed sends: ' . $report->failures()->count() . PHP_EOL;
 
@@ -293,6 +289,7 @@ class AuthController extends Controller
                 echo $failure->error()->getMessage() . PHP_EOL;
             }
         }
+        dd("");
     }
 
     public function get_qualified_shoppers($price, $area)
