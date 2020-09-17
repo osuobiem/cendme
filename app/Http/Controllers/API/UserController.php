@@ -58,6 +58,17 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
+        // Get validation rules
+        $validate = $this->login_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ]);
+        }
+
         // Initial failure response
         $res = [
             'success' => false,
@@ -74,6 +85,22 @@ class UserController extends Controller
 
             // Create access token
             $token = $user->createToken('User Access Token');
+
+            // Check if user has logged in from a new device
+            if ($user->device_unique != $request['device_unique']) {
+                $user->device_unique = $request['device_unique'];
+
+                // Try user save or catch error if any
+                try {
+                    $user->save();
+                } catch (\Throwable $th) {
+                    Log::error($th);
+                    return response()->json([
+                        'success' => 500,
+                        'message' => 'Internal Server Error'
+                    ]);
+                }
+            }
 
             // Get user photo url
             $user->photo = url('/') . Storage::url('users/' . $user->photo);
@@ -103,6 +130,20 @@ class UserController extends Controller
         }
     }
     // -----------
+
+    /**
+     * User Login Validation Rules
+     * @return object The validator object
+     */
+    private function login_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+            'device_unique' => 'required'
+        ]);
+    }
 
     // USER SIGNUP
     /**

@@ -61,6 +61,17 @@ class ShopperController extends Controller
      */
     public function login(Request $request)
     {
+        // Get validation rules
+        $validate = $this->login_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ]);
+        }
+
         // Initial failure response
         $res = [
             'success' => false,
@@ -77,6 +88,22 @@ class ShopperController extends Controller
 
             // Create access token
             $token = $shopper->createToken('Shopper Access Token');
+
+            // Check if shopper has logged in from a new device
+            if ($shopper->device_unique != $request['device_unique']) {
+                $shopper->device_unique = $request['device_unique'];
+
+                // Try shopper save or catch error if any
+                try {
+                    $shopper->save();
+                } catch (\Throwable $th) {
+                    Log::error($th);
+                    return response()->json([
+                        'success' => 500,
+                        'message' => 'Internal Server Error'
+                    ]);
+                }
+            }
 
             // Get shopper photo url
             $shopper->photo = url('/') . Storage::url('shoppers/' . $shopper->photo);
@@ -103,6 +130,20 @@ class ShopperController extends Controller
         } else {
             return response()->json($res);
         }
+    }
+
+    /**
+     * Shopper Login Validation Rules
+     * @return object The validator object
+     */
+    private function login_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+            'device_unique' => 'required'
+        ]);
     }
     // -----------
 
