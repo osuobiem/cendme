@@ -7,11 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Order;
 use App\Shopper;
 use App\Transaction;
-use Google\Cloud\Firestore\FirestoreClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 
 class AuthController extends Controller
 {
@@ -140,8 +141,16 @@ class AuthController extends Controller
                 if ($order->status != 'pending') {
                     $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
 
-                    // Send request notification data
-                    $this->fire_add_data($order->reference, $shoppers);
+                    // Loop through shoppers to extract device unique/token
+                    $device_tokens = [];
+                    foreach ($shoppers as $shopper) {
+                        array_push($device_tokens, $shopper->device_unique);
+                    }
+
+                    // Send order request notification
+                    $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
+                    $this->send_request_notification($device_tokens, $body, $order->reference);
+
                     return response()->json([
                         'success' => true,
                         'message' => $message,
@@ -251,23 +260,39 @@ class AuthController extends Controller
     }
 
     /**
-     * Store order request notification on cloud firestore
-     * @param string $order_ref Order Reference
-     * @param array $agents Qualified Shoppers array
+     * Send notification to shopper devices
+     * @param array $device_tokens Device tokens of qualified shoppers
+     * @param string $body Body of the notification
+     * @param string $order_ref Reference of the order
+     * 
+     * @return bool
      */
-    public function fire_add_data($order_ref, $shoppers)
+    public function send_request_notification($device_tokens, $body, $order_ref)
     {
-        // Initialize Firestore Client
-        $firestore = new FirestoreClient();
+        // Initialize Firebase Cloud Messaging Component
+        $messaging = app('firebase.messaging');
 
-        // Get Collection, document and store data
-        $order_not = $firestore->collection('order-requests')->document($order_ref);
-        $order_not->set([
-            'shoppers' => $shoppers,
-            'created_at' => date('Y-m-d h:i'),
-            'expires_at' => date('Y-m-d h:i', time() + 900),
-            'status' => 0
-        ]);
+        // Create message object
+        $message = CloudMessage::new();
+
+        // Compose and attach notification to message
+        $notification = Notification::create('Cendme Order Request', $body);
+        $message->withNotification($notification);
+
+        // Compose and attach data to message
+        $data = ['order_ref' => $order_ref];
+        $message->withData($data);
+
+        $report = $messaging->sendMulticast($message, $device_tokens);
+
+        echo 'Successful sends: ' . $report->successes()->count() . PHP_EOL;
+        echo 'Failed sends: ' . $report->failures()->count() . PHP_EOL;
+
+        if ($report->hasFailures()) {
+            foreach ($report->failures()->getItems() as $failure) {
+                echo $failure->error()->getMessage() . PHP_EOL;
+            }
+        }
     }
 
     public function get_qualified_shoppers($price, $area)

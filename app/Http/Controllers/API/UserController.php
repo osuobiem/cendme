@@ -104,7 +104,6 @@ class UserController extends Controller
     }
     // -----------
 
-
     // USER SIGNUP
     /**
      * Create new user

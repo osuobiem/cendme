@@ -575,4 +575,10 @@ class ShopperController extends Controller
         return $errors;
     }
     // ------------
+
+    /**
+     * Accept Order Request
+     * @param int $order_id
+     * @return json
+     */
 }
