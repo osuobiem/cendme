@@ -300,11 +300,11 @@ class AuthController extends Controller
         // Get qualified shoppers
         $shoppers = Shopper::where('area_id', $area)->where('balance', '>=', $price)->where('verified', true)->get();
 
-        $ids = [];
+        $shs = [];
         foreach ($shoppers as $shopper) {
-            array_push($ids, $shopper->id);
+            array_push($shs, $shopper);
         }
 
-        return $ids;
+        return $shs;
     }
 }
