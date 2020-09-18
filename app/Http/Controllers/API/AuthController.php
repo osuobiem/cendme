@@ -190,12 +190,7 @@ class AuthController extends Controller
                         // Send order request notification
                         $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
 
-                        if (!$this->send_request_notification($device_tokens, $body, $order->reference)) {
-                            return response()->json([
-                                'success' => false,
-                                'message' => 'Internal Server Error'
-                            ], 500);
-                        }
+                        $this->send_request_notification($device_tokens, $body, $order->reference);
                     } catch (\Throwable $th) {
                         Log::error($th);
                         return response()->json([
@@ -284,11 +279,9 @@ class AuthController extends Controller
 
                 $messaging->send($message);
             } catch (\Throwable $th) {
-                return false;
+                Log::error($th);
             }
         }
-
-        return true;
     }
 
     public function get_qualified_shoppers($price, $area)
