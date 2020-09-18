@@ -189,7 +189,14 @@ class AuthController extends Controller
 
                         // Send order request notification
                         $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
-                        $this->send_request_notification($device_tokens, $body, $order->reference);
+
+                        if (!$this->send_request_notification($device_tokens, $body, $order->reference)) {
+                            Log::error($th);
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Internal Server Error'
+                            ], 500);
+                        }
                     } catch (\Throwable $th) {
                         Log::error($th);
                         return response()->json([
