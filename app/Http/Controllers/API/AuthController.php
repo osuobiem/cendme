@@ -282,8 +282,7 @@ class AuthController extends Controller
                     ->withNotification(Notification::create('Cendme Order Request', $body))
                     ->withData(['order_ref' => $order_ref]);
 
-                $r = $messaging->send($message);
-                dd($r);
+                $messaging->send($message);
             } catch (\Throwable $th) {
                 return false;
             }
