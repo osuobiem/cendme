@@ -334,4 +334,69 @@ class OrderController extends Controller
             'message' => 'Order Deleted'
         ]);
     }
+
+    /**
+     * Cancel order
+     * @param int $id Order ID
+     * @return json
+     */
+    public function cancel(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        // Check if order has been canceled
+        if ($order->status == 'cancelled') {
+            return response()->json([
+                'success' => true,
+                'message' => 'Order Cancelled'
+            ]);
+        }
+
+        // Check if order can be canceled
+        if ($order->status != 'paid') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order cannot be cancelled'
+            ]);
+        }
+
+        $amount = json_decode($order->amount);
+
+        // Calculate refund amount
+        $refund = $amount->total - $amount->payment_charge;
+
+        // Add refund amount to user balance
+        $user = $request->user();
+        $user->balance += $refund;
+
+        // Update order status
+        $order->status = 'cancelled';
+
+        $products = json_decode($order->products);
+
+        try {
+            // Update product quantity
+            foreach ($products as $product) {
+                $p = Product::findOrFail($product->id);
+                $p->quantity += $product->quantity;
+
+                $p->save();
+            }
+
+            // Update user and order
+            $user->save();
+            $order->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order Cancelled'
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal Server Error'
+            ], 500);
+        }
+    }
 }

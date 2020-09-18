@@ -92,6 +92,9 @@ Route::group(['namespace' => 'API'], function () {
 
         // Delete Order
         Route::get('delete/{id}', 'OrderController@delete');
+
+        // Cancel Order Request
+        Route::get('cancel/{id}', 'OrderController@cancel');
     });
     // ----------------
 
