@@ -176,10 +176,10 @@ class AuthController extends Controller
 
                     // Try to save order or catch error if any
                     try {
-                        // $order->save();
-                        // $originator->save();
-                        // $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
-                        // $data = $originator;
+                        $order->save();
+                        $originator->save();
+                        $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
+                        $data = $originator;
 
                         // Loop through shoppers to extract device unique/token
                         $device_tokens = [];
@@ -266,30 +266,23 @@ class AuthController extends Controller
      */
     public function send_request_notification($device_tokens, $body, $order_ref)
     {
-
         // Initialize Firebase Cloud Messaging Component
         $messaging = app('firebase.messaging');
 
-        // Create message object
-        // $message = CloudMessage::new();
+        // Send Notification to devices
+        foreach ($device_tokens as $token) {
+            try {
+                $message = CloudMessage::withTarget('token', $token)
+                    ->withNotification(Notification::create('Cendme Order Request', $body))
+                    ->withData(['order_ref' => $order_ref]);
 
-        $message = CloudMessage::withTarget('token', 'ekg-I-7kSgmS6de3zOAxhG:APA91bG8rQ7IH8mHrwGtc1OC3ZpHu2Hnyxx-JXpV_OzfEnLkt9GsDgzsEA5c_9GIQELks9vDotWXNx9teV88K8ivOZbRkpecvjfV7eesib3sbeUSLno70JLDPICXJRisq0KQbFJEfq8f')
-            ->withNotification(Notification::create('Title', 'Body'))
-            ->withData(['key' => 'value']);
-
-        $messaging->send($message);
-
-        $report = $messaging->send($message);
-        dd($report);
-        echo 'Successful sends: ' . $report->successes()->count() . PHP_EOL;
-        echo 'Failed sends: ' . $report->failures()->count() . PHP_EOL;
-
-        if ($report->hasFailures()) {
-            foreach ($report->failures()->getItems() as $failure) {
-                echo $failure->error()->getMessage() . PHP_EOL;
+                $messaging->send($message);
+            } catch (\Throwable $th) {
+                return false;
             }
         }
-        dd("");
+
+        return true;
     }
 
     public function get_qualified_shoppers($price, $area)
