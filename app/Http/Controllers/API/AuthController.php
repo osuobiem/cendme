@@ -191,7 +191,6 @@ class AuthController extends Controller
                         $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
 
                         if (!$this->send_request_notification($device_tokens, $body, $order->reference)) {
-                            Log::error($th);
                             return response()->json([
                                 'success' => false,
                                 'message' => 'Internal Server Error'
