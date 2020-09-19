@@ -129,12 +129,11 @@ class AuthController extends Controller
                     ]);
                 }
 
-                $price = json_decode($order->amount)->products;
-                $shoppers = $this->get_qualified_shoppers($price, $originator->area_id);
+                $shoppers = $this->get_eligible_shoppers($originator->area_id);
 
-                // Check if any shopper qualified
+                // Check if any shopper eligible
                 if (count($shoppers) < 1) {
-                    $message = "No suitable shopper found!";
+                    $message = "No eligible shopper found!";
                 }
 
                 // Check if the order has been completed
@@ -259,7 +258,7 @@ class AuthController extends Controller
 
     /**
      * Send notification to shopper devices
-     * @param array $device_tokens Device tokens of qualified shoppers
+     * @param array $device_tokens Device tokens of eligible shoppers
      * @param string $body Body of the notification
      * @param string $order_ref Reference of the order
      * 
@@ -284,10 +283,10 @@ class AuthController extends Controller
         }
     }
 
-    public function get_qualified_shoppers($price, $area)
+    public function get_eligible_shoppers($area)
     {
-        // Get qualified shoppers
-        $shoppers = Shopper::where('area_id', $area)->where('balance', '>=', $price)->where('verified', true)->get();
+        // Get eligible shoppers
+        $shoppers = Shopper::where('area_id', $area)->where('balance', '>=', 5000)->where('verified', true)->get();
 
         $shs = [];
         foreach ($shoppers as $shopper) {

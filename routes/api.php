@@ -76,6 +76,9 @@ Route::group(['namespace' => 'API'], function () {
 
             // Initialize Payment
             Route::post('transaction/finalize', 'AuthController@finalize');
+
+            // Accept Order Reuest
+            Route::get('order/accept/{order_id}', 'ShopperController@accept_order');
         });
     });
     // ----------------
