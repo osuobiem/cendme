@@ -8,6 +8,7 @@ use App\Credential;
 use App\Http\Controllers\Controller;
 use App\Order;
 use App\Product;
+use App\Vendor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -639,6 +640,15 @@ class ShopperController extends Controller
             ]);
         }
 
+        // Check if shopper has an accepted order
+        $a_order = Order::where('shopper_id', $shopper->id)->where('status', 'accepted')->first();
+        if ($a_order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You already have a pending order'
+            ]);
+        }
+
         $order->shopper_id = $shopper->id;
         $order->status = 'accepted';
 
@@ -695,8 +705,91 @@ class ShopperController extends Controller
                 'message' => 'Order Accepted',
                 'data' => [
                     'vendors' => $data,
-                    'user' => $user
+                    'user' => $user,
+                    'order_ref' => $order->reference
                 ]
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal Server Error'
+            ], 500);
+        }
+    }
+
+    /**
+     * Pay for products using QR code
+     * @param string $qr_token Token gotten from scan
+     * @return json
+     */
+    public function pay_with_qr(Request $request, $qr_token)
+    {
+        // Get vendor
+        $vendor = Vendor::where('qr_token', $qr_token)->firstOrFail();
+
+        // Shopper
+        $shopper = $request->user();
+
+        // Get accepted order
+        $order = Order::where('shopper_id', $shopper->id)->where('status', 'accepted')->firstOrFail();
+
+        $amount = json_decode($order->amount);
+
+        // Check if shopper can pay for order
+        if ($shopper->balance < $amount->total) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Insufficient Balance'
+            ]);
+        }
+
+        $payment_amount = 0;
+        $paid_list = [];
+        $unpaid_list = [];
+
+        // Get products
+        $products = json_decode($order->products);
+        foreach ($products as $product) {
+            $p = Product::findOrFail($product->id);
+
+            // Check if vendor owns product
+            if ($p->vendor_id = $vendor->id) {
+                $payment_amount += $p->price * $product->quantity;
+                array_push($paid_list, $product);
+            } else {
+                array_push($unpaid_list, $product);
+            }
+        }
+
+        // Check vendor has no products in the order
+        if ($payment_amount == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No products from this vendor'
+            ]);
+        }
+
+        if (count($unpaid_list) < 1) {
+            $order->status = 'in transit';
+        }
+        $order->products = json_encode($unpaid_list);
+        $order->paid_for = $paid_list;
+
+        // Pay vendor
+        $vendor->balance += $payment_amount;
+
+        // Debit Shopper
+        $shopper->balance -= $payment_amount;
+
+        try {
+            $vendor->save();
+            $order->save();
+            $shopper->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment Successful'
             ]);
         } catch (\Throwable $th) {
             Log::error($th);

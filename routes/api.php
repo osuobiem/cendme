@@ -79,6 +79,9 @@ Route::group(['namespace' => 'API'], function () {
 
             // Accept Order Reuest
             Route::get('order/accept/{order_id}', 'ShopperController@accept_order');
+
+            // Pay for order using qr code
+            Route::get('order/pay/{qr_token}', 'ShopperController@pay_with_qr');
         });
     });
     // ----------------
