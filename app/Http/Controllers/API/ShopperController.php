@@ -622,14 +622,14 @@ class ShopperController extends Controller
 
     /**
      * Accept Order Request
-     * @param int $order_id
+     * @param string $order_ref Order Reference
      * @return json
      */
-    public function accept_order(Request $request, $order_id)
+    public function accept_order(Request $request, $order_ref)
     {
         $shopper = $request->user();
 
-        $order = Order::findOrFail($order_id);
+        $order = Order::where('reference', $order_ref)->firstOrFail();
         $user = $order->user;
 
         // Confirm shopper eligibility

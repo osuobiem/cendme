@@ -337,12 +337,12 @@ class OrderController extends Controller
 
     /**
      * Cancel order
-     * @param int $id Order ID
+     * @param int $ref Order reference
      * @return json
      */
-    public function cancel(Request $request, $id)
+    public function cancel(Request $request, $ref)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::where('reference', $ref)->firstOrFail();
 
         // Check if order has been canceled
         if ($order->status == 'cancelled') {

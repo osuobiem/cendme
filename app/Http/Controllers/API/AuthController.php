@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Credential;
 use App\Http\Controllers\Controller;
 use App\Order;
+use App\Product;
 use App\Shopper;
 use App\Transaction;
 use Illuminate\Http\Request;
@@ -129,13 +130,6 @@ class AuthController extends Controller
                     ]);
                 }
 
-                $shoppers = $this->get_eligible_shoppers($originator->area_id);
-
-                // Check if any shopper eligible
-                if (count($shoppers) < 1) {
-                    $message = "No eligible shopper found!";
-                }
-
                 // Check if the order has been completed
                 if ($order->status != 'pending') {
                     $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
@@ -168,6 +162,16 @@ class AuthController extends Controller
                     $originator->balance -= $amount;
                 }
 
+                $shoppers = $this->get_eligible_shoppers($originator->area_id);
+
+                // Check if any shopper eligible
+                if (count($shoppers) < 1) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No eligible shopper found!'
+                    ]);
+                }
+
                 $transaction->order_id = $order->id;
 
                 if ($request['status']) {
@@ -189,7 +193,9 @@ class AuthController extends Controller
                         // Send order request notification
                         $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
 
-                        $this->send_request_notification($device_tokens, $body, $order->reference);
+                        // Get Notification data
+                        $noti_data = $this->compose_notification_data($order);
+                        $this->send_request_notification($device_tokens, $body, $noti_data);
                     } catch (\Throwable $th) {
                         Log::error($th);
                         return response()->json([
@@ -260,11 +266,11 @@ class AuthController extends Controller
      * Send notification to shopper devices
      * @param array $device_tokens Device tokens of eligible shoppers
      * @param string $body Body of the notification
-     * @param string $order_ref Reference of the order
+     * @param string $data Data to attach to notification
      * 
      * @return bool
      */
-    public function send_request_notification($device_tokens, $body, $order_ref)
+    public function send_request_notification($device_tokens, $body, $data)
     {
         // Initialize Firebase Cloud Messaging Component
         $messaging = app('firebase.messaging');
@@ -274,7 +280,7 @@ class AuthController extends Controller
             try {
                 $message = CloudMessage::withTarget('token', $token)
                     ->withNotification(Notification::create('Cendme Order Request', $body))
-                    ->withData(['order_ref' => $order_ref]);
+                    ->withData($data);
 
                 $messaging->send($message);
             } catch (\Throwable $th) {
@@ -283,6 +289,11 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Get Eligible shoppers to execute order
+     * @param int $area Area ID
+     * @return array
+     */
     public function get_eligible_shoppers($area)
     {
         // Get eligible shoppers
@@ -294,5 +305,65 @@ class AuthController extends Controller
         }
 
         return $shs;
+    }
+
+    /**
+     * Compose Notification data
+     * @param object $order
+     * @return array
+     */
+    public function compose_notification_data($order)
+    {
+        $products = json_decode($order->products);
+
+        foreach ($products as $product) {
+            $data = [];
+            $vendors = [];
+
+            $p = Product::findOrFail($product->id);
+            $vendor = $p->vendor;
+
+            // Product data
+            $p_data = [
+                'id' => $p->id,
+                'title' => $p->title,
+                'photo' => url('/') . Storage::url('products/' . $p->photo),
+                'price' => $p->price,
+                'quantity' => $product->quantity
+            ];
+
+            // Compose vendor data
+            if (isset($vendors[$vendor->id])) {
+                array_push($vendors[$vendor->id]["products"], $p_data);
+            } else {
+                $v = [
+                    "id" => $vendor->id,
+                    "name" => $vendor->business_name,
+                    "phone" => $vendor->phone,
+                    "address" => $vendor->address,
+                    "photo" => url('/') . Storage::url('vendors/' . $vendor->photo),
+                    "products" => []
+                ];
+                array_push($v["products"], $p_data);
+
+                $vendors[$vendor->id] = $v;
+            }
+        }
+
+        // Compose response data
+        foreach ($vendors as $vendor) {
+            array_push($data, $vendor);
+        }
+
+        // Get user
+        $user = $order->user;
+        $user->photo = url('/') . Storage::url('users/' . $user->photo);
+
+        // Return composed data
+        return [
+            'vendors' => $data,
+            'user' => $user,
+            'order_ref' => $order->reference
+        ];
     }
 }

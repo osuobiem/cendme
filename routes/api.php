@@ -45,6 +45,9 @@ Route::group(['namespace' => 'API'], function () {
 
             // Initialize Payment
             Route::post('transaction/finalize', 'AuthController@finalize');
+
+            // Cancel Order Request
+            Route::get('order/cancel/{ref}', 'OrderController@cancel');
         });
     });
     // ----------------
@@ -78,7 +81,7 @@ Route::group(['namespace' => 'API'], function () {
             Route::post('transaction/finalize', 'AuthController@finalize');
 
             // Accept Order Reuest
-            Route::get('order/accept/{order_id}', 'ShopperController@accept_order');
+            Route::get('order/accept/{order_ref}', 'ShopperController@accept_order');
 
             // Pay for order using qr code
             Route::get('order/pay/{qr_token}', 'ShopperController@pay_with_qr');
@@ -98,9 +101,6 @@ Route::group(['namespace' => 'API'], function () {
 
         // Delete Order
         Route::get('delete/{id}', 'OrderController@delete');
-
-        // Cancel Order Request
-        Route::get('cancel/{id}', 'OrderController@cancel');
     });
     // ----------------
 
