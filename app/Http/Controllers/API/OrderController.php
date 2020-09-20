@@ -292,12 +292,19 @@ class OrderController extends Controller
                     ]);
                 }
 
+                // Check if order has been accepted
+                $shopper = [];
+                if ($order->shopper) {
+                    $shopper = $order->shopper;
+                }
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Fetch Successful',
                     'data' => [
                         'order' => $order,
-                        'cart' => $cart
+                        'cart' => $cart,
+                        'shopper' => $shopper
                     ]
                 ]);
             } else {
