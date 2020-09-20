@@ -430,7 +430,7 @@ class OrderController extends Controller
         $order = Order::where('reference', $order_ref)->firstOrFail();
 
         // Check Order status
-        if ($order->status != 'paid') {
+        if ($order->status != 'paid' && $order->shopper_id != $shopper->id) {
             return response()->json([
                 'success' => 'false',
                 'message' => 'Order has either been canelled by user or accepted by another shopper'
