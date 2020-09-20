@@ -120,24 +120,24 @@ class AuthController extends Controller
 
                 $transaction->user_id = $originator->id;
 
-                $order = Order::where('reference', $request['order_ref'])->first();
+                $order = Order::where('reference', $request['order_ref'])->firstOrFail();
 
-                // Check if the order exists
-                if (!$order) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Order not found'
-                    ]);
-                }
-
-                // Check if the order has been completed
-                if ($order->status != 'pending') {
+                // Check if the order has been paid for
+                if ($order->status == 'paid') {
                     $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
 
                     return response()->json([
                         'success' => true,
                         'message' => $message,
                         'data' => $originator
+                    ]);
+                }
+
+                // Check if the order is in another state
+                if ($order->status != 'pending') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Order has already been paid for'
                     ]);
                 }
 
@@ -179,11 +179,6 @@ class AuthController extends Controller
 
                     // Try to save order or catch error if any
                     try {
-                        $order->save();
-                        $originator->save();
-                        $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
-                        $data = $originator;
-
                         // Loop through shoppers to extract device unique/token
                         $device_tokens = [];
                         foreach ($shoppers as $shopper) {
@@ -193,9 +188,19 @@ class AuthController extends Controller
                         // Send order request notification
                         $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
 
-                        // Get Notification data
-                        $noti_data = $this->compose_notification_data($order);
-                        $this->send_request_notification($device_tokens, $body, $noti_data);
+                        $send = $this->send_request_notification($device_tokens, $body, ['order_ref' => $order->reference]);
+
+                        if (!$send) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Internal Server Error'
+                            ], 500);
+                        }
+
+                        $order->save();
+                        $originator->save();
+                        $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
+                        $data = $originator;
                     } catch (\Throwable $th) {
                         Log::error($th);
                         return response()->json([
@@ -266,7 +271,7 @@ class AuthController extends Controller
      * Send notification to shopper devices
      * @param array $device_tokens Device tokens of eligible shoppers
      * @param string $body Body of the notification
-     * @param string $data Data to attach to notification
+     * @param array $data Data to attach to notification
      * 
      * @return bool
      */
@@ -282,9 +287,11 @@ class AuthController extends Controller
                     ->withNotification(Notification::create('Cendme Order Request', $body))
                     ->withData($data);
 
-                $messaging->send($message);
+                $messaging->sendMulticast($message, $device_tokens);
+                return true;
             } catch (\Throwable $th) {
                 Log::error($th);
+                return false;
             }
         }
     }
@@ -315,11 +322,10 @@ class AuthController extends Controller
     public function compose_notification_data($order)
     {
         $products = json_decode($order->products);
+        $data = [];
+        $vendors = [];
 
-        foreach ($products as $product) {
-            $data = [];
-            $vendors = [];
-
+        foreach ($products as $i => $product) {
             $p = Product::findOrFail($product->id);
             $vendor = $p->vendor;
 
@@ -333,6 +339,7 @@ class AuthController extends Controller
             ];
 
             // Compose vendor data
+
             if (isset($vendors[$vendor->id])) {
                 array_push($vendors[$vendor->id]["products"], $p_data);
             } else {
@@ -344,6 +351,7 @@ class AuthController extends Controller
                     "photo" => url('/') . Storage::url('vendors/' . $vendor->photo),
                     "products" => []
                 ];
+
                 array_push($v["products"], $p_data);
 
                 $vendors[$vendor->id] = $v;
@@ -361,7 +369,7 @@ class AuthController extends Controller
 
         // Return composed data
         return [
-            'vendors' => $data,
+            // 'vendors' => $data,
             'user' => $user,
             'order_ref' => $order->reference
         ];
