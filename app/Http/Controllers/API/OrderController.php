@@ -389,7 +389,10 @@ class OrderController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Order Cancelled'
+                'message' => 'Order Cancelled',
+                'data' => [
+                    'order' => $order
+                ]
             ]);
         } catch (\Throwable $th) {
             Log::error($th);
