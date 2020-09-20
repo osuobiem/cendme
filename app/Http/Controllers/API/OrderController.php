@@ -334,7 +334,16 @@ class OrderController extends Controller
      */
     public function delete($id)
     {
-        Order::findOrFail($id)->forceDelete();
+
+        $order = Order::findOrFail($id);
+
+        // Check order status
+        if ($order->status != 'pending' || $order->status != 'completed') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order cannot be deleted'
+            ]);
+        }
 
         return response()->json([
             'success' => true,
