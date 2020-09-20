@@ -80,7 +80,7 @@ Route::group(['namespace' => 'API'], function () {
             // Initialize Payment
             Route::post('transaction/finalize', 'AuthController@finalize');
 
-            // Accept Order Reuest
+            // Accept Order Request
             Route::get('order/accept/{order_ref}', 'ShopperController@accept_order');
 
             // Pay for order using qr code

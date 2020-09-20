@@ -630,6 +630,15 @@ class ShopperController extends Controller
         $shopper = $request->user();
 
         $order = Order::where('reference', $order_ref)->firstOrFail();
+
+        // Check Order status
+        if ($order->status != 'paid') {
+            return response()->json([
+                'success' => 'false',
+                'message' => 'Order has either been canelled by user or accepted by another shopper'
+            ]);
+        }
+
         $user = $order->user;
 
         // Confirm shopper eligibility
