@@ -81,7 +81,7 @@ Route::group(['namespace' => 'API'], function () {
             Route::post('transaction/finalize', 'AuthController@finalize');
 
             // Accept Order Request
-            Route::get('order/accept/{order_ref}', 'ShopperController@accept_order');
+            Route::get('order/accept/{order_ref}', 'OrderController@accept');
 
             // Pay for order using qr code
             Route::get('order/pay/{qr_token}', 'ShopperController@pay_with_qr');

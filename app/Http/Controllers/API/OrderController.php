@@ -409,4 +409,111 @@ class OrderController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Accept Order Request
+     * @param string $order_ref Order Reference
+     * @return json
+     */
+    public function accept(Request $request, $order_ref)
+    {
+        $shopper = $request->user();
+
+        $order = Order::where('reference', $order_ref)->firstOrFail();
+
+        // Check Order status
+        if ($order->status != 'paid') {
+            return response()->json([
+                'success' => 'false',
+                'message' => 'Order has either been canelled by user or accepted by another shopper'
+            ]);
+        }
+
+        $user = $order->user;
+
+        // Confirm shopper eligibility
+        if ($shopper->area_id != $user->area_id || $shopper->balance < 5000) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not eligible to accept this request'
+            ]);
+        }
+
+        // Check if shopper has an accepted order
+        $a_order = Order::where('shopper_id', $shopper->id)->where('status', 'accepted')->first();
+        if ($a_order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You already have a pending order'
+            ]);
+        }
+
+        $order->shopper_id = $shopper->id;
+        $order->status = 'accepted';
+
+        $data = [];
+        $vendors = [];
+
+        // Get products in order list
+        $products = json_decode($order->products);
+
+        foreach ($products as $product) {
+            $p = Product::findOrFail($product->id);
+            $vendor = $p->vendor;
+
+            // Product data
+            $p_data = [
+                'id' => $p->id,
+                'title' => $p->title,
+                'photo' => url('/') . Storage::url('products/' . $p->photo),
+                'price' => $p->price,
+                'quantity' => $product->quantity
+            ];
+
+            // Compose vendor data
+            if (isset($vendors[$vendor->id])) {
+                array_push($vendors[$vendor->id]["products"], $p_data);
+            } else {
+                $v = [
+                    "id" => $vendor->id,
+                    "name" => $vendor->business_name,
+                    "phone" => $vendor->phone,
+                    "address" => $vendor->address,
+                    "photo" => url('/') . Storage::url('vendors/' . $vendor->photo),
+                    "products" => []
+                ];
+                array_push($v["products"], $p_data);
+
+                $vendors[$vendor->id] = $v;
+            }
+        }
+
+        // Compose response data
+        foreach ($vendors as $vendor) {
+            array_push($data, $vendor);
+        }
+
+        $user->photo = url('/') . Storage::url('users/' . $user->photo);
+
+        try {
+            // Update order data
+            $order->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order Accepted',
+                'data' => [
+                    'vendors' => $data,
+                    'user' => $user,
+                    'order_ref' => $order->reference
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal Server Error'
+            ], 500);
+        }
+    }
 }
