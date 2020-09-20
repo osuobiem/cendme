@@ -129,7 +129,7 @@ class AuthController extends Controller
                     return response()->json([
                         'success' => true,
                         'message' => $message,
-                        'data' => $originator
+                        'data' => ['order' => $order]
                     ]);
                 }
 
@@ -200,7 +200,7 @@ class AuthController extends Controller
                         $order->save();
                         $originator->save();
                         $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
-                        $data = $originator;
+                        $data = ['order' => $order];
                     } catch (\Throwable $th) {
                         Log::error($th);
                         return response()->json([
