@@ -338,7 +338,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         // Check order status
-        if ($order->status != 'pending' || $order->status != 'completed') {
+        if ($order->status != 'pending' && $order->status != 'completed') {
             return response()->json([
                 'success' => false,
                 'message' => 'Order cannot be deleted'
