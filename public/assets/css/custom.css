@@ -177,3 +177,11 @@
     position: fixed !important;
     text-align: left !important;
 }
+
+.b-low {
+    background: #0000000d
+}
+
+.b-high {
+    background: #fff
+}

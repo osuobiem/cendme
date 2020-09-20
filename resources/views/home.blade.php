@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-<div class="wrapper pb-0">
+<div class="wrapper pb-0 b-high">
   <div class="default-dt home-banner">
     <div id="image-slider" class="splide" style="height: inherit !important;">
       <div class="splide__track">
@@ -58,7 +58,7 @@
       </div>
     </div>
   </div>
-  <div class="about-steps-group white-bg pt-5">
+  <div class="about-steps-group white-bg pt-5 b-low" data-aos="fade-up" data-aos-duration="2000">
     <div class="container">
       <div class="row">
         <div class="col-lg-12">
@@ -111,7 +111,8 @@
     </div>
   </div>
 
-  <div class="how-it-works-bg" style="background: url('{{ url('assets/images/su2.jpg') }}');">
+  <div class="how-it-works-bg" style="background: url('{{ url('assets/images/su2.jpg') }}')" data-aos="fade-up"
+    data-aos-duration="1500">
     <div class="how-order-gambo pt-5" style="background: #4e4b4b94;">
       <div class="container">
         <div class="row">

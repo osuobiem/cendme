@@ -13,9 +13,11 @@
   <link href="{{url('assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
   <link href="{{ url('assets/vendor/unicons-2.0.1/css/unicons.css')}}" rel='stylesheet'>
   <link rel="stylesheet" href="{{ url('assets/vendor/splide-2.4.4/dist/css/splide.min.css')}}">
+  <link rel="stylesheet" href="{{ url('assets/vendor/aos/aos.min.css')}}">
 
   <script src="{{ url('assets/js/jquery-3.4.1.min.js') }}"></script>
   <script src="{{ url('assets/js/custom.js') }}"></script>
+  <script src="{{ url('assets/vendor/aos/aos.min.js') }}"></script>
 
 </head>
 

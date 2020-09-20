@@ -1,8 +1,8 @@
-<footer class="footer pt-5" style="background: #0000000d">
+<footer class="footer pt-5 b-low">
     <div class="footer-first-row p-0">
       <div class="container">
         <div class="row">
-          <div class="col-md-6 col-sm-6 mt-2 text-center">
+          <div class="col-md-4 col-sm-4 mt-2 text-center">
             <p class="m-0" style="color:#424361">Contact us</p>
             <ul class="call-email-alt">
               <li><a href="tel:+234 801 2345 678" class="callemail"><i class="uil uil-phone"></i>+234 801 2345 678</a>
@@ -11,13 +11,24 @@
                     class="uil uil-envelope-alt"></i>info@cendme.com</a></li>
             </ul>
           </div>
-          <div class="col-md-6 col-sm-6 mt-2">
+          <div class="col-md-4 col-sm-4 mt-2">
             <div class="social-links-footer text-center">
               <p class="m-0" style="color:#424361">Follow us on social media</p>
               <ul>
                 <li><a href="#"><i class="uil uil-facebook"></i></a></li>
                 <li><a href="#"><i class="uil uil-twitter"></i></a></li>
                 <li><a href="#"><i class="uil uil-instagram"></i></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-4 mt-2">
+            <div class="social-links-footer text-center">
+              <p class="m-0" style="color:#424361">Download CendMe Mobile App</p>
+              <ul>
+                <li><a href="#">
+                  <img src="{{ url('assets/images/google.png') }}" alt="Google Play"></a></li>
+                <li><a href="#">
+                  <img src="{{ url('assets/images/apple.png') }}" alt="Google Play"></a></li>
               </ul>
             </div>
           </div>
@@ -88,3 +99,7 @@
   <script src="{{ url('assets/vendor/DataTables/datatables.min.js') }}"></script>
   <script src="{{ url('assets/vendor/sweetalert/sweetalert.min.js') }}"></script>
   <script src="{{ url('assets/js/scripts.js') }}"></script>
+
+  <script>
+  AOS.init();
+  </script>
