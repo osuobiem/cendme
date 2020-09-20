@@ -334,7 +334,6 @@ class OrderController extends Controller
      */
     public function delete($id)
     {
-
         $order = Order::findOrFail($id);
 
         // Check order status
