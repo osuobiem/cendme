@@ -185,6 +185,7 @@ class UserController extends Controller
         $user->phone = $request['phone'];
         $user->password = Hash::make(strtolower($request['password']));
         $user->device_unique = $request['device_unique'];
+        $user->area_id = $request['area'];
 
         // Try user save or catch error if any
         try {
@@ -222,7 +223,8 @@ class UserController extends Controller
             'email' => 'required|email|unique:users',
             'phone' => 'required|numeric|digits:11',
             'password' => 'required|alpha_dash|min:6|max:30',
-            'device_unique' => 'required'
+            'device_unique' => 'required',
+            'area' => 'required|numeric|exists:areas,id',
         ]);
     }
     // -----------
