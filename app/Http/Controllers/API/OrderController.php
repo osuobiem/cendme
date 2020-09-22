@@ -524,4 +524,35 @@ class OrderController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Update has_expired field
+     * @param string $order_ref Order Reference
+     * @param int $value Value to update
+     * 
+     * @return json
+     */
+    public function update_has_expired($order_ref, $value)
+    {
+        $order = Order::where('reference', $order_ref)->firstOrFail();
+
+        $order->has_expired = $value;
+        try {
+            $order->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Update Successful',
+                'data' => [
+                    'order' => $order
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal Server Error'
+            ], 500);
+        }
+    }
 }

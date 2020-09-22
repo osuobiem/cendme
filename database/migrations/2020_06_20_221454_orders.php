@@ -22,7 +22,6 @@ class Orders extends Migration
             $table->string('reference');
             $table->text('products');
             $table->int('has_expired')->default(0);
-            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
