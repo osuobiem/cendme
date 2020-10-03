@@ -26,13 +26,16 @@ class AuthController extends Controller
     ];
 
     /**
-     * Get Paystack Credentials
+     * Get Payment Credentials
      * @return json
      */
-    public function get_paystack()
+    public function get_credentials()
     {
         $credentials = Credential::where('key', 'paystack_secret_key')
-            ->orWhere('key', 'paystack_public_key')->get();
+            ->orWhere('key', 'paystack_public_key')
+            ->orWhere('key', 'flutter_public_key')
+            ->orWhere('key', 'flutter_private_key')
+            ->orWhere('key', 'flutter_enc_key')->get();
 
         $formatted_cred = [];
 

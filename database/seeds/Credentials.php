@@ -15,14 +15,35 @@ class Credentials extends Seeder
         DB::table('credentials')->insert(
             [
                 'key' => 'paystack_secret_key',
-                'value' => 'sk_test_cfeddb7779ff834c310e8150fad059a4897953ee',
+                'value' => 'sk_test_0df67e05bce39bc55365f9334a815c48da2a4483',
             ]
         );
 
         DB::table('credentials')->insert(
             [
                 'key' => 'paystack_public_key',
-                'value' => 'pk_test_86f90cf4ce59fc889b74d6e0cfe8ddcdaaa4c592'
+                'value' => 'pk_test_1bc8133fe2c65d13ec694d9ccba440f04c9e0689'
+            ]
+        );
+
+        DB::table('credentials')->insert(
+            [
+                'key' => 'flutter_secret_key',
+                'value' => 'FLWSECK_TEST-75df3c1099c66f773bcef12b932172ea-X',
+            ]
+        );
+
+        DB::table('credentials')->insert(
+            [
+                'key' => 'flutter_enc_key',
+                'value' => 'FLWSECK_TESTaf7a52e83f04',
+            ]
+        );
+
+        DB::table('credentials')->insert(
+            [
+                'key' => 'flutter_public_key',
+                'value' => 'FLWPUBK_TEST-42e14d8c9512f5596b6a7b50d0d61bd4-X'
             ]
         );
 

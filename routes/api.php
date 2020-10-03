@@ -41,7 +41,7 @@ Route::group(['namespace' => 'API'], function () {
             Route::post('update-photo', 'UserController@update_photo');
 
             // Get Paystack Payment Credentials
-            Route::get('payment/credentials', 'AuthController@get_paystack');
+            Route::get('payment/credentials', 'AuthController@get_credentials');
 
             // Initialize Payment
             Route::post('transaction/finalize', 'AuthController@finalize');
@@ -74,8 +74,8 @@ Route::group(['namespace' => 'API'], function () {
             // Update Photo
             Route::post('update-photo', 'ShopperController@update_photo');
 
-            // Get Paystack Payment Credentials
-            Route::get('payment/credentials', 'AuthController@get_paystack');
+            // Get Payment Credentials
+            Route::get('payment/credentials', 'AuthController@get_credentials');
 
             // Initialize Payment
             Route::post('transaction/finalize', 'AuthController@finalize');
