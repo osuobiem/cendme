@@ -23,7 +23,7 @@ class Vendor extends Migration
             $table->string('photo')->default('placeholder.png');
             $table->string('password');
             $table->json('other_details')->nullable();
-            $table->int('orders_count')->default(0);
+            $table->integer('orders_count')->default(0);
             $table->string('qr_token')->default(0);
             $table->foreignId('area_id')->constrained()->onDelete('cascade')->onUpdate('no action');
             $table->rememberToken();
