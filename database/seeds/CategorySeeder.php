@@ -31,6 +31,9 @@ class CategorySeeder extends Seeder
             'name' => 'Plastic & Paper Products'
         ]);
         Category::create([
+            'name' => 'Phones'
+        ]);
+        Category::create([
             'name' => 'Miscellaneous'
         ]);
     }

@@ -14,11 +14,31 @@ class SubCategorySeeder extends Seeder
     {
         SubCategory::create([
             'name' => 'Male Fashion',
-            'category_id' => 7
+            'category_id' => 8
         ]);
         SubCategory::create([
             'name' => 'Female Fashion',
+            'category_id' => 8
+        ]);
+        SubCategory::create([
+            'name' => 'Accessories',
             'category_id' => 7
+        ]);
+        SubCategory::create([
+            'name' => 'Gear',
+            'category_id' => 5
+        ]);
+        SubCategory::create([
+            'name' => 'Bathing & Skin Care',
+            'category_id' => 5
+        ]);
+        SubCategory::create([
+            'name' => 'Baby & Toddler Toys',
+            'category_id' => 5
+        ]);
+        SubCategory::create([
+            'name' => 'Apparel & Accessories',
+            'category_id' => 5
         ]);
         SubCategory::create([
             'name' => 'Cooking Ingredients',
