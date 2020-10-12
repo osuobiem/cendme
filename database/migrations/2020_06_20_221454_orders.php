@@ -21,7 +21,7 @@ class Orders extends Migration
             $table->string('status')->default('pending');
             $table->string('reference');
             $table->text('products');
-            $table->int('has_expired')->default(0);
+            $table->integer('has_expired')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
