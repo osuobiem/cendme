@@ -129,6 +129,7 @@ class VendorController extends Controller
         $vendor->address = $request['address'];
         $vendor->password = Hash::make(strtolower($request['password']));
         $vendor->area_id = $request['area'];
+        $vendor->qr_token = md5(rand(1, 100) . '-' . time());
 
         // Try vendor save or catch error if any
         try {
