@@ -191,7 +191,7 @@ class AuthController extends Controller
                         // Send order request notification
                         $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
 
-                        $send = $this->send_request_notification($device_tokens, $body, ['order_ref' => $order->reference]);
+                        $send = $this->send_request_notification($device_tokens, $body, $order->reference);
 
                         if (!$send) {
                             return response()->json([
@@ -288,7 +288,7 @@ class AuthController extends Controller
             try {
                 $message = CloudMessage::withTarget('token', $token)
                     ->withNotification(Notification::create('Cendme Order Request', $body))
-                    ->withData($data);
+                    ->withData('{"type": "order", "ref": "' . $data . '"}');
 
                 $messaging->sendMulticast($message, $device_tokens);
                 return true;

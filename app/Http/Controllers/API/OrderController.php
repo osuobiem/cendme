@@ -298,6 +298,14 @@ class OrderController extends Controller
                     $shopper = $order->shopper;
                 }
 
+                $updated_at = $order->updated_at;
+                $time = date('Y-m-d g:i:s');
+
+                $updated_at = date_create($updated_at);
+                $time = date_create($time);
+
+                dd(date_diff($time, $updated_at));
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Fetch Successful',
