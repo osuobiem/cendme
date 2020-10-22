@@ -83,6 +83,9 @@ Route::group(['namespace' => 'API'], function () {
             // Accept Order Request
             Route::get('order/accept/{order_ref}', 'OrderController@accept');
 
+            // Fetch Order From Notification
+            Route::get('order/get-from-noti/{order_ref}', 'OrderController@get_from_notification');
+
             // Pay for order using qr code
             Route::get('order/pay/{qr_token}', 'ShopperController@pay_with_qr');
         });

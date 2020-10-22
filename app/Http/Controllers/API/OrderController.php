@@ -534,6 +534,73 @@ class OrderController extends Controller
     }
 
     /**
+     * Get order data after notification has been sent to shopper
+     * @param string $order_ref Order Reference
+     * @return json
+     */
+    public function get_from_notification($order_ref)
+    {
+        $order = Order::where('reference', $order_ref)->firstOrFail();
+
+        $user = $order->user;
+
+
+        $data = [];
+        $vendors = [];
+
+        // Get products in order list
+        $products = json_decode($order->products);
+
+        foreach ($products as $product) {
+            $p = Product::findOrFail($product->id);
+            $vendor = $p->vendor;
+
+            // Product data
+            $p_data = [
+                'id' => $p->id,
+                'title' => $p->title,
+                'photo' => url('/') . Storage::url('products/' . $p->photo),
+                'price' => $p->price,
+                'quantity' => $product->quantity
+            ];
+
+            // Compose vendor data
+            if (isset($vendors[$vendor->id])) {
+                array_push($vendors[$vendor->id]["products"], $p_data);
+            } else {
+                $v = [
+                    "id" => $vendor->id,
+                    "name" => $vendor->business_name,
+                    "phone" => $vendor->phone,
+                    "address" => $vendor->address,
+                    "photo" => url('/') . Storage::url('vendors/' . $vendor->photo),
+                    "products" => []
+                ];
+                array_push($v["products"], $p_data);
+
+                $vendors[$vendor->id] = $v;
+            }
+        }
+
+        // Compose response data
+        foreach ($vendors as $vendor) {
+            array_push($data, $vendor);
+        }
+
+        $user->photo = url('/') . Storage::url('users/' . $user->photo);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order Fetch Successful',
+            'data' => [
+                'vendors' => $data,
+                'user' => $user,
+                'order_ref' => $order->reference
+            ]
+        ]);
+    }
+
+    /**
      * Update has_expired field
      * @param string $order_ref Order Reference
      * @param int $value Value to update
