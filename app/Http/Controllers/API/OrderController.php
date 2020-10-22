@@ -299,12 +299,27 @@ class OrderController extends Controller
                 }
 
                 $updated_at = $order->updated_at;
-                $time = date('Y-m-d g:i:s');
+
+                $time = date('Y-m-d g:i:s A');
 
                 $updated_at = date_create($updated_at);
                 $time = date_create($time);
 
-                dd(date_diff($time, $updated_at));
+                // updated_at time difference 
+                $diff = date_diff($time, $updated_at)->i;
+
+                // Check if order has not been accepted
+                if ($diff > 30 && $order->status == 'paid') {
+
+                    if (!$this->cancel($request, $order->reference, true)) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Internal Server Error'
+                        ], 500);
+                    }
+                }
+
+                $order->time_diff = $diff;
 
                 return response()->json([
                     'success' => true,
@@ -361,9 +376,10 @@ class OrderController extends Controller
     /**
      * Cancel order
      * @param int $ref Order reference
+     * @param bool $internal True if function is called by another function in this controller
      * @return json
      */
-    public function cancel(Request $request, $ref)
+    public function cancel(Request $request, $ref, $internal = false)
     {
         $order = Order::where('reference', $ref)->firstOrFail();
 
@@ -398,6 +414,14 @@ class OrderController extends Controller
         $products = json_decode($order->products);
 
         try {
+            if ($internal) {
+                // Update user and order
+                $user->save();
+                $order->save();
+
+                return true;
+            }
+
             // Update product quantity
             foreach ($products as $product) {
                 $p = Product::findOrFail($product->id);
@@ -419,6 +443,11 @@ class OrderController extends Controller
             ]);
         } catch (\Throwable $th) {
             Log::error($th);
+
+            if ($internal) {
+                return false;
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Internal Server Error'
@@ -601,18 +630,19 @@ class OrderController extends Controller
     }
 
     /**
-     * Update has_expired field
+     * Update continue wait field
      * @param string $order_ref Order Reference
-     * @param int $value Value to update
      * 
      * @return json
      */
-    public function update_has_expired($order_ref, $value)
+    public function continue_wait($order_ref)
     {
         $order = Order::where('reference', $order_ref)->firstOrFail();
 
-        $order->has_expired = $value;
+        $order->continue_wait = 1;
+        $u = $order->updated_at;
         try {
+            $order->updated_at = $u;
             $order->save();
 
             return response()->json([

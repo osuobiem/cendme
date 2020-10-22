@@ -106,7 +106,7 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('delete/{id}', 'OrderController@delete');
 
         // Update Has Expired Field
-        Route::get('update-has-expired/{ref}/{val}', 'OrderController@update_has_expired');
+        Route::get('continue-wait/{ref}', 'OrderController@continue_wait');
     });
     // ----------------
 
