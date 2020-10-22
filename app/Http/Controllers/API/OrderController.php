@@ -317,6 +317,8 @@ class OrderController extends Controller
                             'message' => 'Internal Server Error'
                         ], 500);
                     }
+
+                    $order->status = 'cancelled';
                 }
 
                 $order->time_diff = $diff;
