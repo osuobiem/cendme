@@ -191,7 +191,7 @@ class AuthController extends Controller
                         // Send order request notification
                         $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
 
-                        $dt = ["type" => "order", "ref" => $order->reference];
+                        $dt = ["type" => "order", "ref" => $order->reference, "click_action" => "FLUTTER_NOTIFICATION_CLICK"];
                         $send = $this->send_request_notification($device_tokens, $body, $dt);
 
                         if (!$send) {
