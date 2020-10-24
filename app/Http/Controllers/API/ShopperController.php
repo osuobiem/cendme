@@ -725,11 +725,15 @@ class ShopperController extends Controller
             $order->save();
             $shopper->save();
 
+            $user = $order->user;
+            $user->photo = url('/') . Storage::url('users/' . $user->photo);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Payment Successful',
                 'data' => [
-                    'vendors' => $data
+                    'vendors' => $data,
+                    'user' => $user
                 ]
             ]);
         } catch (\Throwable $th) {
