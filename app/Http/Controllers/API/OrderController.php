@@ -487,7 +487,9 @@ class OrderController extends Controller
         }
 
         // Check if shopper has an accepted order
-        $a_order = Order::where('shopper_id', $shopper->id)->where('status', 'accepted')->first();
+        $a_order = Order::where('shopper_id', $shopper->id)
+            ->where('status', 'accepted')
+            ->orWhere('status', 'in transit')->first();
         if ($a_order) {
             return response()->json([
                 'success' => false,
