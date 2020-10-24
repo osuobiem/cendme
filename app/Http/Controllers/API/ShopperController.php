@@ -685,7 +685,7 @@ class ShopperController extends Controller
                         "photo" => url('/') . Storage::url('vendors/' . $v->photo),
                         "products" => []
                     ];
-                    array_push($v["products"], $p_data);
+                    array_push($vs["products"], $p_data);
 
                     $vendors[$v->id] = $vs;
                 }
