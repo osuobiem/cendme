@@ -168,7 +168,7 @@ class AuthController extends Controller
                 $shoppers = $this->get_eligible_shoppers($originator->area_id);
 
                 // Check if any shopper eligible
-                if (!$shoppers) {
+                if (count($shoppers) < 1) {
                     return response()->json([
                         'success' => false,
                         'message' => 'No eligible shopper found!'
@@ -316,7 +316,7 @@ class AuthController extends Controller
                 ->where('status', 'accepted')
                 ->orWhere('status', 'in transit')->first();
 
-            if (count($order) < 1) {
+            if (!$order) {
                 array_push($shs, $shopper);
             }
         }
