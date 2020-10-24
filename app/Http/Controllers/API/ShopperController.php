@@ -650,16 +650,46 @@ class ShopperController extends Controller
         $paid_list = [];
         $unpaid_list = [];
 
+        $vendors = [];
+
         // Get products
         $products = json_decode($order->products);
         foreach ($products as $product) {
             $p = Product::findOrFail($product->id);
 
             // Check if vendor owns product
-            if ($p->vendor_id = $vendor->id) {
+            if ($p->vendor_id == $vendor->id) {
                 $payment_amount += $p->price * $product->quantity;
                 array_push($paid_list, $product);
             } else {
+                $v = $p->vendor;
+
+                // Product data
+                $p_data = [
+                    'id' => $p->id,
+                    'title' => $p->title,
+                    'photo' => url('/') . Storage::url('products/' . $p->photo),
+                    'price' => $p->price,
+                    'quantity' => $product->quantity
+                ];
+
+                // Compose vendor data
+                if (isset($vendors[$v->id])) {
+                    array_push($vendors[$v->id]["products"], $p_data);
+                } else {
+                    $vs = [
+                        "id" => $v->id,
+                        "name" => $v->business_name,
+                        "phone" => $v->phone,
+                        "address" => $v->address,
+                        "photo" => url('/') . Storage::url('vendors/' . $v->photo),
+                        "products" => []
+                    ];
+                    array_push($v["products"], $p_data);
+
+                    $vendors[$v->id] = $vs;
+                }
+
                 array_push($unpaid_list, $product);
             }
         }
@@ -684,6 +714,12 @@ class ShopperController extends Controller
         // Debit Shopper
         $shopper->balance -= $payment_amount;
 
+        // Compose response data
+        $data = [];
+        foreach ($vendors as $ven) {
+            array_push($data, $ven);
+        }
+
         try {
             $vendor->save();
             $order->save();
@@ -691,7 +727,10 @@ class ShopperController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Payment Successful'
+                'message' => 'Payment Successful',
+                'data' => [
+                    'vendors' => $data
+                ]
             ]);
         } catch (\Throwable $th) {
             Log::error($th);
