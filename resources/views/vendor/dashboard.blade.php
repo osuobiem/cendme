@@ -86,7 +86,7 @@
       // });
 
       let qrcode = new QRCode("pay-qr-code", {
-        text: "This code cannot work without Cendme mobile app",
+        text: "{{ Auth::user()->qr_token }}",
         width: 300,
         height: 300,
         colorDark: "#000000",
