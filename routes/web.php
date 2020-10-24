@@ -127,6 +127,16 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
 // ---------------
 
 /**
+ * ORDER ROUTES
+ */
+Route::group(['prefix' => 'order', 'middleware' => 'auth'], function () {
+
+    // Create Product
+    Route::get('get', 'OrderController@get');
+});
+// ---------------
+
+/**
  * ADMIN ROUTES
  */
 Route::group(['prefix' => '/admin'], function () {
