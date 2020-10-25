@@ -676,6 +676,7 @@ class ShopperController extends Controller
                 // Compose vendor data
                 if (isset($vendors[$v->id])) {
                     array_push($vendors[$v->id]["products"], $p_data);
+                    $vendors[$vendor->id]["products_total"] += $p->price;
                 } else {
                     $vs = [
                         "id" => $v->id,
@@ -683,7 +684,8 @@ class ShopperController extends Controller
                         "phone" => $v->phone,
                         "address" => $v->address,
                         "photo" => url('/') . Storage::url('vendors/' . $v->photo),
-                        "products" => []
+                        "products" => [],
+                        "products_total" => $p->price
                     ];
                     array_push($vs["products"], $p_data);
 

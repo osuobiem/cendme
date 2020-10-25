@@ -600,6 +600,7 @@ class OrderController extends Controller
             // Compose vendor data
             if (isset($vendors[$vendor->id])) {
                 array_push($vendors[$vendor->id]["products"], $p_data);
+                $vendors[$vendor->id]["products_total"] += $p->price;
             } else {
                 $v = [
                     "id" => $vendor->id,
@@ -607,7 +608,8 @@ class OrderController extends Controller
                     "phone" => $vendor->phone,
                     "address" => $vendor->address,
                     "photo" => url('/') . Storage::url('vendors/' . $vendor->photo),
-                    "products" => []
+                    "products" => [],
+                    "products_total" => $p->price
                 ];
                 array_push($v["products"], $p_data);
 
