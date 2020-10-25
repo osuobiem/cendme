@@ -577,7 +577,6 @@ class OrderController extends Controller
 
         $user = $order->user;
 
-
         $data = [];
         $vendors = [];
 
