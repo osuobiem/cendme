@@ -40,4 +40,12 @@ class Shopper extends Authenticatable
     {
         return $this->hasOne('App\BVN_Data');
     }
+
+    /**
+     * Relationship with Order
+     */
+    public function orders()
+    {
+        return $this->hasMany('App\Order');
+    }
 }

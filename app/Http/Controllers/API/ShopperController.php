@@ -749,4 +749,20 @@ class ShopperController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Order History
+     * @return json
+     */
+    public function order_history(Request $request)
+    {
+        // Get shopper orders
+        $orders = $request->user()->orders;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Fetch Successful',
+            'data' => $orders
+        ]);
+    }
 }

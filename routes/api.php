@@ -88,6 +88,9 @@ Route::group(['namespace' => 'API'], function () {
 
             // Pay for order using qr code
             Route::get('order/pay/{qr_token}', 'ShopperController@pay_with_qr');
+
+            // Get order history
+            Route::get('order/history', 'ShopperController@order_history');
         });
     });
     // ----------------
