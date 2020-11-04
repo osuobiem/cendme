@@ -119,10 +119,10 @@ Route::group(['namespace' => 'API'], function () {
     Route::group(['prefix' => 'products', 'middleware' => ['auth:users-api']], function () {
 
         // Get all products according to vendor
-        Route::get('all/{vendor_id}', 'ProductController@list_random');
+        // Route::get('all/{vendor_id}', 'ProductController@list_random');
 
         // Get all products according to vendor, category and subcategory
-        Route::get('all/{vendor_id}/{category_id?}/{subcategory_id?}', 'ProductController@list');
+        Route::get('all/{vendor_id}/{category_id?}/{subcategory_id?}/{paginate?}/{last_id?}', 'ProductController@list');
 
         // Search for vendor products
         Route::get('search/{vendor_id}/{keyword}', 'ProductController@search');

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     /**
-     * Get all products at random accprding to vendor
+     * Get all products at random according to vendor
      * @param int $vendor_id Vendor that products belongs to
      * @return json
      */
@@ -79,29 +79,46 @@ class ProductController extends Controller
      * @param int $subcategory_id SubCategory ID
      * @return json
      */
-    public function list($vendor_id, $category_id = false, $subcategory_id = false)
+    public function list($vendor_id, $category_id = false, $subcategory_id = false, $paginate = false, $last_id = false)
     {
-        $products = [];
+        $products = Product::where('vendor_id', $vendor_id)->where('quantity', '>', 0);
 
         // Get Products by Category
-        if ($category_id && !$subcategory_id) {
+        if ($category_id && $category_id != 'paginate') {
             $category = Category::find($category_id);
             $products = $category->product()
                 ->where('quantity', '>', 0)
-                ->where('vendor_id', $vendor_id)
-                ->orderBy('updated_at', 'desc')
-                ->take(15)->get();
+                ->where('vendor_id', $vendor_id);
+        } elseif ($category_id == 'paginate') {
+            $products = $products->where('id', '>', $subcategory_id)->take(15)->get();
+            return $this->return_products($products);
         }
 
         // Get Products by SubCategory
-        elseif ($category_id && $subcategory_id) {
-            $products = Product::where('vendor_id', $vendor_id)
-                ->where('quantity', '>', 0)
-                ->where('subcategory_id', $subcategory_id)
-                ->orderBy('updated_at', 'desc')
-                ->take(15)->get();
+        if ($category_id != 'paginate' && $subcategory_id && $subcategory_id != 'paginate') {
+            $products = Product::where('vendor_id', $vendor_id)->where('quantity', '>', 0)->where('subcategory_id', $subcategory_id);
+        } elseif ($subcategory_id == 'paginate') {
+            $products = Product::where('vendor_id', $vendor_id)->where('quantity', '>', 0)->where('id', '>', $paginate)->take(15)->get();
+            return $this->return_products($products);
         }
 
+        // Check for pagination
+        if ($paginate == 'paginate') {
+            $products = $products->where('id', '>', $last_id)->take(15)->get();
+            return $this->return_products($products);
+        }
+
+        $products = $products->take(15)->get();
+        return $this->return_products($products);
+    }
+
+    /**
+     * Return fetched products
+     * @param $products
+     * @return json
+     */
+    function return_products($products)
+    {
         return response()->json([
             'success' => true,
             'message' => 'Fetch Successful',
@@ -113,6 +130,13 @@ class ProductController extends Controller
         ]);
     }
 
+
+    /**
+     * Search for products
+     * @param int $vendor_id Vendor ID
+     * @param string $keywork Search keyword
+     * @return json
+     */
     public function search($vendor_id, $keyword)
     {
         // Search for products
