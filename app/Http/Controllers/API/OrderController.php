@@ -6,6 +6,7 @@ use App\Cart;
 use App\Credential;
 use App\Http\Controllers\Controller;
 use App\Order;
+use App\OrderVendor;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -66,6 +67,7 @@ class OrderController extends Controller
         $price_accumulator = 0;
         $vendor_addresses = [];
         $current_v = false;
+        $vendors = [];
 
         // Extract product data from cart list
         foreach ($list as $l) {
@@ -78,6 +80,10 @@ class OrderController extends Controller
             ]);
 
             $price_accumulator += $l->price;
+
+            if(!in_array($product->vendor_id, $vendors)) {
+                array_push($vendors, $product->vendor_id);
+            }
 
             /* Push vendor addresses to the vendor address holder so they can be
                 used for distance calculation*/
@@ -144,6 +150,14 @@ class OrderController extends Controller
         // Try to save order or catch error if any
         try {
             $order->save();
+
+            foreach($vendors as $v) {
+                $order_v = new OrderVendor();
+                $order_v->order_id = $order->id;
+                $order_v->vendor_id = $v;
+
+                $order_v->save();
+            }
 
             return [
                 'success' => true,
