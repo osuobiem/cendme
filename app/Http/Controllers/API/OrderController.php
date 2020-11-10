@@ -147,6 +147,8 @@ class OrderController extends Controller
         $order->reference = $ref;
         $order->products = json_encode($request['products']);
 
+        $user->balance -= $amount['total'];
+
         // Try to save order or catch error if any
         try {
             $order->save();
@@ -159,6 +161,8 @@ class OrderController extends Controller
                 $order_v->save();
             }
 
+            $user->save();
+
             return [
                 'success' => true,
                 'status' => 200,
@@ -167,7 +171,8 @@ class OrderController extends Controller
                     "order" => [
                         'amount' => $amount,
                         'reference' => $ref
-                    ]
+                    ],
+                    "user" => $user
                 ]
             ];
         } catch (\Throwable $th) {
