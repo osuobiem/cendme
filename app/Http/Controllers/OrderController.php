@@ -11,18 +11,25 @@ class OrderController extends Controller
      * Get Vendor Orders
      * @return object
      */
-    public function get() {
+    public function get($limit = false) {
         $vendor = Auth::user();
 
-        $v_orders = $vendor->v_orders;
+        $v_orders = $vendor->v_orders();
+        $v_orders = !$limit ? $v_orders->get() : $v_orders->limit($limit)->get();
+
         $orders = [];
 
         if($v_orders) {
             foreach($v_orders as $vo) {
-                array_push($orders, $vo->order);
+                array_push($orders, [
+                    'id' => $vo->order->id,
+                    'ref' => $vo->order->reference,
+                    'date' => $vo->order->created_at,
+                    'status' => $vo->status
+                ]);
             }
         }
 
-        dd($orders);
+        return view('vendor.order.list', ['orders' => $orders]);
     }
 }

@@ -132,7 +132,7 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
 Route::group(['prefix' => 'order', 'middleware' => 'auth'], function () {
 
     // Get Orders
-    Route::get('get', 'OrderController@get');
+    Route::get('get/{limit?}', 'OrderController@get');
 });
 // ---------------
 

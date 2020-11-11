@@ -44,15 +44,19 @@
               <table class="table ucp-table table-hover" id="order-table">
                 <thead>
                   <tr>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>View</th>
+                  <th>Order Reference</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>View</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td colspan="4" class="text-center">No Orders Yet!</td>
+                <tbody id="orders-table">
+                  <tr class="text-center">
+                    <td colspan="4">
+                    <div id="order-spinner" class="spinner-border spinner-border-sm text-dark" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -93,6 +97,8 @@
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
       });
+
+			fetchOrders()
     });
 
     function ofsProducts() {
@@ -101,6 +107,18 @@
 
     function cannotPrint() {
       swal("QRCode print will be available when Cendme mobile application is ready!");
+    }
+
+    // Fetch Orders
+    function fetchOrders() {
+        url = `{{ url('order/get/10') }}`
+        goGet(url)
+        .then(res => {
+            $('#orders-table').html(res)
+        })
+        .catch(err => {
+            showAlert(false, 'Could not load orders. Please relaod page')
+        })
     }
   </script>
 </main>

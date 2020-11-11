@@ -37,7 +37,7 @@
 			  <table class="table ucp-table table-hover" id="order-table">
 				<thead>
 				  <tr>
-					<th>Amount</th>
+					<th>Order Reference</th>
 					<th>Status</th>
 					<th>Date</th>
 					<th>View</th>
@@ -79,7 +79,10 @@
 			url = `{{ url('order/get') }}`
 			goGet(url)
 			.then(res => {
-			console.log(res)
+				$('#orders-table').html(res)
+			})
+			.catch(err => {
+				showAlert(false, 'Could not load orders. Please relaod page')
 			})
 		}
 
