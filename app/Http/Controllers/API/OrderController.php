@@ -147,8 +147,6 @@ class OrderController extends Controller
         $order->reference = $ref;
         $order->products = json_encode($request['products']);
 
-        $user->balance -= $amount['total'];
-
         // Try to save order or catch error if any
         try {
             $order->save();
@@ -164,8 +162,6 @@ class OrderController extends Controller
             foreach($user->cart as $cart) {
                 $cart->forceDelete();
             }
-            
-            $user->save();
 
             return [
                 'success' => true,

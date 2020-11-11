@@ -223,6 +223,8 @@ class AuthController extends Controller
         $transaction->type = $type;
         $transaction->status = $request['status'];
 
+        $data['originator'] = $originator;
+
         // Try to save transaction or catch error if any
         try {
             $transaction->save();
