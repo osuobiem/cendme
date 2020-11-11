@@ -35,4 +35,9 @@ class Vendor extends Authenticatable
     {
         return $this->hasOne('App\Vendor_account');
     }
+
+    // Relationship with OrderVendor
+    public function v_orders() {
+        return $this->hasMany('App\OrderVendor');
+    }
 }

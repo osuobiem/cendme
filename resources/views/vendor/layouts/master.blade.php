@@ -45,6 +45,8 @@
 <script src="{{ url('assets/vendor/DataTables/datatables.min.js') }}"></script>
 <script src="{{ url('assets/vendor/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ url('assets/js/scripts.js') }}"></script>
+
+@stack('scripts')
 </body>
 
 </html>

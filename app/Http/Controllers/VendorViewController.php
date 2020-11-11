@@ -62,7 +62,7 @@ class VendorViewController extends Controller
      */
     public function orders()
     {
-        return view('vendor.orders');
+        return view('vendor.order.index');
     }
 
     /**

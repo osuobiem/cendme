@@ -131,7 +131,7 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
  */
 Route::group(['prefix' => 'order', 'middleware' => 'auth'], function () {
 
-    // Create Product
+    // Get Orders
     Route::get('get', 'OrderController@get');
 });
 // ---------------

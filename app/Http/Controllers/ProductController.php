@@ -132,46 +132,41 @@ class ProductController extends Controller
     public function ustore(Request $request, $id)
     {
         // Find product with supplied id
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
-        if ($product) {
+        // Assign product object properties
+        $product->title = $request['title'];
+        $product->details = $request['details'] ? $request['details'] : '';
+        $product->quantity = $request['quantity'];
+        $product->price = $request['price'];
+        $product->subcategory_id = $request['subcategory'];
 
-            // Assign product object properties
-            $product->title = $request['title'];
-            $product->details = $request['details'] ? $request['details'] : '';
-            $product->quantity = $request['quantity'];
-            $product->price = $request['price'];
-            $product->subcategory_id = $request['subcategory'];
+        $old_photo = $product->photo;
+        $stored = false;
 
-            $old_photo = $product->photo;
-            $stored = false;
+        // Check for images
+        if ($request['photo']) {
+            $photo = $request['photo'];
+            $stored = Storage::put('/public/products', $photo);
 
-            // Check for images
-            if ($request['photo']) {
-                $photo = $request['photo'];
-                $stored = Storage::put('/public/products', $photo);
+            $product->photo = $stored ? basename($stored) : '';
+        }
 
-                $product->photo = $stored ? basename($stored) : '';
-            }
+        // Try product save or catch error if any
+        try {
+            $product->save();
 
-            // Try product save or catch error if any
-            try {
-                $product->save();
+            // Delete previous photo
+            $stored && $old_photo != 'placeholder.png' ? Storage::delete('/public/products/' . $old_photo) : '';
 
-                // Delete previous photo
-                $stored && $old_photo != 'placeholder.png' ? Storage::delete('/public/products/' . $old_photo) : '';
+            return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
+        } catch (\Throwable $th) {
+            Log::error($th);
 
-                return ['success' => true, 'status' => 200, 'message' => 'Update Successful'];
-            } catch (\Throwable $th) {
-                Log::error($th);
+            // Delete uploaded file if there's an error
+            $stored && $product->photo != 'placeholder.png' ? Storage::delete('/public/products/' . $product->photo) : '';
 
-                // Delete uploaded file if there's an error
-                $stored && $product->photo != 'placeholder.png' ? Storage::delete('/public/products/' . $product->photo) : '';
-
-                return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
-            }
-        } else {
-            return ['success' => false, 'status' => 404, 'message' => 'Product not found'];
+            return ['success' => false, 'status' => 500, 'message' => 'Internal Server Error'];
         }
     }
 
