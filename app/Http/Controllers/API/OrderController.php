@@ -313,7 +313,6 @@ class OrderController extends Controller
 
                 // Check if order has been accepted
                 $shopper = [];
-                dd($order->shopper);
                 if ($order->shopper) {
                     $shopper = $order->shopper;
                 }

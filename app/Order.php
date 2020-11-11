@@ -20,4 +20,10 @@ class Order extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    // Relationship with Shopper
+    public function shopper()
+    {
+        return $this->belongsTo('App\Shopper');
+    }
 }
