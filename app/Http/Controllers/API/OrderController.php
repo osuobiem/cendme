@@ -315,6 +315,7 @@ class OrderController extends Controller
                 $shopper = [];
                 if ($order->shopper) {
                     $shopper = $order->shopper;
+                    dd($shopper);
                 }
 
                 $updated_at = $order->updated_at;
