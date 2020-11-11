@@ -161,7 +161,7 @@ class OrderController extends Controller
                 $order_v->save();
             }
 
-            $user->cart->forceDelete();
+            $user->cart->delete();
             $user->save();
 
             return [
