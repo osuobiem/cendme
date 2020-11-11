@@ -315,6 +315,7 @@ class OrderController extends Controller
                 $shopper = [];
                 if ($order->shopper) {
                     $shopper = $order->shopper;
+                    $shopper->photo = url('/') . Storage::url('shoppers/' . $shopper->photo);
                 }
 
                 $updated_at = $order->updated_at;
