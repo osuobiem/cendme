@@ -15,6 +15,7 @@ class CreateOrderVendors extends Migration
     {
         Schema::create('order_vendors', function (Blueprint $table) {
             $table->id();
+            $table->boolean('status')->default(0);
             $table->foreignId('order_id')->constrained()->onUpdate('no action')->onDelete('cascade');
             $table->foreignId('vendor_id')->constrained()->onUpdate('no action')->onDelete('cascade');
 
