@@ -26,4 +26,10 @@ class Order extends Model
     {
         return $this->belongsTo('App\Shopper');
     }
+
+    // Relationship with OrderVendors
+    public function order_vendors()
+    {
+        return $this->hasMany('App\OrderVendor');
+    }
 }

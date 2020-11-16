@@ -44,22 +44,23 @@
               <table class="table ucp-table table-hover" id="order-table">
                 <thead>
                   <tr>
-                  <th>Order Reference</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th>View</th>
+                    <th>Order Reference</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>View</th>
                   </tr>
                 </thead>
                 <tbody id="orders-table">
                   <tr class="text-center">
                     <td colspan="4">
-                    <div id="order-spinner" class="spinner-border spinner-border-sm text-dark" role="status">
-                      <span class="sr-only">Loading...</span>
-                    </div>
+                      <div id="order-spinner" class="spinner-border spinner-border-sm text-dark" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
               </table>
+              <div id="order-views"></div>
             </div>
           </div>
         </div>
@@ -98,7 +99,8 @@
         correctLevel: QRCode.CorrectLevel.H
       });
 
-			fetchOrders()
+      fetchOrders()
+      fetchOrderViews()
     });
 
     function ofsProducts() {
@@ -111,15 +113,41 @@
 
     // Fetch Orders
     function fetchOrders() {
-        url = `{{ url('order/get/10') }}`
-        goGet(url)
+      url = `{{ url('order/get/10') }}`
+      goGet(url)
         .then(res => {
-            $('#orders-table').html(res)
+          $('#orders-table').html(res)
         })
         .catch(err => {
-            showAlert(false, 'Could not load orders. Please relaod page')
+          showAlert(false, 'Could not load orders. Please relaod page')
         })
     }
+
+    // Fetch Order Views
+    function fetchOrderViews() {
+      url = `{{ url('order/get-view/10') }}`
+      goGet(url)
+        .then(res => {
+          $('#order-views').html(res)
+        })
+        .catch(err => {
+          showAlert(false, 'Could not load orders. Please relaod page')
+        })
+    }
+
+    function confirmPayment(order_id) {
+		let url = `{{ url('order/confirm-payment') }}/${order_id}`
+		goGet(url)
+			.then(res => {
+				showAlert(true, 'Payment Confirmed')
+				$(`#vo-${order_id}`).click()
+				fetchOrders()
+				fetchOrderViews()
+			})
+			.catch(err => {
+				showAlert(false, 'Could not confirm payment. Please try again')
+			})
+	}
   </script>
 </main>
 @endsection

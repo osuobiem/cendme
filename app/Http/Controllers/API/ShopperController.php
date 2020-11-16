@@ -708,7 +708,7 @@ class ShopperController extends Controller
             $order->status = 'in transit';
         }
         $order->products = json_encode($unpaid_list);
-        $order->paid_for = $paid_list;
+        $order->paid_for = json_encode($paid_list);
 
         // Pay vendor
         $vendor->balance += $payment_amount;

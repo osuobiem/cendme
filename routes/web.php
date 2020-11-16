@@ -133,6 +133,12 @@ Route::group(['prefix' => 'order', 'middleware' => 'auth'], function () {
 
     // Get Orders
     Route::get('get/{limit?}', 'OrderController@get');
+
+    // Get Order Views
+    Route::get('get-view/{limit?}', 'OrderController@get_views');
+
+    // Confirm Payment
+    Route::get('confirm-payment/{order_id}', 'OrderController@confirm_payment');
 });
 // ---------------
 
