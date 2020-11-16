@@ -86,15 +86,11 @@
 
   <script>
     $(document).ready(function () {
-      // $('#order-table').DataTable({
-      //   "order": []
-      // });
-
       let qrcode = new QRCode("pay-qr-code", {
         text: "{{ Auth::user()->qr_token }}",
         width: 300,
         height: 300,
-        colorDark: "#000000",
+        colorDark: "#2b2f4c",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
       });

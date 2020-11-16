@@ -81,7 +81,7 @@ class OrderController extends Controller
 
             $price_accumulator += $l->price;
 
-            if(!in_array($product->vendor_id, $vendors)) {
+            if (!in_array($product->vendor_id, $vendors)) {
                 array_push($vendors, $product->vendor_id);
             }
 
@@ -151,7 +151,7 @@ class OrderController extends Controller
         try {
             $order->save();
 
-            foreach($vendors as $v) {
+            foreach ($vendors as $v) {
                 $order_v = new OrderVendor();
                 $order_v->order_id = $order->id;
                 $order_v->vendor_id = $v;
@@ -159,7 +159,7 @@ class OrderController extends Controller
                 $order_v->save();
             }
 
-            foreach($user->cart as $cart) {
+            foreach ($user->cart as $cart) {
                 $cart->forceDelete();
             }
 
@@ -619,7 +619,7 @@ class OrderController extends Controller
             // Compose vendor data
             if (isset($vendors[$vendor->id])) {
                 array_push($vendors[$vendor->id]["products"], $p_data);
-                $vendors[$vendor->id]["products_total"] += $product->price;
+                $vendors[$vendor->id]["products_total"] += $p->price * $product->quantity;
             } else {
                 $v = [
                     "id" => $vendor->id,
@@ -628,7 +628,7 @@ class OrderController extends Controller
                     "address" => $vendor->address,
                     "photo" => url('/') . Storage::url('vendors/' . $vendor->photo),
                     "products" => [],
-                    "products_total" => $product->price
+                    "products_total" => $p->price
                 ];
                 array_push($v["products"], $p_data);
 

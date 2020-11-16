@@ -91,6 +91,9 @@ Route::group(['namespace' => 'API'], function () {
 
             // Get order history
             Route::get('order/history', 'ShopperController@order_history');
+
+            // Payment Confirmation
+            Route::get('payment-confirmation/{order_id}/{vendor_id}', 'ShopperController@cpcon');
         });
     });
     // ----------------

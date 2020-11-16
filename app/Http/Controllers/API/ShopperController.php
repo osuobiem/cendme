@@ -7,6 +7,7 @@ use App\BVN_Data;
 use App\Credential;
 use App\Http\Controllers\Controller;
 use App\Order;
+use App\OrderVendor;
 use App\Product;
 use App\Vendor;
 use Carbon\Carbon;
@@ -707,6 +708,10 @@ class ShopperController extends Controller
         if (count($unpaid_list) < 1) {
             $order->status = 'in transit';
         }
+        $pf = json_decode($order->paid_for, true);
+        $pf = $pf ? $pf : [];
+        $paid_list = array_merge($paid_list, $pf);
+
         $order->products = json_encode($unpaid_list);
         $order->paid_for = json_encode($paid_list);
 
@@ -722,10 +727,14 @@ class ShopperController extends Controller
             array_push($data, $ven);
         }
 
+        $order_vendor = OrderVendor::where('order_id', $order->id)->where('vendor_id', $vendor->id)->first();
+        $order_vendor->status = 1;
+
         try {
             $vendor->save();
             $order->save();
             $shopper->save();
+            $order_vendor->save();
 
             $user = $order->user;
             $user->photo = url('/') . Storage::url('users/' . $user->photo);
@@ -764,5 +773,83 @@ class ShopperController extends Controller
             'message' => 'Fetch Successful',
             'data' => $orders
         ]);
+    }
+
+    /**
+     * Check Payment Confirmation
+     * @param int $order_id Order ID
+     * @param int $vendor_id Vendor ID
+     * 
+     * @return json
+     */
+    public function cpcon($order_id, $vendor_id)
+    {
+        $order_vendor = OrderVendor::where('order_id', $order_id)
+            ->where('vendor_id', $vendor_id)
+            ->first();
+
+        if ($order_vendor) {
+            $data = [];
+
+            if ($order_vendor->status) {
+                $vendors = [];
+                $order = Order::findOrFail($order_id);
+
+                // Get products in order list
+                $products = json_decode($order->products);
+
+                foreach ($products as $product) {
+                    $p = Product::findOrFail($product->id);
+                    $vendor = $p->vendor;
+
+                    // Product data
+                    $p_data = [
+                        'id' => $p->id,
+                        'title' => $p->title,
+                        'photo' => url('/') . Storage::url('products/' . $p->photo),
+                        'price' => $p->price,
+                        'quantity' => $product->quantity
+                    ];
+
+                    // Compose vendor data
+                    if (isset($vendors[$vendor->id])) {
+                        array_push($vendors[$vendor->id]["products"], $p_data);
+                        $vendors[$vendor->id]["products_total"] += $p->price * $product->quantity;
+                    } else {
+                        $v = [
+                            "id" => $vendor->id,
+                            "name" => $vendor->business_name,
+                            "phone" => $vendor->phone,
+                            "address" => $vendor->address,
+                            "photo" => url('/') . Storage::url('vendors/' . $vendor->photo),
+                            "products" => [],
+                            "products_total" => $p->price * $product->quantity
+                        ];
+                        array_push($v["products"], $p_data);
+
+                        $vendors[$vendor->id] = $v;
+                    }
+                }
+
+                // Compose response data
+                foreach ($vendors as $vendor) {
+                    array_push($data, $vendor);
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $order_vendor->status ? 'Payment Confirmed' : 'Awaiting Confirmation',
+                'data' => [
+                    'vendors' => $data,
+                    'confirmed' => $order_vendor->status
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid Vendor'
+            ]);
+        }
     }
 }

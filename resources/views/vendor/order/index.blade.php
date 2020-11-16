@@ -52,7 +52,8 @@
 					  </td>
 					</tr>
 				</tbody>
-			  </table>
+				</table>
+				<div id="order-views"></div>
 			</div>
 		  </div>
 		</div>
@@ -73,6 +74,7 @@
 
 		$(document).ready(function () {
 			fetchOrders()
+			fetchOrderViews()
 		});
 
 		function fetchOrders() {
@@ -85,6 +87,32 @@
 				showAlert(false, 'Could not load orders. Please relaod page')
 			})
 		}
+
+		// Fetch Order Views
+    function fetchOrderViews() {
+      url = `{{ url('order/get-view') }}`
+      goGet(url)
+        .then(res => {
+          $('#order-views').html(res)
+        })
+        .catch(err => {
+          showAlert(false, 'Could not load orders. Please relaod page')
+        })
+    }
+
+		function confirmPayment(order_id) {
+		let url = `{{ url('order/confirm-payment') }}/${order_id}`
+		goGet(url)
+			.then(res => {
+				showAlert(true, 'Payment Confirmed')
+				$(`#vo-${order_id}`).click()
+				fetchOrders()
+				fetchOrderViews()
+			})
+			.catch(err => {
+				showAlert(false, 'Could not confirm payment. Please try again')
+			})
+	}
 
 	</script>
 @endpush

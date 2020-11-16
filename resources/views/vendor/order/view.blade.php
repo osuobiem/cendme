@@ -52,12 +52,14 @@
 									<strong>₦{{ number_format($order['products_total']) }}</strong></td>
 							</tr>
 
+							@if(!$order['status'])
 							<tr>
 								<td class="text-center" colspan="3">
 									<a class="view-btn hover-btn text-light" id="{{ $order['id'] }}-confirm"
 										onclick="confirmPayment(`{{ $order['id'] }}`)">Confirm Payment</a>
 								</td>
 							</tr>
+							@endif
 
 						</table>
 					</div>

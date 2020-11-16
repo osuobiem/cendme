@@ -138,6 +138,9 @@ class OrderController extends Controller
                 array_push($unpaid_list, $product);
             }
         }
+        $pf = json_decode($order->paid_for, true);
+        $pf = $pf ? $pf : [];
+        $paid_list = array_merge($paid_list, $pf);
 
         if (count($unpaid_list) < 1) {
             $order->status = 'in transit';
