@@ -777,14 +777,15 @@ class ShopperController extends Controller
 
     /**
      * Check Payment Confirmation
-     * @param int $order_id Order ID
+     * @param int $order_ref Order Reference
      * @param int $vendor_id Vendor ID
      * 
      * @return json
      */
-    public function cpcon($order_id, $vendor_id)
+    public function cpcon($order_ref, $vendor_id)
     {
-        $order_vendor = OrderVendor::where('order_id', $order_id)
+        $order = Order::where('reference', $order_ref)->first();
+        $order_vendor = OrderVendor::where('order_id', $order->id)
             ->where('vendor_id', $vendor_id)
             ->first();
 
@@ -793,7 +794,6 @@ class ShopperController extends Controller
 
             if ($order_vendor->status) {
                 $vendors = [];
-                $order = Order::findOrFail($order_id);
 
                 // Get products in order list
                 $products = json_decode($order->products);
