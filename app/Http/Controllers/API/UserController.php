@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Area;
 use App\Http\Controllers\Controller;
+use App\Mail\ResetPassword;
+use App\PasswordReset;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -11,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -372,4 +375,61 @@ class UserController extends Controller
         ]);
     }
     // ------------
+    
+    /**
+     * Send Password Reset Email
+     * @return json
+     */
+    public function reset_password(Request $request) {
+        // Get validation rules
+        $validate = $this->reset_rules($request);
+
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ], 400);
+        }
+
+        $email = $request['email'];
+        $token = md5(rand(1, 100) . '-' . time());
+        $user = User::where('email', $email)->first();
+
+        $password_reset = new PasswordReset();
+        $password_reset->reset_token = $token;
+        $password_reset->email = $email;
+        $password_reset->will_expire = date('Y-m-d H:i:s', time()+86400);
+
+        // Try Save and Send mail
+        try {
+            Mail::to($user)->send(new ResetPassword($token));
+
+            $password_reset->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Password Reset Email Sent!'
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal Server Error!'
+            ], 500);
+        }
+    }
+
+     /**
+     * Password Validation Rules
+     * @return object The validator object
+     */
+    private function reset_rules(Request $request)
+    {
+        // Make and return validation rules
+        return Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email'
+        ]);
+    }
 }
