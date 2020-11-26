@@ -18,6 +18,12 @@ use Illuminate\Support\Facades\Route;
  */
 // Home/Landing Page
 Route::get('', 'HomeController@index');
+
+// Password Reset Page
+Route::get('reset-password/{token?}', 'HomeController@reset_password');
+
+// Process Password Reset
+Route::post('process-password-reset/{token?}', 'HomeController@process_password_reset');
 // -------------
 
 /**
