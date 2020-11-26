@@ -15,6 +15,17 @@
 
 {{-- Main Content --}}
 @section('content')
+
+<style type="text/css">
+#pay-qr-code-1 {
+  display: inline-block
+}
+  @media print
+  {
+  #qr-container { display: block !important }
+  }
+  </style>
+
 <main>
   <div class="container-fluid">
 
@@ -70,16 +81,23 @@
         <div class="card card-static-2 mb-30">
           <div class="card-title-2">
             <h4>Payment QR Code</h4>
-            <a href="#" onclick="cannotPrint()" class="view-btn hover-btn"> <i class="fas fa-print"></i> Print</a>
+            <a href="#" onclick="printQR()" class="view-btn hover-btn"> <i class="fas fa-print"></i> Print</a>
           </div>
           <hr style="margin: 0 !important;">
           <div class="card-body">
-            <div id="qr-txt"><span>Scan to pay</span></div>
+            <div id="qr-txt"><strong>Scan to pay</strong></div>
+            <div class="text-center pr-3"><img src="{{ url('assets/images/cendme-logo-l.png') }}" alt="Cendme.com" style="height: 70px"></div>
             <div id="pay-qr-code"></div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="text-center d-none mt-5" id="qr-container">
+    <div id="qr-txt"><h3><strong>Scan to pay</strong></h3></div>
+    <div class="text-center pr-3"><img src="{{ url('assets/images/cendme-logo-l.png') }}" alt="Cendme.com" style="height: 140px"></div>
+    <div id="pay-qr-code-1"></div>
   </div>
 
   <script src="{{ url('assets/vendor/qrcode/qrcode.min.js') }}"></script>
@@ -95,6 +113,15 @@
         correctLevel: QRCode.CorrectLevel.H
       });
 
+      new QRCode("pay-qr-code-1", {
+        text: "{{ Auth::user()->qr_token }}",
+        width: 600,
+        height: 600,
+        colorDark: "#2b2f4c",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
       fetchOrders()
       fetchOrderViews()
     });
@@ -103,8 +130,9 @@
       location.href = "{{ url('vendor/products?sort=true') }}"
     }
 
-    function cannotPrint() {
-      swal("QRCode print will be available when Cendme mobile application is ready!");
+    // Print QR Code
+    function printQR() {
+      $('#qr-container').print()
     }
 
     // Fetch Orders

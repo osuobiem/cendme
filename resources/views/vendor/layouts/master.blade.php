@@ -16,7 +16,7 @@
   <link href="{{url('assets/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
   <link href="{{url('assets/vendor/DataTables/datatables.min.css')}}" rel="stylesheet">
   <link href="{{url('assets/css/animate.min.css')}}" rel="stylesheet">
-
+  
   <script src="{{ url('assets/js/jquery-3.4.1.min.js') }}"></script>
   <script src="{{ url('assets/js/custom.js') }}"></script>
 
@@ -41,6 +41,7 @@
 <div class="alert alert-danger top-alert d-none" role="alert" id="error-alert">
 </div>
 
+<script src="{{ url('assets/js/jQuery.print.min.js') }}"></script>
 <script src="{{ url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ url('assets/vendor/DataTables/datatables.min.js') }}"></script>
 <script src="{{ url('assets/vendor/sweetalert/sweetalert.min.js') }}"></script>
