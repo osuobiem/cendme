@@ -64,7 +64,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label class="form-label">Subcategory <span class="text-danger">*</span></label>
               <select name="subcategory" required class="form-control" id="e{{ $product->id }}subcategory">
-                @foreach ($subcategories as $subcategory)
+                @foreach ($product->subcategory->category->subcategory as $subcategory)
                     <option value="{{ $subcategory->id }}" 
                       {{ $subcategory->id == $product->subcategory_id ? 'selected' : '' }}>{{ $subcategory->name }}</option>
                 @endforeach

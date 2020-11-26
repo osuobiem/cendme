@@ -116,13 +116,10 @@
           setTimeout(() => {
             $('#a-close-modal').click()
             loadProducts()
-          }, 1800)
-          
-          setTimeout(() => {
             loadUpdateModals()
             loadViewModals()
             loadAddForm()
-          }, 2000)
+          }, 1800)
         })
         .catch(err => {
           spin()

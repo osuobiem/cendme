@@ -122,7 +122,7 @@ class VendorViewController extends Controller
     /**
      * Return product add form
      */
-    public function product_add_form(Request $request)
+    public function product_add_form()
     {
         return view('vendor.product.add');
     }
@@ -142,13 +142,9 @@ class VendorViewController extends Controller
         // Fetch categories
         $categories = Category::get();
 
-        // Fetch subcategories
-        $subcategories = SubCategory::orderBy('name')->get();
-
         $data = [
             'products' => $products,
-            'categories' => $categories,
-            'subcategories' => $subcategories
+            'categories' => $categories
         ];
 
         // Return view
