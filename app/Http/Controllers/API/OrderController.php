@@ -492,7 +492,7 @@ class OrderController extends Controller
         if ($order->status != 'paid' && $order->shopper_id != $shopper->id) {
             return response()->json([
                 'success' => 'false',
-                'message' => 'Order has either been canelled by user or accepted by another shopper'
+                'message' => 'Order has either been cancelled by user or accepted by another shopper'
             ]);
         }
 
@@ -563,10 +563,13 @@ class OrderController extends Controller
         }
 
         $user->photo = url('/') . Storage::url('users/' . $user->photo);
+        $shopper->free = false;
 
         try {
             // Update order data
             $order->save();
+
+            $shopper->save();
 
             return response()->json([
                 'success' => true,

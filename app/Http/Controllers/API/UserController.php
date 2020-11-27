@@ -458,6 +458,7 @@ class UserController extends Controller
         $shopper_amount = $amount->products + $amount->shopper_transport_fare + ($amount->service_charge * ($shopper->level->commision/100));
 
         $shopper->balance += $shopper_amount;
+        $shopper->free = true;
 
         // Try Save
         try {

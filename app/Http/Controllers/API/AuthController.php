@@ -314,13 +314,7 @@ class AuthController extends Controller
 
         $shs = [];
         foreach ($shoppers as $shopper) {
-            $order = Order::where('shopper_id', $shopper->id)
-                ->where('status', 'accepted')
-                ->orWhere('status', 'in transit')->first();
-
-            if (!$order) {
-                array_push($shs, $shopper);
-            }
+            $shopper->free ? array_push($shs, $shopper) : null;
         }
 
         return $shs;

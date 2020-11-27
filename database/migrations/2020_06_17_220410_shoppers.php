@@ -33,6 +33,7 @@ class Shoppers extends Migration
             $table->bigInteger('level_id')->unsigned();
             $table->boolean('verified')->default(false);
             $table->boolean('status')->default(true);
+            $table->boolean('free')->default(true);
             $table->timestamps();
             $table->softDeletes();
 
