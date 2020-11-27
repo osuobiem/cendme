@@ -32,6 +32,9 @@ Route::group(['namespace' => 'API'], function () {
         // User Login
         Route::post('login', 'UserController@login');
 
+        // Send Password Reset Email to User
+        Route::post('reset-password', 'UserController@reset_password');
+
         Route::group(['middleware' => 'auth:users-api'], function () {
 
             // User Update
@@ -62,6 +65,9 @@ Route::group(['namespace' => 'API'], function () {
 
         // Shopper Login
         Route::post('login', 'ShopperController@login');
+
+        // Send Password Reset Email to Shopper
+        Route::post('reset-password', 'ShopperController@reset_password');
 
         Route::group(['middleware' => 'auth:shoppers-api'], function () {
 
@@ -161,12 +167,6 @@ Route::group(['namespace' => 'API'], function () {
 
     // Get all areas according to state
     Route::get('areas/{state_id}', 'AreaController@list');
-
-    // Send Password Reset Email to User
-    Route::post('user/reset-password', 'UserController@reset_password');
-
-    // Send Password Reset Email to Shopper
-    Route::post('shopper/reset-password', 'ShopperController@reset_password');
 
     // PROTECTED ROUTES
     Route::group(['middleware' => ['auth:users-api']], function () {
