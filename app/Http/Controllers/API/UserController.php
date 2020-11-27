@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Area;
 use App\Http\Controllers\Controller;
 use App\Mail\ResetPassword;
+use App\Order;
 use App\PasswordReset;
 use App\User;
 use Carbon\Carbon;
@@ -432,5 +433,48 @@ class UserController extends Controller
         return Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email'
         ]);
+    }
+
+    /**
+     * Confirm Delivery
+     * @param string $order_ref Order reference
+     * 
+     * @return json
+     */
+    public function confirm_delivery($order_ref) {
+        $order = Order::where('reference', $order_ref)->firstOrFail();
+
+        if($order->status != 'in transit') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Order is not in transit'
+            ]);
+        }
+
+        $order->status = 'delivered';
+        $shopper = $order->shopper;
+        
+        $amount = json_decode($order->amount);
+        $shopper_amount = $amount->products + $amount->shopper_transport_fare + ($amount->service_charge * ($shopper->level->commision/100));
+
+        $shopper->balance += $shopper_amount;
+
+        // Try Save
+        try {
+            $shopper->save();
+            $order->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Delivery Confirmed'
+            ]);
+        } catch (\Throwable $th) {
+            Log::error($th);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Internal Server Error'
+            ], 500);
+        }
     }
 }

@@ -51,6 +51,9 @@ Route::group(['namespace' => 'API'], function () {
 
             // Cancel Order Request
             Route::get('order/cancel/{ref}', 'OrderController@cancel');
+
+            // Confirm Delivery
+            Route::get('confirm-delivery/{ref}', 'UserController@confirm_delivery');
         });
     });
     // ----------------
