@@ -64,11 +64,14 @@
                       <span class="text-danger error-message" id="password"></span>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group d-flex" style="justify-content:space-between">
                       <div class="custom-control custom-checkbox">
                         <input class="custom-control-input" id="rememberPasswordCheck" name="remember_me"
                           type="checkbox" checked />
                         <label class="custom-control-label" for="rememberPasswordCheck">Remember me</label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <a class="breadcrumb-item active" href="{{ url('reset-password') }}">Forgot Password?</a>
                       </div>
                     </div>
 

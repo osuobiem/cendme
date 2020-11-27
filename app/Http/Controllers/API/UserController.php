@@ -399,6 +399,7 @@ class UserController extends Controller
         $password_reset = new PasswordReset();
         $password_reset->reset_token = $token;
         $password_reset->email = $email;
+        $password_reset->user_type = 'user';
         $password_reset->will_expire = date('Y-m-d H:i:s', time()+86400);
 
         // Try Save and Send mail

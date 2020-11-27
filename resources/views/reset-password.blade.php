@@ -71,6 +71,7 @@
 
   <script>
 
+$(document).ready(function () {
     $('#reset-form').submit(e => {
       e.preventDefault();
 
@@ -123,6 +124,8 @@
           }
         })
     })
+
+})
 
     function spin() {
       $('#btn-txt').toggle()

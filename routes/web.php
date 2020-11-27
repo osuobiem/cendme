@@ -24,6 +24,9 @@ Route::get('reset-password/{token?}', 'HomeController@reset_password');
 
 // Process Password Reset
 Route::post('process-password-reset/{token?}', 'HomeController@process_password_reset');
+
+// Set New Password
+Route::post('set-new-password', 'HomeController@set_new_password');
 // -------------
 
 /**
