@@ -126,91 +126,78 @@ class AuthController extends Controller
                 $order = Order::where('reference', $request['order_ref'])->firstOrFail();
 
                 // Check if the order has been paid for
-                if ($order->status == 'paid') {
-                    $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
-
-                    return response()->json([
-                        'success' => true,
-                        'message' => $message,
-                        'data' => ['order' => $order]
-                    ]);
-                }
-
-                // Check if the order is in another state
                 if ($order->status != 'pending') {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Order has already been paid for'
-                    ]);
-                }
+                    $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
+                    $data = ['order' => $order];
+                } else {
+                    $order_amount = json_decode($order->amount)->total;
 
-                $order_amount = json_decode($order->amount)->total;
-
-                if ($amount != $order_amount) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Invalid amount'
-                    ]);
-                }
-
-                if (!$request['direct_pay']) {
-                    // Check if user's wallet balance is sufficient
-                    if ($originator->balance < $amount) {
+                    if ($amount != $order_amount) {
                         return response()->json([
                             'success' => false,
-                            'message' => 'Insufficient Balance'
+                            'message' => 'Invalid amount'
                         ]);
                     }
 
-                    $originator->balance -= $amount;
-                }
-
-                $shoppers = $this->get_eligible_shoppers($originator->area_id);
-
-                // Check if any shopper eligible
-                if (count($shoppers) < 1) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'No eligible shopper found!'
-                    ]);
-                }
-
-                $transaction->order_id = $order->id;
-
-                if ($request['status']) {
-                    $order->status = 'paid';
-
-                    // Try to save order or catch error if any
-                    try {
-                        // Loop through shoppers to extract device unique/token
-                        $device_tokens = [];
-                        foreach ($shoppers as $shopper) {
-                            array_push($device_tokens, $shopper->device_unique);
+                    if ($request['direct_pay']) {
+                        // Check if user's wallet balance is sufficient
+                        if ($originator->balance < $amount) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Insufficient Balance'
+                            ]);
                         }
 
-                        // Send order request notification
-                        $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
+                        $originator->balance -= $amount;
+                    }
 
-                        $dt = ["type" => "order", "ref" => $order->reference, "click_action" => "FLUTTER_NOTIFICATION_CLICK"];
-                        $send = $this->send_request_notification($device_tokens, $body, $dt);
+                    $shoppers = $this->get_eligible_shoppers($originator->area_id);
 
-                        if (!$send) {
+                    // Check if any shopper eligible
+                    if (count($shoppers) < 1) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'No eligible shopper found!'
+                        ]);
+                    }
+
+                    $transaction->order_id = $order->id;
+
+                    if ($request['status']) {
+                        $order->status = 'paid';
+
+                        // Try to save order or catch error if any
+                        try {
+                            // Loop through shoppers to extract device unique/token
+                            $device_tokens = [];
+                            foreach ($shoppers as $shopper) {
+                                array_push($device_tokens, $shopper->device_unique);
+                            }
+
+                            // Send order request notification
+                            $body = 'Will you shop for ' . explode(' ', $order->user->name)[0] . '?';
+
+                            $dt = ["type" => "order", "ref" => $order->reference, "click_action" => "FLUTTER_NOTIFICATION_CLICK"];
+                            $send = $this->send_request_notification($device_tokens, $body, $dt);
+
+                            if (!$send) {
+                                return response()->json([
+                                    'success' => false,
+                                    'message' => 'Internal Server Error'
+                                ], 500);
+                            }
+
+                            $order->save();
+                            $originator->save();
+                            $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
+                            $data = ['order' => $order];
+                        } catch (\Throwable $th) {
+                            Log::error($th);
                             return response()->json([
                                 'success' => false,
                                 'message' => 'Internal Server Error'
                             ], 500);
                         }
-
-                        $order->save();
-                        $originator->save();
-                        $originator->photo = url('/') . Storage::url('users/' . $originator->photo);
-                        $data = ['order' => $order];
-                    } catch (\Throwable $th) {
-                        Log::error($th);
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Internal Server Error'
-                        ], 500);
                     }
                 }
 
