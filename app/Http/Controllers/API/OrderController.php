@@ -283,81 +283,73 @@ class OrderController extends Controller
         // Check if order id was supplied
         if ($id) {
             // Get single order
-            $order = Order::find($id);
+            $order = Order::findOrFail($id);
 
-            if ($order) {
-
-                // Try to add products to cart
-                if (!$this->create_cart($request, json_decode($order->products, true))) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Something went wrong. Please try again'
-                    ]);
-                }
-
-                $entries = $request->user()->cart;
-                $cart = [];
-
-                foreach ($entries as $entry) {
-                    $product = Product::find($entry->product_id);
-
-                    // Push composed entry to products array
-                    array_push($cart, [
-                        'id' => $product->id,
-                        'photo' => url('/') . Storage::url('products/' . $product->photo),
-                        'title' => $product->title,
-                        'price' => $entry->price,
-                        'quantity' => $entry->quantity
-                    ]);
-                }
-
-                // Check if order has been accepted
-                $shopper = [];
-                if ($order->shopper) {
-                    $shopper = $order->shopper;
-                    $shopper->photo = url('/') . Storage::url('shoppers/' . $shopper->photo);
-                }
-
-                $updated_at = $order->updated_at;
-
-                $time = date('Y-m-d g:i:s A');
-
-                $updated_at = date_create($updated_at);
-                $time = date_create($time);
-
-                // updated_at time difference 
-                $diff = date_diff($time, $updated_at)->i;
-
-                // Check if order has not been accepted
-                if ($diff > 30 && $order->status == 'paid') {
-
-                    if (!$this->cancel($request, $order->reference, true)) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Internal Server Error'
-                        ], 500);
-                    }
-
-                    $order->status = 'cancelled';
-                }
-
-                $order->time_diff = $diff;
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Fetch Successful',
-                    'data' => [
-                        'order' => $order,
-                        'cart' => $cart,
-                        'shopper' => $shopper
-                    ]
-                ]);
-            } else {
+            // Try to add products to cart
+            if (!$this->create_cart($request, json_decode($order->products, true))) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Order not found'
+                    'message' => 'Something went wrong. Please try again'
                 ]);
             }
+
+            $entries = $request->user()->cart;
+            $cart = [];
+
+            foreach ($entries as $entry) {
+                $product = Product::find($entry->product_id);
+
+                // Push composed entry to products array
+                array_push($cart, [
+                    'id' => $product->id,
+                    'photo' => url('/') . Storage::url('products/' . $product->photo),
+                    'title' => $product->title,
+                    'price' => $entry->price,
+                    'quantity' => $entry->quantity
+                ]);
+            }
+
+            // Check if order has been accepted
+            $shopper = [];
+            if ($order->shopper) {
+                $shopper = $order->shopper;
+                $shopper->photo = url('/') . Storage::url('shoppers/' . $shopper->photo);
+            }
+
+            $updated_at = $order->updated_at;
+
+            $time = date('Y-m-d g:i:s A');
+
+            $updated_at = date_create($updated_at);
+            $time = date_create($time);
+
+            // updated_at time difference 
+            $diff = date_diff($time, $updated_at)->i;
+
+            // Check if order has not been accepted
+            if ($diff > 30 && $order->status == 'paid') {
+
+                if (!$this->cancel($request, $order->reference, true)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Internal Server Error'
+                    ], 500);
+                }
+
+                $order->status = 'cancelled';
+            }
+
+            $order->time_diff = $diff;
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Fetch Successful',
+                'data' => [
+                    'order' => $order,
+                    'cart' => $cart,
+                    'shopper' => $shopper
+                ]
+            ]);
         }
 
         // Get Orders
