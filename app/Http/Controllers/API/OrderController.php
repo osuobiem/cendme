@@ -285,12 +285,14 @@ class OrderController extends Controller
             // Get single order
             $order = Order::findOrFail($id);
 
-            // Try to add products to cart
-            if (!$this->create_cart($request, json_decode($order->products, true))) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Something went wrong. Please try again'
-                ]);
+            if (count($order->products) > 0) {
+                // Try to add products to cart
+                if (!$this->create_cart($request, json_decode($order->products, true))) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Something went wrong. Please try again'
+                    ]);
+                }
             }
 
             $entries = $request->user()->cart;
