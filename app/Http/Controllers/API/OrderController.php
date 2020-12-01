@@ -285,7 +285,7 @@ class OrderController extends Controller
             // Get single order
             $order = Order::findOrFail($id);
 
-            if (count(jaon_decode($order->products)) > 0) {
+            if (count(json_decode($order->products)) > 0) {
                 // Try to add products to cart
                 if (!$this->create_cart($request, json_decode($order->products, true))) {
                     return response()->json([
