@@ -120,25 +120,22 @@ class OrderController extends Controller
         $distance = $distance / 1000;
 
         // Calculate shopper transport fare
-        $fare = is_int($distance) ? $distance * 200 : (((int) $distance) + 1) * 200; // NOTE: Fare default should be retrieved from DB
-
-        // Multiply fare by 2 for to and fro travel
-        // $fare *= 2;
-
-        // Total of transaction without gateway charge
-        $initial_total = $price_accumulator + ($price_accumulator * 0.1) + $fare;
-
-        // Payment gateway charge
-        $payment_charge = $initial_total < 2500 ? $initial_total * 0.015 : ($initial_total * 0.015) + 100;
-        $payment_charge = $payment_charge > 2000 ? 2000 : $payment_charge;
+        if(is_int($distance)) {
+            $fare = ( ($distance-1)*100 ) + 200;
+        }
+        else {
+            $fare = (((int) $distance) * 100) + 200;
+        }
+        
+        // Total of transaction
+        $total = ($price_accumulator * 1.1) + $fare;
 
         // Amount breakdown
         $amount = [
             "products" => $price_accumulator,
             "service_charge" => $price_accumulator * 0.1, // NOTE: Percentage value should retrieved from DB
             "shopper_transport_fare" => $fare,
-            'payment_charge' => $payment_charge,
-            "total" => $initial_total + $payment_charge
+            "total" => $total
         ];
 
         $order->amount = json_encode($amount);
