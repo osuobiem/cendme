@@ -103,6 +103,15 @@ Route::group(['namespace' => 'API'], function () {
 
             // Payment Confirmation
             Route::get('payment-confirmation/{order_ref}/{vendor_id}', 'ShopperController@cpcon');
+
+            // Get Shopper Balance
+            Route::get('balance', function (Request $request) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Fetch Successful',
+                    'data' => $request->user()->balance
+                ]);
+            });
         });
     });
     // ----------------
