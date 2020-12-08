@@ -455,7 +455,7 @@ class UserController extends Controller
         $shopper = $order->shopper;
         
         $amount = json_decode($order->amount);
-        $shopper_amount = $amount->products + $amount->shopper_transport_fare + ($amount->service_charge * ($shopper->level->commision/100));
+        $shopper_amount = $amount->products + $amount->shopper_transport_fare + ($amount->products * ($shopper->level->commision/100));
 
         $shopper->balance += $shopper_amount;
         $shopper->free = true;
