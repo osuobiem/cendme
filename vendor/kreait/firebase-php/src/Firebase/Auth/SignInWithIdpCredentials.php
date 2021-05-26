@@ -4,37 +4,39 @@ declare(strict_types=1);
 
 namespace Kreait\Firebase\Auth;
 
-final class SignInWithIdpCredentials implements SignIn
+final class SignInWithIdpCredentials implements IsTenantAware, SignIn
 {
-    /** @var string|null */
-    private $accessToken;
+    private string $provider;
+    private ?string $accessToken = null;
+    private ?string $idToken = null;
+    private ?string $oauthTokenSecret = null;
+    private string $requestUri = 'http://localhost';
+    private ?TenantId $tenantId = null;
 
-    /** @var string|null */
-    private $idToken;
-
-    /** @var string */
-    private $provider;
-
-    /** @var string */
-    private $requestUri = 'http://localhost';
-
-    private function __construct()
+    private function __construct(string $provider)
     {
+        $this->provider = $provider;
     }
 
     public static function withAccessToken(string $provider, string $accessToken): self
     {
-        $instance = new self();
-        $instance->provider = $provider;
+        $instance = new self($provider);
         $instance->accessToken = $accessToken;
+
+        return $instance;
+    }
+
+    public static function withAccessTokenAndOauthTokenSecret(string $provider, string $accessToken, string $oauthTokenSecret): self
+    {
+        $instance = self::withAccessToken($provider, $accessToken);
+        $instance->oauthTokenSecret = $oauthTokenSecret;
 
         return $instance;
     }
 
     public static function withIdToken(string $provider, string $idToken): self
     {
-        $instance = new self();
-        $instance->provider = $provider;
+        $instance = new self($provider);
         $instance->idToken = $idToken;
 
         return $instance;
@@ -48,9 +50,22 @@ final class SignInWithIdpCredentials implements SignIn
         return $instance;
     }
 
+    public function withTenantId(TenantId $tenantId): self
+    {
+        $action = clone $this;
+        $action->tenantId = $tenantId;
+
+        return $action;
+    }
+
     public function provider(): string
     {
         return $this->provider;
+    }
+
+    public function oauthTokenSecret(): ?string
+    {
+        return $this->oauthTokenSecret;
     }
 
     public function accessToken(): ?string
@@ -66,5 +81,10 @@ final class SignInWithIdpCredentials implements SignIn
     public function requestUri(): string
     {
         return $this->requestUri;
+    }
+
+    public function tenantId(): ?TenantId
+    {
+        return $this->tenantId;
     }
 }

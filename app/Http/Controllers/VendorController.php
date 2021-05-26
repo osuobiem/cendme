@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\ProductExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VendorController extends Controller
 {
@@ -417,5 +419,9 @@ class VendorController extends Controller
             "message" => 'Still in process'
         ], 400);
     }
-    // -----------
+
+    public function exportIntoExcell()
+    {
+        return Excel::download(new ProductExport, 'productlist.xlsx');
+    }
 }

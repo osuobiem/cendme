@@ -127,6 +127,11 @@ class VendorViewController extends Controller
         return view('vendor.product.add');
     }
 
+    public function product_batch_form()
+    {
+        return view('vendor.product.batch');
+    }
+
     /**
      * Get update modals
      * @return html

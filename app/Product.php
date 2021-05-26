@@ -9,6 +9,7 @@ class Product extends Model
 {
     use SoftDeletes;
 
+    protected $fillable=['title', 'details', 'quantity', 'price', 'vendor_id', 'subcategory_id'];
     // Relationship with Vendor
     public function vendor()
     {

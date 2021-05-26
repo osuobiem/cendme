@@ -26,8 +26,13 @@
         <div class="card card-static-2 mb-30">
           <div class="card-title-2">
             <h4>Products</h4>
-            <a href="#add-product-modal" data-toggle="modal" class="view-btn hover-btn"> <i class="fas fa-plus"></i> Add
-              Product</a>
+            <div class="w-100 text-right">
+              <a href="#batch-products-modal" data-toggle="modal" class="view-btn hover-btn "> <i class="fas fa-plus"></i> Add Batch
+                Products</a>
+              <a href="#add-product-modal" data-toggle="modal" class="view-btn hover-btn "> <i class="fas fa-plus"></i> Add Single
+                Product</a>
+              <a href="export-excell" class="view-btn hover-btn "> <i class="fas fa-download"></i> Download Excel Sheet</a>
+            </div>
           </div>
 
           <hr style="margin: 0 !important;">
@@ -70,13 +75,14 @@
 
   {{-- Add Product Modal --}}
   @section('add-product')
+  @include('vendor.product.batch')
   @include('vendor.product.add')
   @show
 
   <script>
     DTInitialized = false;
 
-    $(document).ready(function () {
+    $(document).ready(function() {
       loadProducts();
       loadCategories();
       loadUpdateModals();
@@ -89,13 +95,15 @@
       let url = "{{ url('vendor/products/get') }}";
 
       $.ajax({
-        type: "GET",
-        url
-      })
+          type: "GET",
+          url
+        })
         .then(res => {
           $('#products').html(res)
           if (!DTInitialized) {
-            order = '{{ $sort }}' == true ? [[3, 'asc']] : [];
+            order = '{{ $sort }}' == true ? [
+              [3, 'asc']
+            ] : [];
             $('#products-table').DataTable({
               "order": order
             });
@@ -112,11 +120,12 @@
       let url = "{{ url('vendor/categories') }}";
 
       $.ajax({
-        type: "GET",
-        url
-      })
+          type: "GET",
+          url
+        })
         .then(res => {
           $('#acategory').append(res)
+          $('#bcategory').append(res)
         })
         .catch(err => {
           showAlert(false, 'An Error Occured!. Please relaod page')
@@ -128,9 +137,9 @@
       let url = "{{ url('vendor/subcategories') }}/" + id;
 
       $.ajax({
-        type: "GET",
-        url
-      })
+          type: "GET",
+          url
+        })
         .then(res => {
           $('#' + container).html(res)
         })
@@ -165,14 +174,27 @@
       let url = "{{ url('vendor/products/add-form') }}";
 
       $.ajax({
-        type: "GET",
-        url
-      })
+          type: "GET",
+          url
+        })
         .then(res => {
           $('#add-form-h').html(res)
         })
-        .catch(err => {
+        .catch(err => {})
+    }
+
+    //load 
+    function loadBatchForm() {
+      let url = "{{ url('vendor/products/batch-form') }}";
+
+      $.ajax({
+          type: "GET",
+          url
         })
+        .then(res => {
+          $('#add-form-b').html(res)
+        })
+        .catch(err => {})
     }
 
     // Load Update Modals
@@ -180,9 +202,9 @@
       let url = "{{ url('vendor/products/update-modals') }}";
 
       $.ajax({
-        type: "GET",
-        url
-      })
+          type: "GET",
+          url
+        })
         .then(res => {
           $('#update-modals-h').html(res)
         })
@@ -196,9 +218,9 @@
       let url = "{{ url('vendor/products/view-modals') }}";
 
       $.ajax({
-        type: "GET",
-        url
-      })
+          type: "GET",
+          url
+        })
         .then(res => {
           $('#view-modals-h').html(res)
         })
@@ -210,6 +232,8 @@
     // Add all event listeners
     function tagFormListeners() {
       addProduct();
+      batchProduct();
+
     }
 
     // Pick Image
@@ -220,11 +244,11 @@
     // Delete Product Warning
     function deleteWarn(id) {
       swal({
-        title: "Are you sure?",
-        icon: "warning",
-        buttons: [true, "Delete"],
-        dangerMode: true,
-      })
+          title: "Are you sure?",
+          icon: "warning",
+          buttons: [true, "Delete"],
+          dangerMode: true,
+        })
         .then((willDelete) => {
           if (willDelete) {
             deleteProduct(id)
@@ -237,9 +261,9 @@
       let url = "{{ url('product/delete') }}/" + id;
 
       $.ajax({
-        type: "DELETE",
-        url
-      })
+          type: "DELETE",
+          url
+        })
         .then(res => {
           showAlert(true, res.message)
           loadProducts()
@@ -259,8 +283,6 @@
     function offError() {
       $('.error-message').html('')
     }
-
-
   </script>
 
 </main>

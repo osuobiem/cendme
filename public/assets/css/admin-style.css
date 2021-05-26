@@ -301,7 +301,8 @@
 }
 
 .view-btn {
-    margin-left: auto;
+    margin-left: 10px;
+    
     padding: 5px 15px;
     border: 1px solid #f55d2c;
     background: #f55d2c;

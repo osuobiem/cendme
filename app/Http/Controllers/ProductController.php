@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Imports\ProductImport;
 use App\Product;
 use App\SubCategory;
 use App\Vendor;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -37,6 +40,29 @@ class ProductController extends Controller
         $status = $store['status'];
         unset($store['status']);
         return response()->json($store, $status);
+    }
+
+    public function batch_create(Request $request)
+    {
+        // Make and return validation rules
+        $validate = Validator::make($request->all(), [
+            'file' => 'required|mimes:xlsx,xls',
+            'subcategory' => 'required|numeric|exists:subcategories,id'
+        ]);
+        // Run validation
+        if ($validate->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validate->errors()
+            ], 400);
+        }
+        $file = $request['file'];
+        try {
+            Excel::import(new ProductImport($request['subcategory']), $file);
+            return ['success' => true, 'status' => 200, 'message' => 'Creation Successful'];
+        } catch (\Exception $e) {
+            Log::error($e);
+        }
     }
 
     /**

@@ -9,6 +9,8 @@ use Firebase\Auth\Token\Domain\Generator;
 use Firebase\Auth\Token\Domain\Verifier;
 use Firebase\Auth\Token\Generator as CustomTokenGenerator;
 use Firebase\Auth\Token\HttpKeyStore;
+use Firebase\Auth\Token\TenantAwareGenerator;
+use Firebase\Auth\Token\TenantAwareVerifier;
 use Firebase\Auth\Token\Verifier as LegacyIdTokenVerifier;
 use Google\Auth\ApplicationDefaultCredentials;
 use Google\Auth\Cache\MemoryCacheItemPool;
@@ -27,7 +29,7 @@ use Google\Cloud\Storage\StorageClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\MessageFormatter;
-use function GuzzleHttp\Psr7\uri_for;
+use GuzzleHttp\Psr7\Utils as GuzzleUtils;
 use GuzzleHttp\RequestOptions;
 use Kreait\Clock;
 use Kreait\Clock\SystemClock;
@@ -36,7 +38,9 @@ use Kreait\Firebase\Auth\CustomTokenViaGoogleIam;
 use Kreait\Firebase\Auth\DisabledLegacyCustomTokenGenerator;
 use Kreait\Firebase\Auth\DisabledLegacyIdTokenVerifier;
 use Kreait\Firebase\Auth\IdTokenVerifier;
+use Kreait\Firebase\Auth\TenantId;
 use Kreait\Firebase\Exception\InvalidArgumentException;
+use Kreait\Firebase\Exception\MessagingApiExceptionConverter;
 use Kreait\Firebase\Exception\RuntimeException;
 use Kreait\Firebase\Http\HttpClientOptions;
 use Kreait\Firebase\Http\Middleware;
@@ -63,51 +67,37 @@ class Factory
         'https://www.googleapis.com/auth/securetoken',
     ];
 
-    /** @var UriInterface|null */
-    protected $databaseUri;
+    protected ?UriInterface $databaseUri = null;
 
-    /** @var string|null */
-    protected $defaultStorageBucket;
+    protected ?string $defaultStorageBucket = null;
 
-    /** @var ServiceAccount|null */
-    protected $serviceAccount;
+    protected ?ServiceAccount $serviceAccount = null;
 
     /** @var ServiceAccountCredentials|UserRefreshCredentials|AppIdentityCredentials|GCECredentials|CredentialsLoader|null */
     protected $googleAuthTokenCredentials;
 
-    /** @var ProjectId|null */
-    protected $projectId;
+    protected ?ProjectId $projectId = null;
 
-    /** @var Email|null */
-    protected $clientEmail;
+    protected ?Email $clientEmail = null;
 
-    /** @var CacheInterface */
-    protected $verifierCache;
+    protected CacheInterface $verifierCache;
 
-    /** @var CacheItemPoolInterface */
-    protected $authTokenCache;
+    protected CacheItemPoolInterface $authTokenCache;
 
-    /** @var bool */
-    protected $discoveryIsDisabled = false;
+    protected bool $discoveryIsDisabled = false;
 
-    /** @var bool */
-    protected $guzzleDebugModeIsEnabled = false;
+    protected bool $guzzleDebugModeIsEnabled = false;
 
     /**
-     * @var string|null
-     *
      * @deprecated 5.7.0 Use {@see withClientOptions} instead.
      */
-    protected $httpProxy;
+    protected ?string $httpProxy = null;
 
-    /** @var string */
-    protected static $databaseUriPattern = 'https://%s.firebaseio.com';
+    protected static string $databaseUriPattern = 'https://%s.firebaseio.com';
 
-    /** @var string */
-    protected static $storageBucketNamePattern = '%s.appspot.com';
+    protected static string $storageBucketNamePattern = '%s.appspot.com';
 
-    /** @var Clock */
-    protected $clock;
+    protected Clock $clock;
 
     /** @var callable|null */
     protected $httpLogMiddleware;
@@ -115,8 +105,9 @@ class Factory
     /** @var callable|null */
     protected $httpDebugLogMiddleware;
 
-    /** @var HttpClientOptions */
-    protected $httpClientOptions;
+    protected ?TenantId $tenantId = null;
+
+    protected HttpClientOptions $httpClientOptions;
 
     public function __construct()
     {
@@ -138,7 +129,8 @@ class Factory
 
         return $factory
             ->withProjectId($serviceAccount->getProjectId())
-            ->withClientEmail($serviceAccount->getClientEmail());
+            ->withClientEmail($serviceAccount->getClientEmail())
+        ;
     }
 
     public function withProjectId(string $projectId): self
@@ -157,6 +149,14 @@ class Factory
         return $factory;
     }
 
+    public function withTenantId(string $tenantId): self
+    {
+        $factory = clone $this;
+        $factory->tenantId = TenantId::fromString($tenantId);
+
+        return $factory;
+    }
+
     public function withDisabledAutoDiscovery(): self
     {
         $factory = clone $this;
@@ -171,7 +171,7 @@ class Factory
     public function withDatabaseUri($uri): self
     {
         $factory = clone $this;
-        $factory->databaseUri = uri_for($uri);
+        $factory->databaseUri = GuzzleUtils::uriFor($uri);
 
         return $factory;
     }
@@ -327,11 +327,11 @@ class Factory
         }
 
         if ($projectId = Util::getenv('GOOGLE_CLOUD_PROJECT')) {
-            return $this->projectId = ProjectId::fromString((string) $projectId);
+            return $this->projectId = ProjectId::fromString($projectId);
         }
 
         if ($projectId = Util::getenv('GCLOUD_PROJECT')) {
-            return $this->projectId = ProjectId::fromString((string) $projectId);
+            return $this->projectId = ProjectId::fromString($projectId);
         }
 
         return null;
@@ -351,12 +351,16 @@ class Factory
             return null;
         }
 
-        if (
-            ($credentials = $this->getGoogleAuthTokenCredentials())
-            && ($credentials instanceof SignBlobInterface)
-            && ($clientEmail = $credentials->getClientName())
-        ) {
-            return $this->clientEmail = new Email($clientEmail);
+        try {
+            if (
+                ($credentials = $this->getGoogleAuthTokenCredentials())
+                && ($credentials instanceof SignBlobInterface)
+                && ($clientEmail = $credentials->getClientName())
+            ) {
+                return $this->clientEmail = new Email($clientEmail);
+            }
+        } catch (Throwable $e) {
+            return null;
         }
 
         return null;
@@ -369,7 +373,7 @@ class Factory
         }
 
         if ($projectId = $this->getProjectId()) {
-            return $this->databaseUri = uri_for(\sprintf(self::$databaseUriPattern, $projectId->sanitizedValue()));
+            return $this->databaseUri = GuzzleUtils::uriFor(\sprintf(self::$databaseUriPattern, $projectId->sanitizedValue()));
         }
 
         throw new RuntimeException('Unable to build a database URI without a project ID');
@@ -388,19 +392,21 @@ class Factory
         return null;
     }
 
-    public function createAuth(): Auth
+    public function createAuth(): Contract\Auth
     {
-        $http = $this->createApiClient([
+        $httpClient = $this->createApiClient([
             'base_uri' => 'https://www.googleapis.com/identitytoolkit/v3/relyingparty/',
         ]);
-        $apiClient = new Auth\ApiClient($http);
+
+        $authApiClient = new Auth\ApiClient($httpClient, $this->tenantId);
 
         $customTokenGenerator = $this->createCustomTokenGenerator();
+
         $idTokenVerifier = $this->createIdTokenVerifier();
 
-        $signInHandler = new Firebase\Auth\SignIn\GuzzleHandler($http);
+        $signInHandler = new Firebase\Auth\SignIn\GuzzleHandler($httpClient);
 
-        return new Auth($apiClient, $customTokenGenerator, $idTokenVerifier, $signInHandler);
+        return new Auth($authApiClient, $httpClient, $customTokenGenerator, $idTokenVerifier, $signInHandler, $this->tenantId);
     }
 
     public function createCustomTokenGenerator(): Generator
@@ -410,11 +416,15 @@ class Factory
         $privateKey = $serviceAccount ? $serviceAccount->getPrivateKey() : '';
 
         if ($clientEmail && $privateKey !== '') {
+            if ($this->tenantId) {
+                return new TenantAwareGenerator($this->tenantId->toString(), (string) $clientEmail, $privateKey);
+            }
+
             return new CustomTokenGenerator((string) $clientEmail, $privateKey);
         }
 
         if ($clientEmail) {
-            return new CustomTokenViaGoogleIam((string) $clientEmail, $this->createApiClient());
+            return new CustomTokenViaGoogleIam((string) $clientEmail, $this->createApiClient(), $this->tenantId);
         }
 
         return new DisabledLegacyCustomTokenGenerator(
@@ -434,10 +444,14 @@ class Factory
 
         $baseVerifier = new LegacyIdTokenVerifier($projectId->sanitizedValue(), $keyStore);
 
+        if ($this->tenantId) {
+            $baseVerifier = new TenantAwareVerifier($this->tenantId->toString(), $baseVerifier);
+        }
+
         return new IdTokenVerifier($baseVerifier, $this->clock);
     }
 
-    public function createDatabase(): Database
+    public function createDatabase(): Contract\Database
     {
         $http = $this->createApiClient();
 
@@ -448,7 +462,7 @@ class Factory
         return new Database($this->getDatabaseUri(), new Database\ApiClient($http));
     }
 
-    public function createRemoteConfig(): RemoteConfig
+    public function createRemoteConfig(): Contract\RemoteConfig
     {
         if (!($projectId = $this->getProjectId())) {
             throw new RuntimeException('Unable to create the messaging service without a project ID');
@@ -461,16 +475,19 @@ class Factory
         return new RemoteConfig(new RemoteConfig\ApiClient($http));
     }
 
-    public function createMessaging(): Messaging
+    public function createMessaging(): Contract\Messaging
     {
         if (!($projectId = $this->getProjectId())) {
             throw new RuntimeException('Unable to create the messaging service without a project ID');
         }
 
+        $errorHandler = new MessagingApiExceptionConverter($this->clock);
+
         $messagingApiClient = new Messaging\ApiClient(
             $this->createApiClient([
                 'base_uri' => 'https://fcm.googleapis.com/v1/projects/'.$projectId->value(),
-            ])
+            ]),
+            $errorHandler
         );
 
         $appInstanceApiClient = new Messaging\AppInstanceApiClient(
@@ -479,16 +496,17 @@ class Factory
                 'headers' => [
                     'access_token_auth' => 'true',
                 ],
-            ])
+            ]),
+            $errorHandler
         );
 
-        return new Messaging($messagingApiClient, $appInstanceApiClient, $projectId);
+        return new Messaging($projectId, $messagingApiClient, $appInstanceApiClient);
     }
 
     /**
      * @param string|Url|UriInterface|mixed $defaultDynamicLinksDomain
      */
-    public function createDynamicLinksService($defaultDynamicLinksDomain = null): DynamicLinks
+    public function createDynamicLinksService($defaultDynamicLinksDomain = null): Contract\DynamicLinks
     {
         $apiClient = $this->createApiClient();
 
@@ -499,7 +517,7 @@ class Factory
         return DynamicLinks::withApiClient($apiClient);
     }
 
-    public function createFirestore(): Firestore
+    public function createFirestore(): Contract\Firestore
     {
         $config = [];
 
@@ -527,7 +545,7 @@ class Factory
         return Firestore::withFirestoreClient($firestoreClient);
     }
 
-    public function createStorage(): Storage
+    public function createStorage(): Contract\Storage
     {
         $config = [];
 

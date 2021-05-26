@@ -100,8 +100,14 @@ Route::group(['prefix' => '/vendor'], function () {
         // Get product update modals
         Route::get('products/update-modals', 'VendorViewController@product_update_modals');
 
-        // Get product view modals
-        Route::get('products/add-form', 'VendorViewController@product_add_form');
+        // Get single product view modals
+        Route::get('products/add-form', 'VendorViewController@product_add_form'); 
+
+        // Get batch product view modals
+        Route::get('products/batch-form', 'VendorViewController@product_batch_form');
+
+        Route::get('export-excell', 'VendorController@exportIntoExcell');
+
 
         // Get product view modals
         Route::get('products/view-modals', 'VendorViewController@product_view_modals');
@@ -123,6 +129,10 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
 
     // Create Product
     Route::post('create', 'ProductController@create');
+
+    //create batch product
+    Route::post('batch_create', 'ProductController@batch_create');
+
 
     // Update Product
     Route::post('update/{id}', 'ProductController@update');
