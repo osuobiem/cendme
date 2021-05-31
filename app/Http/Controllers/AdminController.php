@@ -156,7 +156,6 @@ class AdminController extends Controller
 			// Try vendor delete or catch error if any
 			try {
 				$vendor->delete();
-
 				return response()->json([
 					'success' => true,
 					'message' => 'Vendor deleted'
