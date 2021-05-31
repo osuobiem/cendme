@@ -1,7 +1,6 @@
 @foreach ($agents as $agent)
 
-<div class="modal fade" id="view{{ $agent->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
+<div class="modal fade" id="view{{ $agent->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
@@ -36,11 +35,11 @@
                 <td class="text-secondary" width="50%">Phone:</td>
                 <td>{{ $agent->phone }}</td>
               </tr>
-               <tr>
+              <tr>
                 <td class="text-secondary" width="50%">Gender:</td>
                 <td>{{ $agent->gender }}</td>
               </tr>
-               <tr>
+              <tr>
                 <td class="text-secondary" width="50%">DOB:</td>
                 <td>{{ $agent->dob ? date('d/m/Y', strtotime($agent->dob)) : '' }}</td>
               </tr>
@@ -50,7 +49,7 @@
               </tr>
               <tr>
                 <td class="text-secondary" width="50%">LGA, State:</td>
-                <td>{{ $agent->lga ? $agent->lga->name .', '. $agent->lga->state->name : '' }}</td>
+                <td>{{ $agent->area ? $agent->area->name .', '. $agent->area->state->name : '' }}</td>
               </tr>
               <tr>
                 <td class="text-secondary" width="50%">Level:</td>

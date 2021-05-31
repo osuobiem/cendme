@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Admin;
-use App\Agent;
+use App\Shopper;
 use App\Credential;
 use App\User;
 use App\Vendor;
@@ -192,7 +192,7 @@ class AdminController extends Controller
 	public function delete_agent($id)
 	{
 		// Find agent with supplied id
-		$agent = Agent::find($id);
+		$agent = Shopper::find($id);
 
 		if ($agent) {
 

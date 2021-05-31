@@ -36,7 +36,7 @@
               </tr>
               <tr>
                 <td class="text-secondary" width="50%">LGA, State:</td>
-                <td>{{ $vendor->lga->name.', '.$vendor->lga->state->name }}</td>
+                <td>{{ $vendor->area->name.', '.$vendor->area->state->name }}</td>
               </tr>
               <tr>
                 <td class="text-secondary" width="50%">Wallet Balance:</td>

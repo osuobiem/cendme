@@ -67,12 +67,15 @@
   <!-- View Modals Container -->
   <div id="view-modals-h"></div>
 
+  <div id="assign-modals-a"></div>
+
   <script>
     DTInitialized = false;
 
     $(document).ready(function () {
       loadAgents();
       loadViewModals();
+      loadAssignShopperModals();
     });
 
     // Load Agents
@@ -110,6 +113,22 @@
         })
         .catch(err => {
           showAlert(false, 'Could not load shopper views. Please relaod page')
+        })
+    }
+
+    // Load Assign shopper Modals
+    function loadAssignShopperModals() {
+      let url = "{{ url('admin/agents/assign_agents/view-modals') }}";
+
+      $.ajax({
+        type: "GET",
+        url
+      })
+        .then(res => {
+          $('#assign-modals-a').html(res)
+        })
+        .catch(err => {
+          showAlert(false, 'Could not load assign shopper views. Please relaod page')
         })
     }
 

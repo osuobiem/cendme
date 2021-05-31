@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Agent;
+use App\Shopper;
 use App\User;
 use App\Vendor;
 use Illuminate\Support\Facades\Auth;
@@ -91,7 +91,7 @@ class AdminViewController extends Controller
     public function get_agents($limit = false)
     {
         // Fetch agents
-        $agents = $limit ? Agent::limit($limit)->orderBy('created_at', 'DESC')->get() : Agent::orderBy('created_at', 'DESC')->get();
+        $agents = $limit ? Shopper::limit($limit)->orderBy('created_at', 'DESC')->get() : Shopper::orderBy('created_at', 'DESC')->get();
 
         // Return view
         return view($limit ? 'admin.agent.small_list' : 'admin.agent.list', ['agents' => $agents]);
@@ -132,12 +132,21 @@ class AdminViewController extends Controller
     public function agent_view_modals()
     {
         // Fetch Agents
-        $agents = Agent::all();
+        $agents = Shopper::all();
 
         // Return view
         return view('admin.agent.view', ['agents' => $agents]);
     }
 
+    public function assign_agent_view_modals()
+    {
+        // Fetch Agents
+        $agents = Shopper::all();
+
+        // Return view
+        return view('admin.agent.assign_shopper', ['agents' => $agents]);
+    }
+    
     /**
      * Get users view modals
      * @return html
