@@ -235,8 +235,8 @@ Route::group(['prefix' => '/admin'], function () {
         // Get agent view modals
         Route::get('agents/view-modals', 'AdminViewController@agent_view_modals');
 
-        // Get assigned_agent view modals
-        Route::get('assign_agents/view-modals', 'AdminViewController@assign_agent_view_modals');
+        // Get assign_agent view modals
+        Route::get('agents/assign-modals', 'AdminViewController@assign_agent_view_modals');
 
         // Get user view modals
         Route::get('users/view-modals', 'AdminViewController@user_view_modals');

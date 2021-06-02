@@ -61,14 +61,15 @@
     </div>
   </div>
 
+<div id="agent-modals-h"></div>
+
   <!-- Update Modals Container -->
   <div id="update-modals-h"></div>
 
   <!-- View Modals Container -->
   <div id="view-modals-h"></div>
 
-  <div id="assign-modals-a"></div>
-
+  
   <script>
     DTInitialized = false;
 
@@ -101,6 +102,37 @@
     }
 
     // Load View Modals
+    function  loadAssignShopperModals() {
+      let url = "{{ url('admin/agents/assign-modals') }}";
+
+      $.ajax({
+        type: "GET",
+        url
+      })
+        .then(res => {
+          $('#agent-modals-h').html(res)
+        })
+        .catch(err => {
+          showAlert(false, 'Could not load shopper views. Please relaod page')
+        })
+    }
+
+       // Delete Agent Warning
+    function deleteWarn(id) {
+      swal({
+        title: "Are you sure?",
+        icon: "warning",
+        buttons: [true, "Delete"],
+        dangerMode: true,
+      })
+        .then((willDelete) => {
+          if (willDelete) {
+            deleteAgent(id)
+          }
+        });
+    }
+
+      // Load View Modals
     function loadViewModals() {
       let url = "{{ url('admin/agents/view-modals') }}";
 
@@ -116,23 +148,7 @@
         })
     }
 
-    // Load Assign shopper Modals
-    function loadAssignShopperModals() {
-      let url = "{{ url('admin/agents/assign_agents/view-modals') }}";
-
-      $.ajax({
-        type: "GET",
-        url
-      })
-        .then(res => {
-          $('#assign-modals-a').html(res)
-        })
-        .catch(err => {
-          showAlert(false, 'Could not load assign shopper views. Please relaod page')
-        })
-    }
-
-    // Delete Agent Warning
+       // Delete Agent Warning
     function deleteWarn(id) {
       swal({
         title: "Are you sure?",

@@ -142,9 +142,11 @@ class AdminViewController extends Controller
     {
         // Fetch Agents
         $agents = Shopper::all();
+        
+        $supermarkets =Vendor::all();
 
         // Return view
-        return view('admin.agent.assign_shopper', ['agents' => $agents]);
+        return view('admin.agent.assign_shopper', ['agents' => $agents, 'supermarkets' => $supermarkets]);
     }
     
     /**
@@ -155,7 +157,7 @@ class AdminViewController extends Controller
     {
         // Fetch Users
         $users = User::all();
-
+        
         // Return view
         return view('admin.user.view', ['users' => $users]);
     }
