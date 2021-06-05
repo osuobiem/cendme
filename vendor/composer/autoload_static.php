@@ -112,6 +112,7 @@ class ComposerStaticInit72e41f2904316d1578ef6b5964702c9e
         'ed962a97bd972bc82007176b647d4e36' => __DIR__ . '/..' . '/facade/ignition/src/helpers.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
+        '8fde5feda9697fe0ee53a3938c839fb0' => __DIR__ . '/../..' . '/app/Helpers/Helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -785,6 +786,7 @@ class ComposerStaticInit72e41f2904316d1578ef6b5964702c9e
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'App\\Shopper' => __DIR__ . '/../..' . '/app/Shopper.php',
         'App\\ShopperLevel' => __DIR__ . '/../..' . '/app/ShopperLevel.php',
+        'App\\ShopperVendor' => __DIR__ . '/../..' . '/app/ShopperVendor.php',
         'App\\State' => __DIR__ . '/../..' . '/app/State.php',
         'App\\SubCategory' => __DIR__ . '/../..' . '/app/SubCategory.php',
         'App\\Transaction' => __DIR__ . '/../..' . '/app/Transaction.php',

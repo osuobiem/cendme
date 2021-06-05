@@ -48,4 +48,17 @@ class Shopper extends Authenticatable
     {
         return $this->hasMany('App\Order');
     }
+
+    //Relationship with Shoppers
+    public function vendors()
+    {
+        return $this->belongsToMany('App\Vendor');
+    }
+
+    //Vendor that doesnot exist for this shopper
+    public function supermarkets()
+    {
+        $ids = $this->vendors()->pluck('vendor_id');
+        return Vendor::whereNotIn('id', $ids)->get();
+    }
 }

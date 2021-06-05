@@ -141,9 +141,11 @@ class AdminViewController extends Controller
     public function assign_agent_view_modals()
     {
         // Fetch Agents
-        $agents = Shopper::all();
-        
+        $agents = Shopper::with('vendors')->get();
+
+        //Fetch vendor
         $supermarkets =Vendor::all();
+
 
         // Return view
         return view('admin.agent.assign_shopper', ['agents' => $agents, 'supermarkets' => $supermarkets]);

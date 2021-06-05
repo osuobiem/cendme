@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Admin;
 use App\Shopper;
 use App\Credential;
+use App\ShopperVendor;
 use App\User;
 use App\Vendor;
 use Illuminate\Http\Request;
@@ -139,6 +140,52 @@ class AdminController extends Controller
 	}
 	// ---------------------
 
+	// ASSIGN SHOPPER
+	/**
+	 * assign shopper
+	 * @return json
+	 */
+	public function assign_shopper(Request $request)
+	{ 
+		// Make and return validation rules
+		$validate = Validator::make($request->all(), [
+			'supermarket' => 'required'
+		]);
+
+		// Run validation
+		if ($validate->fails()) {
+			return response()->json([
+				"success" => false,
+				"message" => $validate->errors()
+			], 400);
+		}
+
+
+				try {
+					$payload = [
+						'shopper_id' => $request->agent,
+						'vendor_id' => $request->supermarket
+					];
+					
+					$inserted = ShopperVendor::create($payload);
+					if($inserted)
+					{
+
+						return response()->json([
+						'success' => true,
+						'message' => 'Shopper assigned successfully'
+					]);
+					}else{
+
+					return response()->json([
+						'success' => false,
+						'message' => 'Error Assigning shopper to supermarket'
+					]);
+					}
+				} catch (\Exception $e) {
+					Log::error($e);
+			} 
+	}
 
 	// VENDOR
 	/**

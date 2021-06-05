@@ -40,4 +40,10 @@ class Vendor extends Authenticatable
     public function v_orders() {
         return $this->hasMany('App\OrderVendor');
     }
+
+    //Relationship with Vendors
+    public function shoppers()
+    {
+        return $this->belongsToMany('App\Shopper');
+    }
 }

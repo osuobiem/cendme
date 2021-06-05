@@ -56,6 +56,7 @@ return array(
     'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
     'App\\Shopper' => $baseDir . '/app/Shopper.php',
     'App\\ShopperLevel' => $baseDir . '/app/ShopperLevel.php',
+    'App\\ShopperVendor' => $baseDir . '/app/ShopperVendor.php',
     'App\\State' => $baseDir . '/app/State.php',
     'App\\SubCategory' => $baseDir . '/app/SubCategory.php',
     'App\\Transaction' => $baseDir . '/app/Transaction.php',

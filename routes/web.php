@@ -198,6 +198,8 @@ Route::group(['prefix' => '/admin'], function () {
 
         // Delete User
         Route::delete('users/delete/{id}', 'AdminController@delete_user');
+
+        Route::post('assign-shoper', 'AdminController@assign_shopper');
         // --------------
 
 
