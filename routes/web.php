@@ -193,6 +193,9 @@ Route::group(['prefix' => '/admin'], function () {
         // Delete Vendor
         Route::delete('vendors/delete/{id}', 'AdminController@delete_vendor');
 
+        // Delete Assigned Shopper
+        Route::delete('assigned/delete/{vendorID}/{shopperID}', 'AdminController@delete_assigned_shopper');
+
         // Delete Agent
         Route::delete('agents/delete/{id}', 'AdminController@delete_agent');
 
@@ -216,6 +219,9 @@ Route::group(['prefix' => '/admin'], function () {
         // Users Page
         Route::get('users', 'AdminViewController@users');
 
+        //Assigned Shoppers page
+        Route::get('assigned', 'AdminViewController@Assigned_shoppers');
+
         // Account Page
         Route::get('account', 'AdminViewController@account');
 
@@ -231,8 +237,14 @@ Route::group(['prefix' => '/admin'], function () {
         // Get all Users
         Route::get('users/get/{limit?}', 'AdminViewController@get_users');
 
+        //Get all Assigned Shopper
+        Route::get('assigned/get/{limit?}', 'AdminViewController@get_assigned');
+
         // Get vendor view modals
         Route::get('vendors/view-modals', 'AdminViewController@vendor_view_modals');
+
+        //Get list of Shoppers assigned to Supermarket
+        Route::get('vendors/view-shoppers', 'AdminViewController@view_shoppers');
 
         // Get agent view modals
         Route::get('agents/view-modals', 'AdminViewController@agent_view_modals');

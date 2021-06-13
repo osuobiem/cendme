@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Shopper;
+use App\ShopperVendor;
 use App\User;
 use App\Vendor;
 use Illuminate\Support\Facades\Auth;
@@ -125,6 +126,13 @@ class AdminViewController extends Controller
         return view('admin.vendor.view', ['vendors' => $vendors]);
     }
 
+    public function view_shoppers()
+    {
+        $vendors = Vendor::all();
+
+        return view('admin.vendor.supermarket', ['vendors' => $vendors]);
+    }
+
     /**
      * Get agent view modals
      * @return html
@@ -138,19 +146,23 @@ class AdminViewController extends Controller
         return view('admin.agent.view', ['agents' => $agents]);
     }
 
+    /**
+     * Assign shopper view modals
+     * @return html
+     */    
     public function assign_agent_view_modals()
     {
         // Fetch Agents
         $agents = Shopper::with('vendors')->get();
 
         //Fetch vendor
-        $supermarkets =Vendor::all();
+        $supermarkets = Vendor::all();
 
 
         // Return view
         return view('admin.agent.assign_shopper', ['agents' => $agents, 'supermarkets' => $supermarkets]);
     }
-    
+
     /**
      * Get users view modals
      * @return html
@@ -159,7 +171,7 @@ class AdminViewController extends Controller
     {
         // Fetch Users
         $users = User::all();
-        
+
         // Return view
         return view('admin.user.view', ['users' => $users]);
     }

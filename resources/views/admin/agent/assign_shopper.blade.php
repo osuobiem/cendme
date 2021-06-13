@@ -3,10 +3,9 @@
 <div class="modal fade" id="assign{{ $agent->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
-      <h6 style="font-weight: bold; font-size:18px; text-align:center; margin-top:5px">Assign Shopper to Supermarket</h6>
-      <div class="modal-header mt-5">
+      <div class="modal-header">
         <h5 class="modal-title ml-auto" id="exampleModalLabel">
-          {{ strlen($agent->firstname) < 1 && strlen($agent->lastname) < 1 ? $agent->email : $agent->firstname.' '.$agent->lastname }}
+          Assign Shopper to Supermarket
         </h5>
         <button type="button" class="close" id="a-close-modal" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -16,11 +15,33 @@
         @csrf
         <div class="modal-body">
           <div class="row">
+            <div class="col-md-12 text-center py-2">
+              <h5>
+                {{ strlen($agent->firstname) < 1 && strlen($agent->lastname) < 1 ? $agent->email : $agent->firstname.' '.$agent->lastname }}
+              </h5>
+            </div>
             <div class="col-md-12">
               <div class="img-style-view" style="background: url('{{ Storage::url('agents/'.$agent->photo) }}'); 
             width: 32% !important; height: 150px !important"></div>
             </div>
             <input type="hidden" name="agent" id="agent" value="{{$agent->id}}" />
+            <div class="col-md-12 text-center mt-4">
+              <p style="text-align: center;"> List of assigned supperMarket </p>
+            </div>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>S/N</th>
+                  <th>Business Name</th>
+                </tr>
+              </thead>
+              @foreach($agent->vendors as $sn => $shopper)
+              <tr>
+                <td width="30%">{{$sn+1 }}</td>
+                <td>{{ ucwords($shopper->business_name) }}</td>
+              </tr>
+              @endforeach
+            </table>
             <div class="col-lg-12 mt-3">
               <div class="form-group mb-3">
                 <label class="form-label">Supermarket</label>

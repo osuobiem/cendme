@@ -65,12 +65,15 @@
   <!-- View Modals Container -->
   <div id="view-modals-h"></div>
 
+<!-- Shoppers Modals Container -->
+  <div id="shopper-modals-h"></div>
   <script>
     DTInitialized = false;
 
     $(document).ready(function () {
       loadVendors();
       loadViewModals();
+      loadShoppersModals();
     });
 
     // Load Vendors
@@ -111,6 +114,22 @@
         })
     }
 
+     // Load Shoppers Modal
+    function loadShoppersModals() {
+      let url = "{{ url('admin/vendors/view-shoppers') }}";
+
+      $.ajax({
+        type: "GET",
+        url
+      })
+        .then(res => {
+          $('#shopper-modals-h').html(res)
+        })
+        .catch(err => {
+          showAlert(false, 'Could not load Shoppers. Please relaod page')
+        })
+    }
+
     // Delete Vendor Warning
     function deleteWarn(id) {
       swal({
@@ -143,6 +162,7 @@
         })
     }
 
+    
   </script>
 
 </main>

@@ -311,5 +311,47 @@ class AdminController extends Controller
 			);
 		}
 	}
+
+	// ASSIGNED SHOPPER
+	/**
+	 * Delete Assigned Shopper
+	 * @param int $id Asssigned Shopper ID
+	 * @return json
+	 */
+	public function delete_assigned_shopper($vendorID, $shopperID)
+	{
+		//Find vendor with supplied id
+	$assignedShopper = ShopperVendor::whereVendorId($vendorID)->whereShopperId($shopperID)->first();
+//return $assignedShopper;
+
+		if ($assignedShopper) {
+			
+			// Try Assigned Shopper delete or catch error if any
+			try {
+				$assignedShopper->delete();
+				return response()->json([
+					'success' => true,
+					'message' => 'Shopper Removed Successfully'
+				]);
+			} catch (\Throwable $th) {
+				Log::error($th);
+
+				// Return failure response
+				return response()->json([
+					'success' => false,
+					'message' => 'Internal Server Error'
+				]);
+			}
+		} else {
+			return response()->json(
+				[
+					'success' => false,
+					'message' => 'Assigned Shopper not Found'
+				],
+				404
+			);
+		}
+	}
+
 	// ------------
 }

@@ -122,8 +122,8 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
+
+      
 
   <script>
     $(document).ready(function () {
@@ -177,6 +177,22 @@
         })
         .catch(err => {
           showAlert(false, 'Could not load users. Please relaod page')
+        })
+    }
+
+     // Load Vendors
+    function loadAssignedShoppers() {
+      let url = "{{ url('admin/vendors/get/6') }}";
+
+      $.ajax({
+        type: "GET",
+        url
+      })
+        .then(res => {
+          $('#assigned').html(res)
+        })
+        .catch(err => {
+          showAlert(false, 'Could not load vendors. Please relaod page')
         })
     }
   </script>

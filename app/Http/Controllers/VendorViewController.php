@@ -7,9 +7,11 @@ use App\Bank;
 use App\Category;
 use App\Product;
 use App\State;
+use Vendor;
 use App\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class VendorViewController extends Controller
 {
@@ -222,4 +224,5 @@ class VendorViewController extends Controller
             return view('vendor.areas', ['areas' => $areas]);
         }
     }
+    
 }
