@@ -26,7 +26,7 @@
             </div>
             <input type="hidden" name="agent" id="agent" value="{{$agent->id}}" />
             <div class="col-md-12 text-center mt-4">
-              <p style="text-align: center;"> List of assigned supperMarket </p>
+              <p style="text-align: center;"> List of assigned Supermarket </p>
             </div>
             <table class="table">
               <thead>
@@ -49,7 +49,7 @@
                   @if($agent->vendors->count() >= 2)
                   <option disabled selected>Limit exceeded!, A shopper can only be assign to two supermarkets.</option>
                   @else
-                  <option disabled selected>select Supermarket</option>
+                  <option disabled selected>Select Supermarket</option>
                   @foreach ($agent->supermarkets() as $supermarket)
                   <option value="{{$supermarket->id}}">{{$supermarket->business_name}}</option>
                   @endforeach
