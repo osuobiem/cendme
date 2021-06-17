@@ -452,17 +452,17 @@ class UserController extends Controller
         }
 
         $order->status = 'delivered';
-        $shopper = $order->shopper;
+        // $shopper = $order->shopper;
         
-        $amount = json_decode($order->amount);
-        $shopper_amount = $amount->products + $amount->shopper_transport_fare + ($amount->products * ($shopper->level->commision/100));
+        // $amount = json_decode($order->amount);
+        // $shopper_amount = $amount->products + $amount->shopper_transport_fare + ($amount->products * ($shopper->level->commision/100));
 
-        $shopper->balance += $shopper_amount;
-        $shopper->free = true;
+        // $shopper->balance += $shopper_amount;
+        // $shopper->free = true;
 
         // Try Save
         try {
-            $shopper->save();
+            // $shopper->save();
             $order->save();
 
             return response()->json([

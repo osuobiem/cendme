@@ -490,23 +490,23 @@ class OrderController extends Controller
         $user = $order->user;
 
         // Confirm shopper eligibility
-        if ($shopper->area_id != $user->area_id || $shopper->balance < 5000) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You are not eligible to accept this request'
-            ]);
-        }
+        // if ($shopper->area_id != $user->area_id || $shopper->balance < 5000) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'You are not eligible to accept this request'
+        //     ]);
+        // }
 
         // Check if shopper has an accepted order
-        $a_order = Order::where('shopper_id', $shopper->id)
-            ->where('status', 'accepted')
-            ->orWhere('status', 'in transit')->first();
-        if ($a_order) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You already have a pending order'
-            ]);
-        }
+        // $a_order = Order::where('shopper_id', $shopper->id)
+        //     ->where('status', 'accepted')
+        //     ->orWhere('status', 'in transit')->first();
+        // if ($a_order) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'You already have a pending order'
+        //     ]);
+        // }
 
         $order->shopper_id = $shopper->id;
         $order->status = 'accepted';
@@ -554,7 +554,9 @@ class OrderController extends Controller
         }
 
         $user->photo = url('/') . Storage::url('users/' . $user->photo);
-        $shopper->free = false;
+        // $shopper->free = false;
+        $amount = json_decode($order->amount);
+        $shopper->balance += $amount->products + $amount->shopper_transport_fare;
 
         try {
             // Update order data

@@ -151,7 +151,16 @@ class AuthController extends Controller
                         $originator->balance -= $amount;
                     }
 
-                    $shoppers = $this->get_eligible_shoppers($originator->area_id);
+                    $shoppers = [];
+                    $products = json_decode($order->products);
+
+                    foreach ($products as $key => $product) {
+                        $vendor = Product::findOrFail($product->id)->vendor;
+                        
+                        if($key == 0) $shoppers = $vendor->shoppers;
+                    }
+
+                    // $shoppers = $this->get_eligible_shoppers($originator->area_id);
 
                     // Check if any shopper eligible
                     if (count($shoppers) < 1) {
