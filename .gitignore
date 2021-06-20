@@ -12,8 +12,4 @@ yarn-error.log
 .htaccess
 template
 
-vendor/fzaninotto/faker/.travis/xdebug.sh
-vendor/kreait/firebase-php/src/Firebase/Database/Query/Filter/EndBefore.php
-vendor/kreait/firebase-php/src/Firebase/Database/Query/Filter/StartAfter.php
-vendor/markbaker/complex/.github/workflows/main.yml
-vendor/markbaker/matrix/classes/src/Div0Exception.php
+vendor
