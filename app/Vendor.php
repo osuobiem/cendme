@@ -44,6 +44,6 @@ class Vendor extends Authenticatable
     //Relationship with Vendors
     public function shoppers()
     {
-        return $this->belongsToMany('App\Shopper', 'App\Vendor');
+        return $this->belongsToMany('App\Shopper', 'shopper_vendor');
     }
 }
