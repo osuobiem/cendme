@@ -11,7 +11,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form id="assign-shopper-form">
+      <form class="assigned-shopper-form-v">
         @csrf
         <div class="modal-body">
           <div class="row">
@@ -24,7 +24,7 @@
               <div class="img-style-view" style="background: url('{{ Storage::url('agents/'.$agent->photo) }}'); 
             width: 32% !important; height: 150px !important"></div>
             </div>
-            <input type="hidden" name="agent" id="agent" value="{{$agent->id}}" />
+            <input type="hidden" name="agent"  value="{{$agent->id}}" />
             <div class="col-md-12 text-center mt-4">
               <p style="text-align: center;"> List of assigned Supermarket </p>
             </div>
@@ -45,7 +45,7 @@
             <div class="col-lg-12 mt-3">
               <div class="form-group mb-3">
                 <label class="form-label">Supermarket</label>
-                <select id="supermarket" class="form-control" name="supermarket">
+                <select class="form-control" name="supermarket">
                   @if($agent->vendors->count() >= 2)
                   <option disabled selected>Limit exceeded!, A shopper can only be assign to two supermarkets.</option>
                   @else
@@ -77,14 +77,14 @@
 <script>
   // submit assign shopper form
   // $(document).ready(function() {
-  $('#assign-shopper-form').submit(el => {
+  $('.assigned-shopper-form-v').submit(el => {
     // alert("Yess")
     el.preventDefault();
 
     // offError();
 
     let data = new FormData(el.target)
-    let url = "{{ url('admin/assign-shoper') }}"
+    let url = "{{ url('admin/assign-shopper') }}"
 
     // spin()
 
