@@ -7,11 +7,12 @@
         <h5 class="modal-title ml-auto" id="exampleModalLabel">
           Assign Shopper to Supermarket
         </h5>
-        <button type="button" class="close" id="a-close-modal" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close a-close-modal" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form id="assign-shopper-form">
+      
+      <form id="assigned-shopper-form-{{ $agent->id }}" onsubmit="assignShopper(event)">
         @csrf
         <div class="modal-body">
           <div class="row">
@@ -24,7 +25,7 @@
               <div class="img-style-view" style="background: url('{{ Storage::url('agents/'.$agent->photo) }}'); 
             width: 32% !important; height: 150px !important"></div>
             </div>
-            <input type="hidden" name="agent" id="agent" value="{{$agent->id}}" />
+            <input type="hidden" name="agent"  value="{{$agent->id}}" />
             <div class="col-md-12 text-center mt-4">
               <p style="text-align: center;"> List of assigned Supermarket </p>
             </div>
@@ -45,7 +46,7 @@
             <div class="col-lg-12 mt-3">
               <div class="form-group mb-3">
                 <label class="form-label">Supermarket</label>
-                <select id="supermarket" class="form-control" name="supermarket">
+                <select class="form-control" name="supermarket">
                   @if($agent->vendors->count() >= 2)
                   <option disabled selected>Limit exceeded!, A shopper can only be assign to two supermarkets.</option>
                   @else
@@ -69,65 +70,61 @@
           </div>
         </div>
       </form>
+
     </div>
   </div>
 </div>
 @endforeach
 
 <script>
-  // submit assign shopper form
-  // $(document).ready(function() {
-  $('#assign-shopper-form').submit(el => {
-    // alert("Yess")
-    el.preventDefault();
 
-    // offError();
+    // submit assign shopper form
+    function assignShopper(el) {
+      el.preventDefault();
 
-    let data = new FormData(el.target)
-    let url = "{{ url('admin/assign-shoper') }}"
+      // offError();
 
-    // spin()
+      let data = new FormData(el.target)
+      let url = "{{ url('admin/assign-shopper') }}"
 
-    $.ajax({
-        type: "POST",
-        url,
-        data,
-        processData: false,
-        contentType: false,
-      })
-      .then(data => {
+      // spin()
 
-        showAlert(true, data.message)
+      $.ajax({
+          type: "POST",
+          url,
+          data,
+          processData: false,
+          contentType: false,
+        })
+        .then(data => {
 
-        setTimeout(() => {
-          $('#a-close-modal').click()
-          loadAgents()
-          loadViewModals()
-          loadAssignShopperModals()
-        }, 1000)
-      })
+          $('.a-close-modal').click()
 
-      .catch(err => {
-        // spin()
+          setTimeout(() => {
+            showAlert(true, data.message)
+            loadAssignShopperModals()
+          }, 1000)
+        })
 
-        if (err.status === 400) {
-          errors = err.responseJSON.message;
+        .catch(err => {
+          // spin()
 
-          if (typeof errors === "object") {
-            for (const [key, value] of Object.entries(errors)) {
-              $('#a-' + key).html('');
-              [...value].forEach(m => {
-                $('#a-' + key).append(`<p>${m}</p>`)
-              })
+          if (err.status === 400) {
+            errors = err.responseJSON.message;
+
+            if (typeof errors === "object") {
+              for (const [key, value] of Object.entries(errors)) {
+                $('#a-' + key).html('');
+                [...value].forEach(m => {
+                  $('#a-' + key).append(`<p>${m}</p>`)
+                })
+              }
+            } else {
+              showAlert(false, errors)
             }
           } else {
-            showAlert(false, errors)
+            showAlert(false, "Oops! Something's not right. Try Again")
           }
-        } else {
-          showAlert(false, "Oops! Something's not right. Try Again")
-        }
-      })
-  })
-
-  // });
+        })
+    }
 </script>
