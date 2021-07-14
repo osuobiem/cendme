@@ -77,6 +77,9 @@ class AuthController extends Controller
 
         $data = [];
 
+        $request['status'] = $request['status'] == 'true' ? true : false;
+        $request['direct_pay'] = $request['direct_pay'] == 'true' ? true : false;
+
         // Initial response message
         $message = 'Transaction Finalized';
 
@@ -251,9 +254,8 @@ class AuthController extends Controller
         return Validator::make($request->all(), [
             'type' => 'required|in:' . $types,
             'amount' => 'required|numeric',
-            'status' => 'required|boolean',
-            'ref' => 'required',
-            'direct_pay' => 'boolean'
+            'status' => 'required',
+            'ref' => 'required'
         ]);
     }
 
