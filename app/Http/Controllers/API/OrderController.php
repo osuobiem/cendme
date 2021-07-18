@@ -99,33 +99,35 @@ class OrderController extends Controller
             }
         }
 
-        $distance = 0;
+        // $distance = 0;
 
         /* Loop through vendor addresses and calculate probable product 
         purchase travel distance by shopper */
-        if (count($vendor_addresses) > 1) {
-            foreach ($vendor_addresses as $key => $address) {
-                $distance +=
-                    $key + 1 != count($vendor_addresses) ?
-                    $this->calculate_distance($address, $vendor_addresses[$key + 1])
-                    : $this->calculate_distance($address, $user->address . ', ' . $area->name . ', ' . $state->name);
-            }
-        } else if (count($vendor_addresses) == 1) {
-            $distance = $this->calculate_distance($vendor_addresses[0], $user->address . ', ' . $area->name . ', ' . $state->name);
-        } else {
-            return ['success' => false, 'status' => 500, 'message' => 'User cart is empty'];
-        }
+        // if (count($vendor_addresses) > 1) {
+        //     foreach ($vendor_addresses as $key => $address) {
+        //         $distance +=
+        //             $key + 1 != count($vendor_addresses) ?
+        //             $this->calculate_distance($address, $vendor_addresses[$key + 1])
+        //             : $this->calculate_distance($address, $user->address . ', ' . $area->name . ', ' . $state->name);
+        //     }
+        // } else if (count($vendor_addresses) == 1) {
+        //     $distance = $this->calculate_distance($vendor_addresses[0], $user->address . ', ' . $area->name . ', ' . $state->name);
+        // } else {
+        //     return ['success' => false, 'status' => 500, 'message' => 'User cart is empty'];
+        // }
 
         // Convert m to km
-        $distance = $distance / 1000;
+        // $distance = $distance / 1000;
 
         // Calculate shopper transport fare
-        if(is_int($distance)) {
-            $fare = ( ($distance-1)*100 ) + 200;
-        }
-        else {
-            $fare = (((int) $distance) * 100) + 200;
-        }
+        // if(is_int($distance)) {
+        //     $fare = ( ($distance-1)*100 ) + 200;
+        // }
+        // else {
+        //     $fare = (((int) $distance) * 100) + 200;
+        // }
+
+        $fare = 500;
         
         // Total of transaction
         $total = ($price_accumulator * 1.1) + $fare;
@@ -134,7 +136,7 @@ class OrderController extends Controller
         $amount = [
             "products" => $price_accumulator,
             "service_charge" => $price_accumulator * 0.1, // NOTE: Percentage value should retrieved from DB
-            "shopper_transport_fare" => $fare,
+            "delivery_fee" => $fare,
             "total" => $total
         ];
 
