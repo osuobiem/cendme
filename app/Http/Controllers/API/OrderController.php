@@ -136,7 +136,7 @@ class OrderController extends Controller
         $amount = [
             "products" => $price_accumulator,
             "service_charge" => $price_accumulator * 0.1, // NOTE: Percentage value should retrieved from DB
-            "delivery_fee" => $fare,
+            "shopper_transport_fare" => $fare,
             "total" => $total
         ];
 
