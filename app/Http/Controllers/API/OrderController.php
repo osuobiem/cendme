@@ -558,7 +558,7 @@ class OrderController extends Controller
         $user->photo = url('/') . Storage::url('users/' . $user->photo);
         // $shopper->free = false;
         $amount = json_decode($order->amount);
-        $shopper->balance += $amount->products + $amount->shopper_transport_fare;
+        $shopper->balance += $amount->products;
 
         try {
             // Update order data
