@@ -22,7 +22,7 @@ class ProductController extends Controller
         $products = Product::where('vendor_id', $vendor_id)
             ->where('quantity', '>', 0)
             ->orderBy('updated_at', 'desc')
-            ->take(15)->get();
+            ->take(5)->get();
 
         return response()->json([
             'success' => true,
@@ -90,7 +90,7 @@ class ProductController extends Controller
                 ->where('quantity', '>', 0)
                 ->where('vendor_id', $vendor_id);
         } elseif ($category_id == 'paginate') {
-            $products = $products->where('id', '>', $subcategory_id)->take(15)->get();
+            $products = $products->where('id', '>', $subcategory_id)->take(5)->get();
             return $this->return_products($products);
         }
 
@@ -98,17 +98,17 @@ class ProductController extends Controller
         if ($category_id != 'paginate' && $subcategory_id && $subcategory_id != 'paginate') {
             $products = Product::where('vendor_id', $vendor_id)->where('quantity', '>', 0)->where('subcategory_id', $subcategory_id);
         } elseif ($subcategory_id == 'paginate') {
-            $products = Product::where('vendor_id', $vendor_id)->where('quantity', '>', 0)->where('id', '>', $paginate)->take(15)->get();
+            $products = Product::where('vendor_id', $vendor_id)->where('quantity', '>', 0)->where('id', '>', $paginate)->take(5)->get();
             return $this->return_products($products);
         }
 
         // Check for pagination
         if ($paginate == 'paginate') {
-            $products = $products->where('id', '>', $last_id)->take(15)->get();
+            $products = $products->where('id', '>', $last_id)->take(5)->get();
             return $this->return_products($products);
         }
 
-        $products = $products->take(15)->get();
+        $products = $products->take(5)->get();
         return $this->return_products($products);
     }
 
