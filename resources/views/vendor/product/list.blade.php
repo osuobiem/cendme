@@ -1,6 +1,6 @@
-@foreach ($products as $product)
+@foreach ($products as $key => $product)
 <tr>
-  <td><div class="prod-img-sm" style="background: url('{{ Storage::url('products/'.$product->photo) }}')"></td>
+  <td><div class="prod-img-sm" id="prod-list-img-{{ $product->id }}" style="background: url('{{ Storage::url('products/'.$product->photo) }}')"></td>
   <td>{{ $product->title }}</td>
   <td>₦{{ number_format($product->price) }}</td>
   <td class="{{ $product->quantity < 10 ? 'text-danger':'' }}">{{ $product->quantity }}</td>
@@ -11,4 +11,11 @@
     <button class="btn btn-sm btn-outline-danger" title="Delete Product" onclick="deleteWarn({{ $product->id }})"><i class="fas fa-trash"></i></button>
   </td>
 </tr>
+
+@if($key+1 == count($products))
+  <script>
+    lastId = `{{ $product->id }}`;
+  </script>
+@endif
+
 @endforeach

@@ -107,15 +107,23 @@ class VendorViewController extends Controller
 
     /**
      * Get all products
+     * @param int $last_id Last product id for pagination
      * @return html
      */
-    public function get_products()
+    public function get_products($last_id = 0)
     {
         // Extract vendor ID
         $vendor_id = Auth::user()->id;
 
         // Fetch products
-        $products = Product::where('vendor_id', $vendor_id)->orderBy('created_at', 'desc')->get();
+        if($last_id == 0) {
+            $products = Product::where('vendor_id', $vendor_id)->take(10)->get();
+        }
+        else {
+            $products = Product::where('vendor_id', $vendor_id)
+            ->where('id', '>', $last_id)
+            ->take(10)->get();
+        }
 
         // Return view
         return view('vendor.product.list', ['products' => $products]);
@@ -136,15 +144,23 @@ class VendorViewController extends Controller
 
     /**
      * Get update modals
+     * @param int $last_id Last product id for pagination
      * @return html
      */
-    public function product_update_modals()
+    public function product_update_modals($last_id = 0)
     {
         // Extract vendor ID
         $vendor_id = Auth::user()->id;
 
         // Fetch products
-        $products = Product::where('vendor_id', $vendor_id)->get();
+        if($last_id == 0) {
+            $products = Product::where('vendor_id', $vendor_id)->take(10)->get();
+        }
+        else {
+            $products = Product::where('vendor_id', $vendor_id)
+            ->where('id', '>', $last_id)
+            ->take(10)->get();
+        }
 
         // Fetch categories
         $categories = Category::get();
@@ -160,15 +176,23 @@ class VendorViewController extends Controller
 
     /**
      * Get view modals
+     * @param int $last_id Last product id for pagination
      * @return html
      */
-    public function product_view_modals()
+    public function product_view_modals($last_id = 0)
     {
         // Extract vendor ID
         $vendor_id = Auth::user()->id;
 
         // Fetch products
-        $products = Product::where('vendor_id', $vendor_id)->get();
+        if($last_id == 0) {
+            $products = Product::where('vendor_id', $vendor_id)->take(10)->get();
+        }
+        else {
+            $products = Product::where('vendor_id', $vendor_id)
+            ->where('id', '>', $last_id)
+            ->take(10)->get();
+        }
 
         // Return view
         return view('vendor.product.view', ['products' => $products]);

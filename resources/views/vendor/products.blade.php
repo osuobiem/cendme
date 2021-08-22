@@ -61,6 +61,10 @@
                 </tbody>
               </table>
             </div>
+
+            <div class="w-100 text-center" style="margin-top: 15px;">
+              <a href="#" onclick="loadMoreProducts()" data-toggle="modal" class="view-btn hover-btn px-5"> Load More <i class="fas fa-angle-down"></i></a>
+            </div>
           </div>
         </div>
       </div>
@@ -80,7 +84,9 @@
   @show
 
   <script>
+    lastId = 0;
     DTInitialized = false;
+    fillID = 0;
 
     $(document).ready(function() {
       loadProducts();
@@ -90,25 +96,33 @@
       tagFormListeners()
     });
 
+    function loadMoreProducts() {
+      loadProducts();
+      loadUpdateModals();
+      loadViewModals();
+    }
+
     // Load Products
     function loadProducts() {
-      let url = "{{ url('vendor/products/get') }}";
+      let url = "{{ url('vendor/products/get') }}/"+lastId;
 
       $.ajax({
           type: "GET",
           url
         })
         .then(res => {
-          $('#products').html(res)
-          if (!DTInitialized) {
-            order = '{{ $sort }}' == true ? [
-              [3, 'asc']
-            ] : [];
-            $('#products-table').DataTable({
-              "order": order
-            });
-            DTInitialized = true;
+          if (DTInitialized) {
+            $('#products-table').DataTable().destroy();
           }
+          (lastId == 0) ? $('#products').html(res) : $('#products').append(res)
+
+          order = '{{ $sort }}' == true ? [
+            [3, 'asc']
+          ] : [];
+          $('#products-table').DataTable({
+            "order": order
+          });
+          DTInitialized = true;
         })
         .catch(err => {
           showAlert(false, 'Could not load products. Please relaod page')
@@ -151,6 +165,7 @@
     // Fill Picked Image in Div
     function fillImage(input, fillId) {
       let img = document.getElementById(fillId)
+      fillID = fillId
 
       if (input.files && input.files[0]) {
         if (input.files[0].size > 5120000) {
@@ -199,14 +214,14 @@
 
     // Load Update Modals
     function loadUpdateModals() {
-      let url = "{{ url('vendor/products/update-modals') }}";
+      let url = "{{ url('vendor/products/update-modals') }}/"+lastId;
 
       $.ajax({
           type: "GET",
           url
         })
         .then(res => {
-          $('#update-modals-h').html(res)
+          (lastId == 0) ? $('#update-modals-h').html(res) : $('#update-modals-h').append(res)
         })
         .catch(err => {
           showAlert(false, 'Could not load product edits. Please relaod page')
@@ -215,14 +230,14 @@
 
     // Load View Modals
     function loadViewModals() {
-      let url = "{{ url('vendor/products/view-modals') }}";
+      let url = "{{ url('vendor/products/view-modals') }}/"+lastId;
 
       $.ajax({
           type: "GET",
           url
         })
         .then(res => {
-          $('#view-modals-h').html(res)
+          (lastId == 0) ? $('#view-modals-h').html(res) : $('#view-modals-h').append(res)
         })
         .catch(err => {
           showAlert(false, 'Could not load product views. Please relaod page')

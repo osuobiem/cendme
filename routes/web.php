@@ -95,10 +95,10 @@ Route::group(['prefix' => '/vendor'], function () {
         Route::get('wallet', 'VendorViewController@wallet');
 
         // Get all Products
-        Route::get('products/get', 'VendorViewController@get_products');
+        Route::get('products/get/{last_id?}', 'VendorViewController@get_products');
 
         // Get product update modals
-        Route::get('products/update-modals', 'VendorViewController@product_update_modals');
+        Route::get('products/update-modals/{last_id?}', 'VendorViewController@product_update_modals');
 
         // Get single product view modals
         Route::get('products/add-form', 'VendorViewController@product_add_form'); 
@@ -110,7 +110,7 @@ Route::group(['prefix' => '/vendor'], function () {
 
 
         // Get product view modals
-        Route::get('products/view-modals', 'VendorViewController@product_view_modals');
+        Route::get('products/view-modals/{last_id?}', 'VendorViewController@product_view_modals');
 
         // Get all Categories
         Route::get('categories', 'VendorViewController@get_categories');
