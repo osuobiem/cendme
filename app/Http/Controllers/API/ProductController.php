@@ -143,8 +143,9 @@ class ProductController extends Controller
         
         $results = Product::where('vendor_id', $vendor_id)
             ->where('quantity', '>', 0)
-            ->where('title', 'LIKE', '%' . $keyword . '%')->get();
-            $results = Product::paginate(12);
+            ->where('title', 'LIKE', '%' . $keyword . '%')
+            ->take(5)->get();
+            
         return response()->json([
             'success' => true,
             'message' => 'Search Successful',
