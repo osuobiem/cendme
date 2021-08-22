@@ -5,7 +5,9 @@
           <div class="col-md-4 col-sm-4 mt-2 text-center">
             <p class="m-0" style="color:#424361">Contact us</p>
             <ul class="call-email-alt">
-              <li><a href="tel:+234 801 2345 678" class="callemail"><i class="uil uil-phone"></i>+234 801 2345 678</a>
+              <li><a href="tel:+234 703 680 2353" class="callemail"><i class="uil uil-phone"></i>+234 703 680 2353</a>
+              </li>
+              <li><a href="tel:+234 706 401 2504" class="callemail"><i class="uil uil-phone"></i>+234 706 401 2504</a>
               </li>
               <li><a href="mailto:info@cendme.com" class="callemail"><i
                     class="uil uil-envelope-alt"></i>info@cendme.com</a></li>

@@ -47,7 +47,7 @@
           <div class="about-content">
             <p>Cendme is a mobile app, where you can order
               groceries and have them delivered to your
-              door in as little as 1 hour!</p>
+              door in good time!</p>
           </div>
         </div>
         <div class="col-md-6">
@@ -70,9 +70,9 @@
         <div class="col-lg-3 col-md-6">
           <div class="about-step">
             <i class="uil uil-stopwatch why-ico"></i>
-            <h4>Your shopping in 1 hour</h4>
+            <h4>Shopping with ease</h4>
             <p>Do not ever wait all afternoon to reach the purchase.
-              We'll deliver it to you whenever you want in one-hour intervals.</p>
+              We'll deliver it to you whenever you want in good time.</p>
           </div>
         </div>
         <div class="col-lg-3 col-md-6">
