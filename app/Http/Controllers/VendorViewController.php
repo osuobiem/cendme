@@ -9,6 +9,7 @@ use App\Product;
 use App\State;
 use Vendor;
 use App\SubCategory;
+use App\Vendor as AppVendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -112,15 +113,16 @@ class VendorViewController extends Controller
      */
     public function get_products($last_id = 0)
     {
-        // Extract vendor ID
+        // Extract vendor
         $vendor_id = Auth::user()->id;
+        $vendor = AppVendor::find($vendor_id);
 
         // Fetch products
         if($last_id == 0) {
-            $products = Product::where('vendor_id', $vendor_id)->take(10)->get();
+            $products = $vendor->product()->take(10)->get();
         }
         else {
-            $products = Product::where('vendor_id', $vendor_id)
+            $products = $vendor->product()
             ->where('id', '>', $last_id)
             ->take(10)->get();
         }
