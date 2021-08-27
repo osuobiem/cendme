@@ -137,15 +137,19 @@ class ProductController extends Controller
      * @param string $keywork Search keyword
      * @return json
      */
-    public function search($vendor_id, $keyword)
+    public function search($vendor_id, $keyword, $last_id = false)
     {
         // Search for products
         
         $results = Product::where('vendor_id', $vendor_id)
             ->where('quantity', '>', 0)
-            ->where('title', 'LIKE', '%' . $keyword . '%')
-            ->take(5)->get();
+            ->where('title', 'LIKE', '%' . $keyword . '%');
+        
+        if($last_id !== false) {
+            $results->where('id', '>', $last_id);
+        }
             
+        $results->take(5)->get();
         return response()->json([
             'success' => true,
             'message' => 'Search Successful',

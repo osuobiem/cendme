@@ -146,7 +146,7 @@ Route::group(['namespace' => 'API'], function () {
         Route::get('all/{vendor_id}/{category_id?}/{subcategory_id?}/{paginate?}/{last_id?}', 'ProductController@list');
 
         // Search for vendor products
-        Route::get('search/{vendor_id}/{keyword}', 'ProductController@search');
+        Route::get('search/{vendor_id}/{keyword}/{last_id?}', 'ProductController@search');
     });
     // -------------
 
