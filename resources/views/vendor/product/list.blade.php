@@ -11,8 +11,11 @@
     <button class="btn btn-sm btn-outline-danger" title="Delete Product" onclick="deleteWarn({{ $product->id }})"><i class="fas fa-trash"></i></button>
   </td>
 </tr>
-@endforeach
 
-<script>
-  lastId = `{{ $last_id }}`;
-</script>
+@if($key+1 == count($products))
+  <script>
+    lastId = `{{ $product->id }}`;
+  </script>
+@endif
+
+@endforeach

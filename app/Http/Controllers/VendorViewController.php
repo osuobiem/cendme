@@ -119,17 +119,17 @@ class VendorViewController extends Controller
 
         // Fetch products
         if($last_id == 0) {
-            $products = $vendor->product()->take(10)->get();
+            $products = $vendor->product()->orderBy('id')->take(10)->get();
         }
         else {
             $products = $vendor->product()
             ->where('id', '>', $last_id)
+            ->orderBy('id')
             ->take(10)->get();
         }
-        $last_id = count($products) > 0 ? $products[count($products) - 1]->id : 0;
 
         // Return view
-        return view('vendor.product.list', ['products' => $products, 'last_id' => $last_id]);
+        return view('vendor.product.list', ['products' => $products]);
     }
 
     /**
