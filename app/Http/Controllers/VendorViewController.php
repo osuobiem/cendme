@@ -126,9 +126,10 @@ class VendorViewController extends Controller
             ->where('id', '>', $last_id)
             ->take(10)->get();
         }
+        $last_id = count($products) > 0 ? $products[count($products) - 1]->id : 0;
 
         // Return view
-        return view('vendor.product.list', ['products' => $products]);
+        return view('vendor.product.list', ['products' => $products, 'last_id' => $last_id]);
     }
 
     /**

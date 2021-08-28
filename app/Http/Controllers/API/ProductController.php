@@ -155,7 +155,8 @@ class ProductController extends Controller
             'message' => 'Search Successful',
             'data' => [
                 'products' => $results,
-                'photo_url' => url('/') . Storage::url('products/')
+                'photo_url' => url('/') . Storage::url('products/'),
+                'last_id' => count($results) > 0 ? $results[count($results) - 1]->id : null
             ]
         ]);
     }
