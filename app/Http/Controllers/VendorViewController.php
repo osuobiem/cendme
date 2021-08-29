@@ -152,16 +152,18 @@ class VendorViewController extends Controller
      */
     public function product_update_modals($last_id = 0)
     {
-        // Extract vendor ID
+        // Extract vendor
         $vendor_id = Auth::user()->id;
+        $vendor = AppVendor::find($vendor_id);
 
         // Fetch products
         if($last_id == 0) {
-            $products = Product::where('vendor_id', $vendor_id)->take(10)->get();
+            $products = $vendor->product()->orderBy('id')->take(10)->get();
         }
         else {
-            $products = Product::where('vendor_id', $vendor_id)
+            $products = $vendor->product()
             ->where('id', '>', $last_id)
+            ->orderBy('id')
             ->take(10)->get();
         }
 
@@ -184,16 +186,18 @@ class VendorViewController extends Controller
      */
     public function product_view_modals($last_id = 0)
     {
-        // Extract vendor ID
+        // Extract vendor
         $vendor_id = Auth::user()->id;
+        $vendor = AppVendor::find($vendor_id);
 
         // Fetch products
         if($last_id == 0) {
-            $products = Product::where('vendor_id', $vendor_id)->take(10)->get();
+            $products = $vendor->product()->orderBy('id')->take(10)->get();
         }
         else {
-            $products = Product::where('vendor_id', $vendor_id)
+            $products = $vendor->product()
             ->where('id', '>', $last_id)
+            ->orderBy('id')
             ->take(10)->get();
         }
 
