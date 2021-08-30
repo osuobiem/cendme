@@ -360,7 +360,7 @@ class ShopperController extends Controller
         $shopper->gender = $request['gender'];
         $shopper->phone = $request['phone'];
         $shopper->dob = date('Y-m-d', strtotime($request['dob']));
-        $shopper->bvn = $request['bvn'];
+        // $shopper->bvn = $request['bvn'];
         if ($request['about']) {
             $shopper->about = $request['about'];
         }
@@ -404,11 +404,11 @@ class ShopperController extends Controller
                 Rule::unique('shoppers')->ignore($shopper->id),
             ],
             'gender' => 'required|alpha|min:4|max:6',
-            'bvn' => [
-                'required', 'numeric', 'digits:11',
-                // Ignore current shopper from bvn uniqueness validation
-                Rule::unique('shoppers')->ignore($shopper->id),
-            ],
+            // 'bvn' => [
+            //     'required', 'numeric', 'digits:11',
+            //     // Ignore current shopper from bvn uniqueness validation
+            //     Rule::unique('shoppers')->ignore($shopper->id),
+            // ],
             'dob' => 'required|date',
             'address' => 'required|min:4',
             'area' => 'required|numeric|exists:areas,id',
