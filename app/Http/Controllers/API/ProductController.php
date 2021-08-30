@@ -149,7 +149,7 @@ class ProductController extends Controller
             $results->where('id', '>', $last_id);
         }
             
-        $results->take(5)->get();
+        $results = $results->take(5)->get();
         return response()->json([
             'success' => true,
             'message' => 'Search Successful',
