@@ -156,7 +156,7 @@ class ProductController extends Controller
             'data' => [
                 'products' => $results,
                 'photo_url' => url('/') . Storage::url('products/'),
-                'last_id' => count($results) > 0 ? $results[count($results) - 1]->id : null
+                'last_id' => !empty($results) ? $results[count($results) - 1]->id : null
             ]
         ]);
     }
