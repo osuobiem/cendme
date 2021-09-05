@@ -722,7 +722,13 @@ class ShopperController extends Controller
         $order->paid_for = json_encode($paid_list);
 
         // Pay vendor
-        $vendor->balance += $payment_amount;
+        // $vendor->balance += $payment_amount;
+        if(!$this->transfer_funds($vendor->id, $payment_amount)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment failed'
+            ]);
+        }
 
         // Debit Shopper
         $shopper->balance -= $payment_amount;
@@ -915,5 +921,59 @@ class ShopperController extends Controller
         return Validator::make($request->all(), [
             'email' => 'required|email|exists:shoppers,email'
         ]);
+    }
+
+    /**
+     * Transfer funds to vendor
+     * @param int $vendor_id
+     * @return bool
+     */
+    public function transfer_funds($vendor_id, $amount) {
+        $vendor = Vendor::findOrFail($vendor_id);
+        $credentials = Credential::where('key', 'paystack_secret_key')
+            ->orWhere('key', 'paystack_public_key')->get();
+
+        $formatted_cred = [];
+
+        foreach ($credentials as $cred) {
+            $formatted_cred[$cred->key] = $cred->value;
+        }
+
+
+        // Create transfer recipient
+        $url = "https://api.paystack.co/transferrecipient";
+        $fields = [
+            'type' => "nuban",
+            'name' => $vendor->account->account_name,
+            'account_number' => $vendor->account->account_number,
+            'bank_code' => $vendor->account->bank->code,
+            'currency' => "NGN"
+        ];
+
+        // Ping Paystack's API
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $formatted_cred['paystack_secret_key']
+        ])->post($url, $fields);
+
+        if ($response->failed()) {
+            return false;
+        }
+
+        $recip = $response->json()['data']['recipient_code'];
+        
+        $url = 'https://api.paystack.co/transfer';
+        $fields = [
+            'source' => "balance",
+            'amount' => $amount * 100,
+            'recipient' => $recip,
+            'reason' => "Payment from Cendme.com"
+          ];
+        
+        // Process Transfer
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $formatted_cred['paystack_secret_key']
+        ])->post($url, $fields);
+
+        return $response->successful();
     }
 }

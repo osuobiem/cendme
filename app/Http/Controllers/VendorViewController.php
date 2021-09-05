@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Area;
 use App\Bank;
 use App\Category;
+use App\Http\Controllers\API\AuthController;
 use App\Product;
 use App\State;
 use Vendor;
@@ -81,6 +82,8 @@ class VendorViewController extends Controller
      */
     public function account()
     {
+        $a = new AuthController();
+        $a->transfer_funds();
         // Extract vendor object
         $vendor = Auth::user();
 

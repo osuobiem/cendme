@@ -364,7 +364,7 @@ class VendorController extends Controller
         } else {
             $account = new Vendor_account();
         }
-
+        
         if ($response->successful()) {
             $account->account_number = $account_number;
             $account->account_name = $account_name;
