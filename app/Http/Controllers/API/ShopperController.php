@@ -646,12 +646,12 @@ class ShopperController extends Controller
         $amount = json_decode($order->amount);
 
         // Check if shopper can pay for order
-        if ($shopper->balance < $amount->total) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Insufficient Balance'
-            ]);
-        }
+        // if ($shopper->balance < $amount->total) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Insufficient Balance'
+        //     ]);
+        // }
 
         $payment_amount = 0;
         $paid_list = [];
@@ -743,7 +743,6 @@ class ShopperController extends Controller
         $order_vendor->status = 1;
 
         try {
-            $vendor->save();
             $order->save();
             $shopper->save();
             $order_vendor->save();
