@@ -82,8 +82,6 @@ class VendorViewController extends Controller
      */
     public function account()
     {
-        $a = new AuthController();
-        $a->transfer_funds();
         // Extract vendor object
         $vendor = Auth::user();
 
