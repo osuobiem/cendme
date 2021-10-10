@@ -109,10 +109,11 @@ class VendorViewController extends Controller
 
     /**
      * Get all products
+     * @param int $page Pagination page
      * @param int $last_id Last product id for pagination
      * @return html
      */
-    public function get_products($last_id = 0)
+    public function get_products($page, $last_id = 0)
     {
         // Extract vendor
         $vendor_id = Auth::user()->id;
@@ -130,7 +131,98 @@ class VendorViewController extends Controller
         }
 
         // Return view
-        return view('vendor.product.list', ['products' => $products]);
+        return view('vendor.product.list', ['products' => $products, 'page' => $page]);
+    }
+    
+    /**
+     * Search products
+     * @param string keyword
+     * @param int $page Pagination page
+     * @param int $last_id Last product id for pagination
+     */
+    public function search_products($keyword, $page, $last_id = 0) {
+        // Extract vendor
+        $vendor_id = Auth::user()->id;
+        $vendor = AppVendor::find($vendor_id);
+
+        // Fetch products
+        if($last_id == 0) {
+            $products = $vendor->product()->where('title', 'LIKE', '%' . $keyword . '%')->orderBy('id')->take(10)->get();
+        }
+        else {
+            $products = $vendor->product()
+            ->where('title', 'LIKE', '%' . $keyword . '%')
+            ->where('id', '>', $last_id)
+            ->orderBy('id')
+            ->take(10)->get();
+        }
+
+        // Return view
+        return view('vendor.product.list', ['products' => $products, 'page' => $page]);
+    }
+
+    /**
+     * Search update modals
+     * @param int $last_id Last product id for pagination
+     * @param string keyword
+     * @return html
+     */
+    public function search_update_modals($keyword, $last_id = 0)
+    {
+        // Extract vendor
+        $vendor_id = Auth::user()->id;
+        $vendor = AppVendor::find($vendor_id);
+
+        // Fetch products
+        if($last_id == 0) {
+            $products = $vendor->product()->where('title', 'LIKE', '%' . $keyword . '%')->orderBy('id')->take(10)->get();
+        }
+        else {
+            $products = $vendor->product()
+            ->where('title', 'LIKE', '%' . $keyword . '%')
+            ->where('id', '>', $last_id)
+            ->orderBy('id')
+            ->take(10)->get();
+        }
+
+        // Fetch categories
+        $categories = Category::get();
+
+        $data = [
+            'products' => $products,
+            'categories' => $categories
+        ];
+
+        // Return view
+        return view('vendor.product.update', $data);
+    }
+
+    /**
+     * Search view modals
+     * @param int $last_id Last product id for pagination
+     * @param string keyword
+     * @return html
+     */
+    public function search_view_modals($keyword, $last_id = 0)
+    {
+        // Extract vendor
+        $vendor_id = Auth::user()->id;
+        $vendor = AppVendor::find($vendor_id);
+
+        // Fetch products
+        if($last_id == 0) {
+            $products = $vendor->product()->where('title', 'LIKE', '%' . $keyword . '%')->orderBy('id')->take(10)->get();
+        }
+        else {
+            $products = $vendor->product()
+            ->where('title', 'LIKE', '%' . $keyword . '%')
+            ->where('id', '>', $last_id)
+            ->orderBy('id')
+            ->take(10)->get();
+        }
+
+        // Return view
+        return view('vendor.product.view', ['products' => $products]);
     }
 
     /**
