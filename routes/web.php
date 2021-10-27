@@ -112,7 +112,7 @@ Route::group(['prefix' => '/vendor'], function () {
         // Get batch product view modals
         Route::get('products/batch-form', 'VendorViewController@product_batch_form');
 
-        Route::get('export-excell', 'VendorController@exportIntoExcell');
+        Route::get('export-excel', 'VendorController@exportIntoExcel');
 
 
         // Get product view modals
@@ -151,6 +151,9 @@ Route::group(['prefix' => 'product', 'middleware' => 'auth'], function () {
 
     // Delete Product
     Route::delete('delete/{id}', 'ProductController@delete');
+
+    // Update Product
+    Route::post('update-batch-products', 'ProductController@update_batch_products');
 });
 // ---------------
 

@@ -242,6 +242,36 @@ class ProductController extends Controller
             );
         }
     }
+
+    /**
+     * Update batch products
+     * @return json
+     */
+    public function update_batch_products(Request $request) {
+        foreach($request['title'] as $id => $title) {
+            $product = Product::findOrFail($id);
+            $product->title = $title;
+            $product->quantity = $request['quantity'][$id];
+            $product->price = $request['price'][$id];
+            $product->subcategory_id = $request['subcategory'][$id];
+            $product->details = $request['details'][$id];
+
+            $stored = false;
+            $oldphoto = $product->photo;
+
+            if(isset($request['photo'][$id])) {
+                $photo = $request['photo'][$id];
+                $stored = Storage::put('/public/products', $photo);
+                $product->photo = $stored ? basename($stored) : 'placeholder.png';
+            }
+
+            $product->save();
+
+            $stored && $product->photo != 'placeholder.png' ? Storage::delete('/public/products/' . $oldphoto) : '';
+        }
+
+        return back();
+    }
     // -------------
 
 

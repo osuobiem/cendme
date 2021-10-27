@@ -420,7 +420,7 @@ class VendorController extends Controller
         ], 400);
     }
 
-    public function exportIntoExcell()
+    public function exportIntoExcel()
     {
         return Excel::download(new ProductExport, 'productlist.xlsx');
     }

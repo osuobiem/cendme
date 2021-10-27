@@ -26,15 +26,18 @@
                     <div class="card card-static-2 mb-30">
                         <div class="card-title-2">
                             <h4>Products</h4>
-                            <div class="w-100 text-right">
+                            <div class="w-100 d-flex" style="justify-content: flex-end">
                                 <a href="#batch-products-modal" data-toggle="modal" class="view-btn hover-btn "> <i
                                         class="fas fa-plus"></i> Add Batch
                                     Products</a>
                                 <a href="#add-product-modal" data-toggle="modal" class="view-btn hover-btn "> <i
                                         class="fas fa-plus"></i> Add Single
                                     Product</a>
-                                <a href="export-excell" class="view-btn hover-btn "> <i class="fas fa-download"></i>
+                                <a href="export-excel" class="view-btn hover-btn "> <i class="fas fa-download"></i>
                                     Download Excel Sheet</a>
+
+                                <a id="update-products-btn" href="#update-products-modal" data-toggle="modal" class="view-btn hover-btn d-none"> <i class="fas fa-edit"></i>
+                                    Update Products</a>
                             </div>
                         </div>
 
@@ -102,6 +105,7 @@
     @section('add-product')
         @include('vendor.product.batch')
         @include('vendor.product.add')
+        @include('vendor.product.update-batch-products')
     @show
 
     <script>
@@ -118,6 +122,7 @@
             loadUpdateModals();
             loadViewModals();
             tagFormListeners();
+            markProduct();
         });
 
         function searchProducts() {
@@ -372,6 +377,24 @@
         // Turn off errors
         function offError() {
             $('.error-message').html('')
+        }
+
+        // Mark Product for update
+        function markProduct(el, productId) {
+            parentTr = $(el).parent().parent();
+
+            if(parentTr.hasClass('marked')) {
+                parentTr.removeClass('marked');
+                $(el).removeClass('btn-warning').addClass('btn-outline-warning');
+                removeProductToForm(productId);
+            }
+            else {
+                parentTr.addClass('marked');
+                $(el).removeClass('btn-outline-warning').addClass('btn-warning');
+                addProductToForm(productId);
+            }
+
+            $('.marked').length > 0 ? $('#update-products-btn').removeClass('d-none') : $('#update-products-btn').addClass('d-none');
         }
     </script>
 

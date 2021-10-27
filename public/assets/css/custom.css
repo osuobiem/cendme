@@ -241,3 +241,27 @@
     right: 95px;
     cursor: pointer;
 }
+
+.marked {
+    background-color: #a5a5a5 !important;
+    position: relative;
+}
+
+.marked::after {
+    font-size: 12px;
+    content: "Marked for Update";
+    position: absolute;
+    right: 25px;
+    bottom: 6px;
+    border: solid 1px;
+    color: white;
+    background: black;
+    padding: 0 5px;
+    border-radius: 5px;
+}
+
+.bu-products {
+    padding: 10px;
+    border-bottom: 1px solid;
+    margin-bottom: 12px;
+}
