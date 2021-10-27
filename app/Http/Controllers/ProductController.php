@@ -267,7 +267,7 @@ class ProductController extends Controller
 
             $product->save();
 
-            $stored && $product->photo != 'placeholder.png' ? Storage::delete('/public/products/' . $oldphoto) : '';
+            $stored && $oldphoto != 'placeholder.png' ? Storage::delete('/public/products/' . $oldphoto) : '';
         }
 
         return back();
