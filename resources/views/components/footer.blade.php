@@ -27,7 +27,7 @@
             <div class="social-links-footer text-center">
               <p class="m-0" style="color:#424361">Download CendMe Mobile App</p>
               <ul>
-                <li><a href="#">
+                <li><a href="https://play.google.com/store/apps/details?id=com.app.cendme">
                   <img src="{{ url('assets/images/google.png') }}" alt="Google Play"></a></li>
                 <li><a href="#">
                   <img src="{{ url('assets/images/apple.png') }}" alt="Google Play"></a></li>
